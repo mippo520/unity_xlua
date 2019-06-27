@@ -68,5 +68,14 @@ namespace Assets.Common.Lua
             scriptEnv.Dispose();
         }
 
+
+        private void OnApplicationQuit()
+        {
+            OnDestroyFunction = null;
+            UpdateFunction = null;
+            StartFunction = null;
+            AwakeFunction = null;
+        }
+
     }
 }
