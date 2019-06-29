@@ -88,7 +88,6 @@ namespace Assets.Common.Resource
                 callback();
             }
 #else
-
             var request = AssetBundle.LoadFromFileAsync(this.AssetBundlePath + "StreamingAssets");
             yield return request;
             var manifestReq = request.assetBundle.LoadAssetAsync<AssetBundleManifest>("AssetBundleManifest");

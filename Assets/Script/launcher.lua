@@ -13,24 +13,24 @@ coroutine.resume(co)
 
 require("define.common")
 
-
 Launcher = {}
 
 function Launcher.start()
-    NetManager:init()
-    EventManager:AddEvent(Event.ConnectSuccess, Launcher, Launcher.connectSuccess)
-    EventManager:AddEvent(Event.ConnectFailed, Launcher, Launcher.connectFailed)
-    EventManager:AddEvent(Event.Disconnect, Launcher, Launcher.disconnect)
+    NetManager.GetInstance():init()
+    EventManager.GetInstance():RegistEvent(Event.ConnectSuccess, Launcher, Launcher.connectSuccess)
+    EventManager.GetInstance():RegistEvent(Event.ConnectFailed, Launcher, Launcher.connectFailed)
+    EventManager.GetInstance():RegistEvent(Event.Disconnect, Launcher, Launcher.disconnect)
+    NetManager.GetInstance():registMessage("c_gs.S2CLogin", Launcher, Launcher.recv)
 
     CS.UnityEngine.SceneManagement.SceneManager.LoadScene("Main", CS.UnityEngine.SceneManagement.LoadSceneMode.Additive)
 end
 
 function Launcher.update()
-    EventManager:Update()
+    EventManager.GetInstance():Update()
 end
 
 function Launcher.appQuit()
-    NetManager:release()
+    NetManager.GetInstance():release()
 end
 
 function Launcher:connectSuccess()
@@ -43,4 +43,8 @@ end
 
 function Launcher:disconnect()
     Info.Debug(" launcher disconnect! ")
+end
+
+function Launcher:recv(msg)
+    Info.Debug(" receive v = " .. msg.open_server_time)
 end

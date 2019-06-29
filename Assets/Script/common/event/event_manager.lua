@@ -17,7 +17,7 @@ function EventManager:ctor()
     self.mapDelObj = {}
 end
 
-function EventManager:AddEvent(event, obj, method)
+function EventManager:RegistEvent(event, obj, method)
     if not obj or not method then
         Info.Error("EventManager:AddEvent error! ", obj, method)
         return
@@ -42,7 +42,7 @@ function EventManager:AddEvent(event, obj, method)
     mapFunc[obj] = handler(obj, method)
 end
 
-function EventManager:DelEvent(event, obj)
+function EventManager:UnregistEvent(event, obj)
     if not obj then
         Info.Error("EventManager:DelEvent error! ", obj)
         return

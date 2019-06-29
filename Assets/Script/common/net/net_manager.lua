@@ -14,38 +14,83 @@ function NetManager.GetInstance()
 end
 
 function NetManager:ctor()
+    self.mapIdMsg = {}
+    self.mapMsgId = {}
 end
 
 
 function NetManager:init()
     Net.GetInstance():Init(EndianType.Big, 4, CS.Assets.Common.Net.FirstPackageCreator())
-    self:connect("192.168.3.192", 9101)
 end
 
 local function receiveCallback(self, data, state)
     if NetState.Connected == state then
         Info.Debug("receive data : " .. data)
+        local id = string.unpack(">I4", data)
+        local msg = self.mapIdMsg[id]
+        if msg then
+            local pb = assert(PB.decode(msg, string.sub( data, 5)))
+            EventManager.GetInstance():FireEvent(msg, pb)
+        else
+            Info.Error("receive message error! id = " .. id)
+        end
+    elseif NetState.Closed == state then
+        EventManager.GetInstance():FireEvent(Event.Closed)
     else
-        EventManager:FireEvent(Event.Disconnect)
+        EventManager.GetInstance():FireEvent(Event.Disconnect)
     end
 end
 
 local function connectCallback(self, state)
     if NetState.Connected == state then
-        EventManager:FireEvent(Event.ConnectSuccess)
+        EventManager.GetInstance():FireEvent(Event.ConnectSuccess)
         Net.GetInstance():Receive(handler(self, receiveCallback))
     else
-        EventManager:FireEvent(Event.ConnectFailed)
+        EventManager.GetInstance():FireEvent(Event.ConnectFailed)
+    end
+end
+
+local function addMsgInfo(self, msg)
+    if not self.mapMsgId[msg] then
+        local id = Tools.Hash(msg)
+        self.mapIdMsg[id] = msg
+        self.mapMsgId[msg] = id
     end
 end
 
 function NetManager:connect(ip, port)
-    Net.GetInstance():Connect("192.168.3.192", 9101, handler(self, connectCallback))
+    Net.GetInstance():Connect(ip, port, handler(self, connectCallback))
 end
 
 function NetManager:release()
     Net.DelInstance()
 end
 
+function NetManager:registMessage(msg, obj, callback)
+    addMsgInfo(self, msg)
+
+    EventManager.GetInstance():RegistEvent(msg, obj, callback)
+end
+
+function NetManager:unregistMessage(obj)
+    EventManager.GetInstance():DelObject(obj)
+end
+
+function NetManager:send(msg, data)
+    addMsgInfo(self, msg)
+    local id = self.mapMsgId[msg]
+    if not id then
+        Info.Error("NetManager:send error! message type is " .. msg)
+        return
+    end
+
+    local bytes = assert(PB.encode(msg, data))
+    local id_byte = string.pack(">I4", id)
+    Net.GetInstance():Send(id_byte .. bytes)
+end
+
+function NetManager:close()
+    Net.GetInstance():Close(false)
+end
 
 return NetManager

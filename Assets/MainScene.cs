@@ -65,6 +65,9 @@ public class MainScene : MonoBehaviour
             {
                 NetManager.GetInstance().Reconnect();
             });
+
+            var text = this.transform.GetChild(4).gameObject;
+            text.GetComponent<Text>().text = "";
         });
 
         LuaManager.GetInstance();

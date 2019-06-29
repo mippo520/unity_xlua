@@ -1,0 +1,30 @@
+syntax = "proto3";
+package c_gs;
+
+
+message C2SLogin {
+    int64 account_id = 1;
+    string token = 2;
+}
+
+message S2CLogin {
+    int32 code = 1;
+    int64 player_id = 2;
+    int64 server_time = 3;
+    int32 offset = 4;
+    int64 open_server_time = 5;
+}
+
+message c2s_create_character {
+    string name = 1;
+    int32 head = 2;
+}
+
+message s2c_create_character {
+    int32 code = 1;
+    int64 player_id = 2;
+}
+
+message s2c_disconnect {
+    int32 code = 1;
+}

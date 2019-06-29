@@ -15,7 +15,8 @@ namespace Assets.Common.Net
     public enum NetState
     {
         Connected = 0,
-        Disconnected = 1
+        Disconnected,
+        Closed
     }
 
     public enum EndianType
@@ -99,7 +100,7 @@ namespace Assets.Common.Net
             m_PackagetCreator.Send(ref data);
         }
 
-        public void Close()
+        public void Close(bool isPassive = true)
         {
             try
             {
@@ -108,7 +109,17 @@ namespace Assets.Common.Net
                     m_Socket.Shutdown(SocketShutdown.Both);
                     m_Socket.Close();
                     m_Socket = null;
-                    if (null != m_ReceiveCallback) m_ReceiveCallback(null, NetState.Disconnected);
+                    if (null != m_ReceiveCallback)
+                    {
+                        if (isPassive)
+                        {
+                            m_ReceiveCallback(null, NetState.Disconnected);
+                        }
+                        else
+                        {
+                            m_ReceiveCallback(null, NetState.Closed);
+                        }
+                    }
                 }
             }
             catch

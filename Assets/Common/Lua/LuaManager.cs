@@ -1,4 +1,5 @@
-﻿using Assets.Common.Resource;
+﻿using Assets.Common.Log;
+using Assets.Common.Resource;
 using Assets.Common.Singleton;
 using System;
 using System.Collections.Generic;
@@ -30,11 +31,16 @@ namespace Assets.Common.Lua
         protected override void _init()
         {
             m_LuaEnv = new LuaEnv();
+            m_LuaEnv.AddBuildin("rapidjson", XLua.LuaDLL.Lua.LoadRapidJson);
+            m_LuaEnv.AddBuildin("pb", XLua.LuaDLL.Lua.LoadLuaProtobuf);
+
             m_LuaEnv.AddLoader(new LuaEnv.CustomLoader((ref string f) =>
             {
+                Info.Debug(f);
                 f = f.Replace(".", "/");
 #if UNITY_EDITOR
-                f = Application.dataPath + "/Script/" + f + ".lua";
+//                 f = Application.dataPath + "/Script/" + f + ".lua";
+                f = "Assets/Script/" + f + ".lua";
                 return File.ReadAllBytes(f);
 #else
                 f = "Assets/Script/" + f + ".txt";

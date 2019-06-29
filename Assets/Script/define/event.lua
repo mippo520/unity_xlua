@@ -2,7 +2,8 @@
 local event = {
     ConnectSuccess = "ConnectSuccess",
     ConnectFailed = "ConnectFailed",
-    Disconnect  = "Disconnect"
+    Disconnect  = "Disconnect",
+    Closed = "Closed"
 }
 
 return event

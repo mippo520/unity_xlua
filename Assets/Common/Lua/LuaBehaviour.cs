@@ -1,4 +1,5 @@
-﻿using Assets.Common.Resource;
+﻿using Assets.Common.Net;
+using Assets.Common.Resource;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 using XLua;
 
 namespace Assets.Common.Lua
@@ -53,19 +55,19 @@ namespace Assets.Common.Lua
         // Use this for initialization
         void Start()
         {
-            if (StartFunction != null) { StartFunction.Call(); }
+            if (null != StartFunction) { StartFunction.Call(); }
         }
 
         // Update is called once per frame
         void Update()
         {
-            if (UpdateFunction != null) { UpdateFunction.Call(); }
+            if (null != UpdateFunction) { UpdateFunction.Call(); }
         }
 
         void OnDestroy()
         {
-            if (OnDestroyFunction != null) { OnDestroyFunction.Call(); }
-            scriptEnv.Dispose();
+            if (null != OnDestroyFunction) { OnDestroyFunction.Call(); }
+            if (null != scriptEnv) scriptEnv.Dispose();
         }
 
 
@@ -75,6 +77,8 @@ namespace Assets.Common.Lua
             UpdateFunction = null;
             StartFunction = null;
             AwakeFunction = null;
+            scriptEnv.Dispose();
+            scriptEnv = null;
         }
 
     }
