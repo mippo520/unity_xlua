@@ -36,7 +36,6 @@ namespace Assets.Common.Lua
 
             m_LuaEnv.AddLoader(new LuaEnv.CustomLoader((ref string f) =>
             {
-                Info.Debug(f);
                 f = f.Replace(".", "/");
 #if UNITY_EDITOR
 //                 f = Application.dataPath + "/Script/" + f + ".lua";

@@ -17,7 +17,7 @@ function EventManager:ctor()
     self.mapDelObj = {}
 end
 
-function EventManager:RegistEvent(event, obj, method)
+function EventManager:registEvent(event, obj, method)
     if not obj or not method then
         Info.Error("EventManager:AddEvent error! ", obj, method)
         return
@@ -42,7 +42,7 @@ function EventManager:RegistEvent(event, obj, method)
     mapFunc[obj] = handler(obj, method)
 end
 
-function EventManager:UnregistEvent(event, obj)
+function EventManager:unregistEvent(event, obj)
     if not obj then
         Info.Error("EventManager:DelEvent error! ", obj)
         return
@@ -62,9 +62,9 @@ function EventManager:UnregistEvent(event, obj)
     self.mapDelObjEvent[obj][event] = 1
 end
 
-function EventManager:DelObject(obj)
+function EventManager:delObject(obj)
     if not obj then
-        Info.Error("EventManager:DelObject error! ", obj)
+        Info.Error("EventManager:delObject error! ", obj)
         return
     end
 
@@ -80,20 +80,22 @@ function EventManager:DelObject(obj)
     self.mapDelObj[obj] = 1
 end
 
-function EventManager:FireEvent(event, ...)
+function EventManager:fireEvent(event, ...)
     if not self.mapFireEvent[event] then
         self.mapFireEvent[event] = {...}
     end
 end
 
-function EventManager:Update()
+function EventManager:update()
     local mapFireEvent = self.mapFireEvent
     self.mapFireEvent = {}
     for event, args in pairs(mapFireEvent) do
         local mapHandler = self.mapEventFunc[event]
-        for obj, handler in pairs(mapHandler) do
-            if not self.mapDelObj[obj] and (not self.mapDelObjEvent[obj] or not self.mapDelObjEvent[obj][event]) then
-                handler(table.unpack(args))
+        if mapHandler then
+            for obj, handler in pairs(mapHandler) do
+                if not self.mapDelObj[obj] and (not self.mapDelObjEvent[obj] or not self.mapDelObjEvent[obj][event]) then
+                    handler(table.unpack(args))
+                end
             end
         end
     end

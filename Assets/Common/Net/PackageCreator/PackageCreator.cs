@@ -29,7 +29,6 @@ namespace Assets.Common.Net
             {
                 nKeyLen = MathFuc.MinMultiple(nKeyLen, arrKey[i].Count);
             }
-            Info.Debug("key lenth is " + nKeyLen.ToString());
             s_Key = new byte[nKeyLen];
 
             for (int i = 0; i < nKeyLen; ++i)
@@ -49,11 +48,6 @@ namespace Assets.Common.Net
                 }
                 s_Key[i] = sz;
 
-            }
-            Info.Debug("key is " + s_Key + " lenth is " + s_Key.Length);
-            foreach (char c in s_Key)
-            {
-                Info.Debug(string.Format("{0}", (int)c));
             }
         }
 

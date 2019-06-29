@@ -16,6 +16,7 @@ end
 function NetManager:ctor()
     self.mapIdMsg = {}
     self.mapMsgId = {}
+    self.mapPairMsg = {}
 end
 
 
@@ -30,23 +31,23 @@ local function receiveCallback(self, data, state)
         local msg = self.mapIdMsg[id]
         if msg then
             local pb = assert(PB.decode(msg, string.sub( data, 5)))
-            EventManager.GetInstance():FireEvent(msg, pb)
+            EventManager.GetInstance():fireEvent(msg, pb)
         else
             Info.Error("receive message error! id = " .. id)
         end
     elseif NetState.Closed == state then
-        EventManager.GetInstance():FireEvent(Event.Closed)
+        EventManager.GetInstance():fireEvent(Event.Closed)
     else
-        EventManager.GetInstance():FireEvent(Event.Disconnect)
+        EventManager.GetInstance():fireEvent(Event.Disconnect)
     end
 end
 
 local function connectCallback(self, state)
     if NetState.Connected == state then
-        EventManager.GetInstance():FireEvent(Event.ConnectSuccess)
+        EventManager.GetInstance():fireEvent(Event.ConnectSuccess)
         Net.GetInstance():Receive(handler(self, receiveCallback))
     else
-        EventManager.GetInstance():FireEvent(Event.ConnectFailed)
+        EventManager.GetInstance():fireEvent(Event.ConnectFailed)
     end
 end
 
@@ -69,11 +70,11 @@ end
 function NetManager:registMessage(msg, obj, callback)
     addMsgInfo(self, msg)
 
-    EventManager.GetInstance():RegistEvent(msg, obj, callback)
+    EventManager.GetInstance():registEvent(msg, obj, callback)
 end
 
 function NetManager:unregistMessage(obj)
-    EventManager.GetInstance():DelObject(obj)
+    EventManager.GetInstance():delObject(obj)
 end
 
 function NetManager:send(msg, data)
@@ -87,6 +88,13 @@ function NetManager:send(msg, data)
     local bytes = assert(PB.encode(msg, data))
     local id_byte = string.pack(">I4", id)
     Net.GetInstance():Send(id_byte .. bytes)
+end
+
+function NetManager:registPairMessage(sendMsg, recvMsg)
+    if self.mapPairMsg[sendMsg] then
+        Info.Error("NetManager:registPairMessage error! pair " .. sendMsg .. " and " .. recvMsg .. " is already registed!")
+    end
+    self.mapPairMsg[sendMsg] = recvMsg
 end
 
 function NetManager:close()
