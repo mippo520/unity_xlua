@@ -11,6 +11,7 @@ end)
 
 coroutine.resume(co)
 
+require("setting")
 require("define.common")
 
 Launcher = {}
@@ -19,7 +20,9 @@ function Launcher.start()
     NetManager.GetInstance():init()
     TimeManager.GetInstance():init()
 
+    Info.Debug("current scene is " .. CS.UnityEngine.SceneManagement.SceneManager.GetActiveScene().name)
     CS.UnityEngine.SceneManagement.SceneManager.LoadScene("Main", CS.UnityEngine.SceneManagement.LoadSceneMode.Additive)
+    Info.Debug("current scene is " .. CS.UnityEngine.SceneManagement.SceneManager.GetActiveScene().name)
 end
 
 function Launcher.update()

@@ -190,7 +190,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: send
+  m_Text: close
 --- !u!222 &120513390
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -212,7 +212,7 @@ GameObject:
   - component: {fileID: 294614014}
   - component: {fileID: 294614013}
   m_Layer: 5
-  m_Name: close
+  m_Name: send
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -660,7 +660,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: close
+  m_Text: send
 --- !u!222 &901301984
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -761,7 +761,7 @@ GameObject:
   - component: {fileID: 1248546602}
   - component: {fileID: 1248546601}
   m_Layer: 5
-  m_Name: send
+  m_Name: close
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

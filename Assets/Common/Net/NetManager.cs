@@ -125,6 +125,17 @@ namespace Assets.Common.Net
             catch
             {
                 m_Socket = null;
+                if (null != m_ReceiveCallback)
+                {
+                    if (isPassive)
+                    {
+                        m_ReceiveCallback(null, NetState.Disconnected);
+                    }
+                    else
+                    {
+                        m_ReceiveCallback(null, NetState.Closed);
+                    }
+                }
             }
         }
 
@@ -158,7 +169,7 @@ namespace Assets.Common.Net
             catch
             {
                 m_ConnectCallback(NetState.Disconnected);
-                Close();
+                m_Socket = null;
             }
         }
 

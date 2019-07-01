@@ -10,6 +10,10 @@ local function connectSuccess(self, msg)
     local text = self.transform:GetChild(4).gameObject
     text:GetComponent(typeof(UnityUI.Text)).text = "connectsuccess"
 end
+local function connectFailed(self, msg)
+    local text = self.transform:GetChild(4).gameObject
+    text:GetComponent(typeof(UnityUI.Text)).text = "connectfailed"
+end
 local function close(self, msg)
     local text = self.transform:GetChild(4).gameObject
     text:GetComponent(typeof(UnityUI.Text)).text = "close"
@@ -18,6 +22,13 @@ local function Disconnect(self, msg)
     local text = self.transform:GetChild(4).gameObject
     text:GetComponent(typeof(UnityUI.Text)).text = "disconnect"
 end
+local function BeginWaitMessage(self, msg)
+    Info.Debug("begin wait msg " .. msg)
+end
+local function FinishWaitMessage(self, msg)
+    Info.Debug("finish wait msg " .. msg)
+end
+
 local id = nil
 local n = 0
 local function loopFinish(self)
@@ -36,8 +47,11 @@ function main.awake(gameObject)
     print("main.Awake")
     self = gameObject
     EventManager.GetInstance():registEvent(Event.ConnectSuccess, self, connectSuccess)
+    EventManager.GetInstance():registEvent(Event.ConnectFailed, self, connectFailed)
     EventManager.GetInstance():registEvent(Event.Closed, self, close)
     EventManager.GetInstance():registEvent(Event.Disconnect, self, Disconnect)
+    EventManager.GetInstance():registEvent(Event.BeginWaitMessage, self, BeginWaitMessage)
+    EventManager.GetInstance():registEvent(Event.FinishWaitMessage, self, FinishWaitMessage)
     -- EventManager.GetInstance():registEvent(Event.FrameUpdate, self, FrameUpdate)
 
     NetManager.GetInstance():registMessage("c_gs.S2CLogin", self, receiveLogin)
@@ -50,7 +64,7 @@ function main.start()
         -- FileManager.GetInstance():readAllBytesAsync("pb", "Assets/Proto/msg_login.proto", function (data)
         --     Protoc:load(data)
         --     NetManager.GetInstance():connect("192.168.3.192", 9101)
-   
+        --     NetManager.GetInstance():registPairMessage("c_gs.C2SLogin", "c_gs.S2CLogin")
         -- end)
 
         Info.Debug(Now())
@@ -70,9 +84,7 @@ function main.start()
 
     local btn3 = self.transform:GetChild(2).gameObject
     btn3:GetComponent(typeof(UnityUI.Button)).onClick:AddListener(function ()
-        
         NetManager.GetInstance():close()
-
     end)
 
 

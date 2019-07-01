@@ -15,7 +15,7 @@ function Timer:call()
 end
 
 function Timer:updateTime()
-    if not self._interval or not self._count or 0 == self._count then
+    if not self._interval or 0 == self._interval or not self._count or 0 == self._count then
         return false
     else
         self._time = self._time + self._interval

@@ -9,50 +9,38 @@ function _addTimer(self, timer)
         return
     end
 
-    if self.mapIdTimer[timer._id] then
-        Info.Error("_addTimer error! timer is exist! id is " .. timer._id)
-        return
-    end
-
     local bInsert = false
-    for idx, id in ipairs(self.arrId) do
-        local timerTmp = self.mapIdTimer[id]
-        if timerTmp and timerTmp._time >= timer._time then
-            table.insert(self.arrId, idx, timer._id)
+    for idx, timerTmp in ipairs(self.arrTimer) do
+        if timerTmp._time >= timer._time then
+            table.insert(self.arrTimer, idx, timer)
             bInsert = true
             break
         end
     end        
     if not bInsert then
-        table.insert(self.arrId, timer._id)
+        table.insert(self.arrTimer, timer)
     end
-    self.mapIdTimer[timer._id] = timer
 end
 
 function _modifyTimer(self, time, obj, func, interval, count)
     local bInsert = false
-    for idx, id in ipairs(self.arrId) do
-        local timer = self.mapIdTimer[id]
-        if timer then
-            if timer._time > time then
-                self.id = self.id + 1
-                table.insert(self.arrId, idx, self.id)
-                local newTimer = Timer.new(self.id, time, obj, func, interval, count)
-                self.mapIdTimer[self.id] = newTimer
-                bInsert = true
-                break
-            elseif timer._time == time and timer._obj == obj and timer._func == func then
-                Info.Error("TimeManager:registTimer error! Already regist the timer!")
-                return
-            end
+    for idx, timer in ipairs(self.arrTimer) do
+        if timer._time > time then
+            self.id = self.id + 1
+            local newTimer = Timer.new(self.id, time, obj, func, interval, count)
+            table.insert(self.arrTimer, idx, newTimer)
+            bInsert = true
+            break
+        elseif timer._time == time and timer._obj == obj and timer._func == func then
+            Info.Error("TimeManager:registTimer error! Already regist the timer!")
+            return
         end
     end
 
     if not bInsert then
         self.id = self.id + 1
-        table.insert(self.arrId, self.id)
         local newTimer = Timer.new(self.id, time, obj, func, interval, count)
-        self.mapIdTimer[self.id] = newTimer
+        table.insert(self.arrTimer, newTimer)
     end
     return self.id
 end
@@ -65,8 +53,7 @@ function TimeManager.GetInstance()
 end
 
 function TimeManager:ctor()
-    self.mapIdTimer = {}
-    self.arrId = {}
+    self.arrTimer = {}
     self.id = 0
     self.arrInsertTimer = {}
 end
@@ -81,18 +68,16 @@ function TimeManager:update()
     local dt = curTime - self.currentTime
     EventManager.GetInstance():fireEvent(Event.FrameUpdate, dt)
     self.currentTime = curTime
-    while #self.arrId > 0 do
-        local id = self.arrId[1]
-        local timer = self.mapIdTimer[id]
+    while #self.arrTimer > 0 do
+        local timer = self.arrTimer[1]
         if timer._time <= self.currentTime then
             timer:call()
-            if self.arrId[1] == id then
-                table.remove(self.arrId, 1)
+            if #self.arrTimer > 0 and self.arrTimer[1]._id == timer._id then
+                table.remove(self.arrTimer, 1)
                 if timer:updateTime() then
                     table.insert(self.arrInsertTimer, timer)
                 end
             end
-            self.mapIdTimer[id] = nil
         else
             break
         end
@@ -109,27 +94,37 @@ function TimeManager:now()
 end
 
 function TimeManager:onceTimer(interval, obj, func)
+    if interval < 0 then
+        interval = 0
+    end
     local time = self:now() + interval
     return _modifyTimer(self, time, obj, func, 0, 0)
 end
 
 function TimeManager:loopTimer(firstInterval, interval, obj, func, count)
+    if interval <= 0 then
+        Info.Error("TimeManager:loopTimer error! interval = " .. interval)
+    end
+    if firstInterval < 0 then
+        firstInterval = 0
+    end
+
     local time = self:now() + firstInterval
     return _modifyTimer(self, time, obj, func, interval, count)
 end
 
 
 function TimeManager:unregistTimer(id)
-    if self.mapIdTimer[id] then
-        self.mapIdTimer[id] = nil
-    end
+    local bRet = false
 
-    for i, v in ipairs(self.arrId) do
-        if v == id then
-            table.remove(self.arrId, i)
+    for i, timer in ipairs(self.arrTimer) do
+        if timer._id == id then
+            table.remove(self.arrTimer, i)
+            bRet = true
             break
         end
     end
+    return bRet
 end
 
 return TimeManager
