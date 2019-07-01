@@ -1,7 +1,6 @@
 
 main = {}
 local self = {}
-local timer = {}
 
 local function receiveLogin(self, msg)
     local text = self.transform:GetChild(4).gameObject
@@ -19,12 +18,18 @@ local function Disconnect(self, msg)
     local text = self.transform:GetChild(4).gameObject
     text:GetComponent(typeof(UnityUI.Text)).text = "disconnect"
 end
-local function TimerFinish(self)
-    Info.Debug("timesup " .. TimeManager.GetInstance():now())
-    TimeManager.GetInstance():unregistTimer(timer[1])
-    table.remove(timer, 1)
-    TimeManager.GetInstance():unregistTimer(timer[1])
-    table.remove(timer, 1)
+local id = nil
+local n = 0
+local function loopFinish(self)
+    Info.Debug("loopFinish timesup " .. Now())
+    n = n + 1
+    if n == 20 then
+        TimeManager.GetInstance():unregistTimer(id)
+    end
+end
+
+local function onceFinish(self)
+    Info.Debug("onceFinish timesup " .. Now())
 end
 
 function main.awake(gameObject)
@@ -48,12 +53,9 @@ function main.start()
    
         -- end)
 
-        local now = TimeManager.GetInstance():now()
-        Info.Debug(now)
-        for i = 1, 10 do
-            table.insert(timer, TimeManager.GetInstance():registTimer(now + i * 100, self, TimerFinish))
-            table.insert(timer, TimeManager.GetInstance():registTimer(now - i * 100 + 2100, self, TimerFinish))
-        end
+        Info.Debug(Now())
+        id = TimeManager.GetInstance():loopTimer(50, 100, self, loopFinish, "forever")
+        TimeManager.GetInstance():onceTimer(1000, self, onceFinish)
     end)
 
     local btn2 = self.transform:GetChild(1).gameObject

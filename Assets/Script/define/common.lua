@@ -13,6 +13,7 @@ EventManager = require("common.event.event_manager")
 Event = require("define.event")
 Tools = require("common.tools")
 TimeManager = require("common.time.time_manager")
+Now = handler(TimeManager.GetInstance(), TimeManager.GetInstance().now)
 
 RapidJson = require 'rapidjson'
 PB = require 'pb'
