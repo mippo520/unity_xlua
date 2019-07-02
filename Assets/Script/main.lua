@@ -1,6 +1,5 @@
 
 main = {}
-local self = {}
 
 local function receiveLogin(self, msg)
     local text = self.transform:GetChild(4).gameObject
@@ -35,7 +34,7 @@ local function loopFinish(self)
     Info.Debug("loopFinish timesup " .. Now())
     n = n + 1
     if n == 20 then
-        TimeManager.GetInstance():unregistTimer(id)
+        TimeManagerInst:unregistTimer(id)
     end
 end
 
@@ -43,56 +42,59 @@ local function onceFinish(self)
     Info.Debug("onceFinish timesup " .. Now())
 end
 
-function main.awake(gameObject)
+function main:awake()
     print("main.Awake")
-    self = gameObject
-    EventManager.GetInstance():registEvent(Event.ConnectSuccess, self, connectSuccess)
-    EventManager.GetInstance():registEvent(Event.ConnectFailed, self, connectFailed)
-    EventManager.GetInstance():registEvent(Event.Closed, self, close)
-    EventManager.GetInstance():registEvent(Event.Disconnect, self, Disconnect)
-    EventManager.GetInstance():registEvent(Event.BeginWaitMessage, self, BeginWaitMessage)
-    EventManager.GetInstance():registEvent(Event.FinishWaitMessage, self, FinishWaitMessage)
-    -- EventManager.GetInstance():registEvent(Event.FrameUpdate, self, FrameUpdate)
+    EventManagerInst:registEvent(Event.ConnectSuccess, self, connectSuccess)
+    EventManagerInst:registEvent(Event.ConnectFailed, self, connectFailed)
+    EventManagerInst:registEvent(Event.Closed, self, close)
+    EventManagerInst:registEvent(Event.Disconnect, self, Disconnect)
+    EventManagerInst:registEvent(Event.BeginWaitMessage, self, BeginWaitMessage)
+    EventManagerInst:registEvent(Event.FinishWaitMessage, self, FinishWaitMessage)
+    -- EventManagerInst:registEvent(Event.FrameUpdate, self, FrameUpdate)
 
-    NetManager.GetInstance():registMessage("c_gs.S2CLogin", self, receiveLogin)
+    NetManagerInst:registMessage("c_gs.S2CLogin", self, receiveLogin)
 end
 
-function main.start()
-    local btn = self.transform:GetChild(0).gameObject
+function main:start()
+    local btn = self.gameObject.transform:GetChild(0).gameObject
     btn:GetComponent(typeof(UnityUI.Button)).onClick:AddListener(function ()
         
-        -- FileManager.GetInstance():readAllBytesAsync("pb", "Assets/Proto/msg_login.proto", function (data)
+        -- FileManagerInst:readAllBytesAsync("pb", "Assets/Proto/msg_login.proto", function (data)
         --     Protoc:load(data)
-        --     NetManager.GetInstance():connect("192.168.3.192", 9101)
-        --     NetManager.GetInstance():registPairMessage("c_gs.C2SLogin", "c_gs.S2CLogin")
+        --     NetManagerInst:connect("192.168.3.192", 9101)
+        --     NetManagerInst:registPairMessage("c_gs.C2SLogin", "c_gs.S2CLogin")
         -- end)
 
-        Info.Debug(Now())
-        id = TimeManager.GetInstance():loopTimer(50, 100, self, loopFinish, "forever")
-        TimeManager.GetInstance():onceTimer(1000, self, onceFinish)
+        -- Info.Debug(Now())
+        -- id = TimeManagerInst:loopTimer(50, 100, self, loopFinish, "forever")
+        -- TimeManagerInst:onceTimer(1000, self, onceFinish)
+        local img = self.gameObject.transform:GetChild(5).gameObject:GetComponent(typeof(UnityUI.Image))
+        ResourcesManagerInst:LoadAssetBundleAsync({"test_ui"}, nil, function (arrRes)
+            local tex = ResourcesManagerInst:LoadAsset("Assets/Prefabs/bg122.jpg")
+            img.sprite = Unity.Sprite.Create(tex, Unity.Rect(0, 0, 200, 100), Unity.Vector2(0, 0))
+        end)
     end)
 
-    local btn2 = self.transform:GetChild(1).gameObject
+    local btn2 = self.gameObject.transform:GetChild(1).gameObject
     btn2:GetComponent(typeof(UnityUI.Button)).onClick:AddListener(function ()
-        
-        NetManager.GetInstance():send("c_gs.C2SLogin", {
+        NetManagerInst:send("c_gs.C2SLogin", {
             account_id = 10086,
             token = "seal;kngilwea"
         })
-
     end)
 
-    local btn3 = self.transform:GetChild(2).gameObject
+    local btn3 = self.gameObject.transform:GetChild(2).gameObject
     btn3:GetComponent(typeof(UnityUI.Button)).onClick:AddListener(function ()
-        NetManager.GetInstance():close()
+        NetManagerInst:close()
     end)
 
 
+    
 end
 
-function main.update()
+function main:update()
 end
 
-function main.onDestroy()
+function main:onDestroy()
     print("main.OnDestroy")
 end

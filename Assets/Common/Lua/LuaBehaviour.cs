@@ -48,25 +48,25 @@ namespace Assets.Common.Lua
 
             if (null != AwakeFunction)
             {
-                AwakeFunction.Call(gameObject);
+                AwakeFunction.Call(this);
             }
         }
 
         // Use this for initialization
         void Start()
         {
-            if (null != StartFunction) { StartFunction.Call(); }
+            if (null != StartFunction) { StartFunction.Call(this); }
         }
 
         // Update is called once per frame
         void Update()
         {
-            if (null != UpdateFunction) { UpdateFunction.Call(); }
+            if (null != UpdateFunction) { UpdateFunction.Call(this); }
         }
 
         void OnDestroy()
         {
-            if (null != OnDestroyFunction) { OnDestroyFunction.Call(); }
+            if (null != OnDestroyFunction) { OnDestroyFunction.Call(this); }
             if (null != scriptEnv) scriptEnv.Dispose();
         }
 

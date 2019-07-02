@@ -1,4 +1,6 @@
-﻿using Assets.Common.Log;
+﻿// #define DEBUG_ASSETBUNDLE
+
+using Assets.Common.Log;
 using Assets.Common.Singleton;
 using System;
 using System.Collections;
@@ -9,6 +11,8 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
+
+
 
 namespace Assets.Common.Resource
 {
@@ -27,22 +31,17 @@ namespace Assets.Common.Resource
             StartCoroutine(this._init(callback));
         }
 
-        public void LoadAssetBundleAsync<T>(string[] arrPath, T t) where T : class
+        public void LoadAssetBundleAsync(string[] arrPath, Action<float> frameCallback, Action<string[]> completeCallback)
         {
-            StartCoroutine(this._startAsyncMethod(this._loadAssetBundlesAsync(arrPath, t)));
-        }
-
-        public void LoadAssetBundleAsync(string[] arrPath, Action<string[]> callback = null)
-        {
-            StartCoroutine(this._startAsyncMethod(this._loadAssetBundlesAsync(arrPath, callback)));
+            StartCoroutine(this._startAsyncMethod(this._loadAssetBundlesAsync(arrPath, frameCallback, completeCallback)));
         }
 
         public UnityEngine.Object LoadAsset(string path)
         {
-#if UNITY_EDITOR
+#if UNITY_EDITOR && !DEBUG_ASSETBUNDLE
             return AssetDatabase.LoadAssetAtPath(path, typeof(UnityEngine.Object));
 #else
-
+            path = path.ToLower();
             if (m_DicAsset.ContainsKey(path))
             {
                 return m_DicAsset[path];
@@ -54,12 +53,12 @@ namespace Assets.Common.Resource
 #endif
         }
 
-
         public T LoadAsset<T>(string path) where T : UnityEngine.Object
         {
-#if UNITY_EDITOR
+#if UNITY_EDITOR && !DEBUG_ASSETBUNDLE
             return AssetDatabase.LoadAssetAtPath<T>(path);
 #else
+            path = path.ToLower();
             if (m_DicAsset.ContainsKey(path))
             {
                 return m_DicAsset[path] as T;
@@ -74,14 +73,14 @@ namespace Assets.Common.Resource
 
         public void UnloadAssetBundle(string[] arrPath)
         {
-#if !UNITY_EDITOR
+#if !UNITY_EDITOR && !DEBUG_ASSETBUNDLE
             StartCoroutine(this._startMethod<Action<string[]>>(this._unloadAssetBundle, new object[] { arrPath }));
 #endif
         }
 
         private IEnumerator _init(Action callback)
         {
-#if UNITY_EDITOR
+#if UNITY_EDITOR && !DEBUG_ASSETBUNDLE
             yield return 0;
             if (null != callback)
             {
@@ -138,45 +137,23 @@ namespace Assets.Common.Resource
             t.GetType().GetMethod("Invoke").Invoke(t, args);
         }
 
-        private IEnumerator _loadAssetBundlesAsync<T>(string[] arrPath, T t) where T : class
+        private IEnumerator _loadAssetBundlesAsync(string[] arrPath, Action<float> frameCallback, Action<string[]> completeCallback)
         {
-            Info.Debug("Begin load assetBundle!");
 
-            MethodInfo methodInfo = null;
-#if UNITY_EDITOR
+#if UNITY_EDITOR && !DEBUG_ASSETBUNDLE
             yield return 0;
-            if (null != t)
+            if (null != frameCallback)
             {
-                methodInfo = t.GetType().GetMethod("FrameCallback");
-                if (null != methodInfo)
-                {
-                    methodInfo.Invoke(t, new object[] { 1.0f });
-                }
+                frameCallback(1.0f);
             }
             yield return 0;
-            if (null != t)
+            if (null != completeCallback)
             {
-                methodInfo = t.GetType().GetMethod("CompleteCallback");
-                if (null != methodInfo)
-                {
-                    methodInfo.Invoke(t, new object[] { arrPath });
-                }
-                else
-                {
-                    methodInfo = t.GetType().GetMethod("Invoke");
-                    if (null != methodInfo)
-                    {
-                        t.GetType().GetMethod("Invoke").Invoke(t, new object[] { arrPath });
-                    }
-                }
+                completeCallback(arrPath);
             }
 #else
 
             float totalProgress = 0.0f;
-            if (null != t)
-            {
-                methodInfo = t.GetType().GetMethod("FrameCallback");
-            }
             Dictionary<string, AssetBundleCreateRequest> abDicReq = new Dictionary<string, AssetBundleCreateRequest>();
             Dictionary<string, AssetBundleRequest> assetDicReq = new Dictionary<string, AssetBundleRequest>();
             List<AssetBundle> listAssetBundle = new List<AssetBundle>();
@@ -237,12 +214,11 @@ namespace Assets.Common.Resource
                 }
 
                 progressTmp += totalProgress;
-
-                if (null != methodInfo)
+                if (null != frameCallback)
                 {
-                    methodInfo.Invoke(t, new object[] { progressTmp });
+                    frameCallback(progressTmp);
                 }
-                yield return new WaitForEndOfFrame();
+                yield return 0;
             }
 
             float onePercentAsset = 1.0f / nAssetCount;
@@ -270,28 +246,17 @@ namespace Assets.Common.Resource
                     assetDicReq.Remove(key);
                 }
                 progressTmp += totalProgress;
-                if (null != methodInfo)
+                if (null != frameCallback)
                 {
-                    methodInfo.Invoke(t, new object[] { progressTmp });
+                    frameCallback(progressTmp);
                 }
-                yield return new WaitForEndOfFrame();
+
+                yield return 0;
             }
 
-            if (null != t)
+            if (null != completeCallback)
             {
-                methodInfo = t.GetType().GetMethod("CompleteCallback");
-                if (null != methodInfo)
-                {
-                    methodInfo.Invoke(t, new object[] { arrPath });
-                }
-                else
-                {
-                    methodInfo = t.GetType().GetMethod("Invoke");
-                    if (null != methodInfo)
-                    {
-                        t.GetType().GetMethod("Invoke").Invoke(t, new object[] { arrPath });
-                    }
-                }
+                completeCallback(arrPath);
             }
 
             // 释放assetbundle

@@ -27,7 +27,7 @@ namespace Assets.Common.Tools
             var data = File.ReadAllBytes(fileName);
             callback(ref data);
 #else
-            ResourcesManager.GetInstance().LoadAssetBundleAsync(new string[] { packageName }, (string[] arrPath) =>
+            ResourcesManager.GetInstance().LoadAssetBundleAsync(new string[] { packageName }, null, (string[] arrPath) =>
             {
                 int lastDot = fileName.LastIndexOf(".");
                 fileName = fileName.Substring(0, lastDot) + ".txt";

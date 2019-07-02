@@ -26,9 +26,23 @@ namespace Assets
                     File.Delete(fsInfo.FullName);
                 }
             }
+            
+//             if (RuntimePlatform.WindowsEditor == Application.platform)
+//             {
+                //打包资源路径(参数1：资源保存路径   参数2：压缩格式    参数3：选择平台，各个平台间不能混用)
+                BuildPipeline.BuildAssetBundles(str, BuildAssetBundleOptions.UncompressedAssetBundle, BuildTarget.Android);
+//             }
+//             else if (RuntimePlatform.OSXEditor == Application.platform)
+//             {
+//                 BuildPipeline.BuildAssetBundles(str, BuildAssetBundleOptions.ChunkBasedCompression, BuildTarget.iOS);
+//             }
 
-            //打包资源路径(参数1：资源保存路径   参数2：压缩格式    参数3：选择平台，各个平台间不能混用)
-            BuildPipeline.BuildAssetBundles(str, BuildAssetBundleOptions.UncompressedAssetBundle, BuildTarget.Android);
+            foreach (FileSystemInfo fsInfo in dirInfo.GetFileSystemInfos())
+            {
+
+                Info.Debug(string.Format("file name is {0}", fsInfo.FullName));
+            }
+
         }
 
         [MenuItem("Custom/textFile2Txt")]
@@ -66,8 +80,6 @@ namespace Assets
             {
                 _changeFileExtension(dir, oldExt, newExt);
             }
-
-            Info.Debug(string.Format("change {0} to {1} finish!", oldExt, newExt));
         }
     }
 }

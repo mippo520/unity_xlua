@@ -66,7 +66,7 @@ end
 function TimeManager:update()
     local curTime = Time.now()
     local dt = curTime - self.currentTime
-    EventManager.GetInstance():fireEvent(Event.FrameUpdate, dt)
+    EventManagerInst:fireEvent(Event.FrameUpdate, dt)
     self.currentTime = curTime
     while #self.arrTimer > 0 do
         local timer = self.arrTimer[1]

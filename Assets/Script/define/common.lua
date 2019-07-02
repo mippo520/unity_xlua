@@ -2,18 +2,21 @@
 require("common.functions")
 
 UnityUI = CS.UnityEngine.UI
+Unity = CS.UnityEngine
+UnitySceneManager = CS.UnityEngine.SceneManagement.SceneManager
+UnitySceneMode = CS.UnityEngine.SceneManagement.LoadSceneMode
 
 Info = CS.Assets.Common.Log.Info
-FileManager = CS.Assets.Common.Tools.FileManager
-ResourcesManager = CS.Assets.Common.Resource.ResourcesManager
+FileManagerInst = CS.Assets.Common.Tools.FileManager.GetInstance()
+ResourcesManagerInst = CS.Assets.Common.Resource.ResourcesManager.GetInstance()
 Time = CS.Assets.Common.Tools.Time
 
-NetManager = require("common.net.net_manager")
-EventManager = require("common.event.event_manager")
+NetManagerInst = require("common.net.net_manager").GetInstance()
+EventManagerInst = require("common.event.event_manager").GetInstance()
+TimeManagerInst = require("common.time.time_manager").GetInstance()
 Event = require("define.event")
 Tools = require("common.tools")
-TimeManager = require("common.time.time_manager")
-Now = handler(TimeManager.GetInstance(), TimeManager.GetInstance().now)
+Now = handler(TimeManagerInst, TimeManagerInst.now)
 
 RapidJson = require 'rapidjson'
 PB = require 'pb'
