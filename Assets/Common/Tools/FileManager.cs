@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -18,6 +19,20 @@ namespace Assets.Common.Tools
         public void readAllBytesAsync(string packageName, string fileName, CallbackFunc callback)
         {
             StartCoroutine(this._readAllBytesAsync(packageName, fileName, callback));
+        }
+
+        static public string md5(ref byte[] content)
+        {
+            string ret = "";
+
+            MD5 md5 = MD5.Create();
+            byte[] s = md5.ComputeHash(content);
+            for (int i = 0; i < s.Length; ++i)
+            {
+                ret = ret + s[i].ToString("X");
+            }
+
+            return ret;
         }
 
         private IEnumerator _readAllBytesAsync(string packageName, string fileName, CallbackFunc callback)

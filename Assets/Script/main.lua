@@ -68,11 +68,15 @@ function main:start()
         -- Info.Debug(Now())
         -- id = TimeManagerInst:loopTimer(50, 100, self, loopFinish, "forever")
         -- TimeManagerInst:onceTimer(1000, self, onceFinish)
-        local img = self.gameObject.transform:GetChild(5).gameObject:GetComponent(typeof(UnityUI.Image))
-        ResourcesManagerInst:LoadAssetBundleAsync({"test_ui"}, nil, function (arrRes)
-            local tex = ResourcesManagerInst:LoadAsset("Assets/Prefabs/bg122.jpg")
-            img.sprite = Unity.Sprite.Create(tex, Unity.Rect(0, 0, 200, 100), Unity.Vector2(0, 0))
-        end)
+        -- local img = self.gameObject.transform:GetChild(5).gameObject:GetComponent(typeof(UnityUI.Image))
+        -- ResourcesManagerInst:LoadAssetBundleAsync({"test_ui"}, nil, function (arrRes)
+        --     local tex = ResourcesManagerInst:LoadAsset("Assets/Prefabs/bg122.jpg")
+        --     img.sprite = Unity.Sprite.Create(tex, Unity.Rect(0, 0, 200, 100), Unity.Vector2(0, 0))
+        -- end)
+
+        local text = self.transform:GetChild(4).gameObject
+        text:GetComponent(typeof(UnityUI.Text)).text = ResourcesManagerInst.md5
+    
     end)
 
     local btn2 = self.gameObject.transform:GetChild(1).gameObject

@@ -9,42 +9,6 @@ namespace Assets
 {
     public class CustomTools
     {
-        [MenuItem("Custom/Build Asset Bundle")]
-        static void buildAssetBundleAndroid()
-        {
-            string str = Application.dataPath + "/StreamingAssets";
-            DirectoryInfo dirInfo = new DirectoryInfo(str);
-            foreach (FileSystemInfo fsInfo in dirInfo.GetFileSystemInfos())
-            {
-                if (fsInfo is DirectoryInfo)
-                {
-                    DirectoryInfo subDir = new DirectoryInfo(fsInfo.FullName);
-                    subDir.Delete(true);
-                }
-                else
-                {
-                    File.Delete(fsInfo.FullName);
-                }
-            }
-            
-//             if (RuntimePlatform.WindowsEditor == Application.platform)
-//             {
-                //打包资源路径(参数1：资源保存路径   参数2：压缩格式    参数3：选择平台，各个平台间不能混用)
-                BuildPipeline.BuildAssetBundles(str, BuildAssetBundleOptions.UncompressedAssetBundle, BuildTarget.Android);
-//             }
-//             else if (RuntimePlatform.OSXEditor == Application.platform)
-//             {
-//                 BuildPipeline.BuildAssetBundles(str, BuildAssetBundleOptions.ChunkBasedCompression, BuildTarget.iOS);
-//             }
-
-            foreach (FileSystemInfo fsInfo in dirInfo.GetFileSystemInfos())
-            {
-
-                Info.Debug(string.Format("file name is {0}", fsInfo.FullName));
-            }
-
-        }
-
         [MenuItem("Custom/textFile2Txt")]
         static void textFile2Txt()
         {

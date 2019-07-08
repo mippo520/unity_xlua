@@ -1,4 +1,6 @@
-﻿using Assets.Common.Log;
+﻿// #define DEBUG_ASSETBUNDLE
+// 
+using Assets.Common.Log;
 using Assets.Common.Resource;
 using Assets.Common.Singleton;
 using System;
@@ -37,8 +39,7 @@ namespace Assets.Common.Lua
             m_LuaEnv.AddLoader(new LuaEnv.CustomLoader((ref string f) =>
             {
                 f = f.Replace(".", "/");
-#if UNITY_EDITOR
-//                 f = Application.dataPath + "/Script/" + f + ".lua";
+#if UNITY_EDITOR && !DEBUG_ASSETBUNDLE
                 f = "Assets/Script/" + f + ".lua";
                 return File.ReadAllBytes(f);
 #else
