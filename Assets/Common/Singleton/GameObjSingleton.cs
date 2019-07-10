@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Assets.Common.Singleton
 {
-    public abstract class GamObjSingleton<T> : MonoBehaviour where T : GamObjSingleton<T>
+    public abstract class GameObjSingleton<T> : MonoBehaviour where T : GameObjSingleton<T>
     {
         private static T gInstance = default(T);
 

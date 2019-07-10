@@ -1,4 +1,5 @@
-﻿using Assets.Common.Net;
+﻿using Assets.Common.Log;
+using Assets.Common.Net;
 using Assets.Common.Resource;
 using System;
 using System.Collections.Generic;
@@ -26,6 +27,7 @@ namespace Assets.Common.Lua
         public LuaFunction UpdateFunction;
         public LuaFunction OnDestroyFunction;
         private LuaTable scriptEnv;
+        private LuaTable className = null;
 
         void Awake()
         {
@@ -40,44 +42,55 @@ namespace Assets.Common.Lua
 
             m_LuaEnv.DoString(string.Format("require '{0}'", luaScript), "LuaBehaviour", scriptEnv);
 
-            LuaTable className = scriptEnv.Get<LuaTable>(luaScript);
+            var beginIndex = luaScript.LastIndexOf(".") + 1;
+            var scriptName = luaScript;
+            if (beginIndex >= 0 && beginIndex < luaScript.Length)
+            {
+                scriptName = scriptName.Substring(beginIndex);
+
+            }
+            className = scriptEnv.Get<LuaTable>(scriptName);
             AwakeFunction = className.Get<LuaFunction>("awake");
             StartFunction = className.Get<LuaFunction>("start");
             UpdateFunction = className.Get<LuaFunction>("update");
             OnDestroyFunction = className.Get<LuaFunction>("onDestroy");
+            meta = m_LuaEnv.NewTable();
+            meta.Set("__index", this);
+            className.SetMetaTable(meta);
+            meta.Dispose();
 
             if (null != AwakeFunction)
             {
-                AwakeFunction.Call(this);
+                AwakeFunction.Call(className);
             }
         }
 
         // Use this for initialization
         void Start()
         {
-            if (null != StartFunction) { StartFunction.Call(this); }
+            if (null != StartFunction) { StartFunction.Call(className); }
         }
 
         // Update is called once per frame
         void Update()
         {
-            if (null != UpdateFunction) { UpdateFunction.Call(this); }
+            if (null != UpdateFunction) { UpdateFunction.Call(className); }
         }
 
         void OnDestroy()
         {
-            if (null != OnDestroyFunction) { OnDestroyFunction.Call(this); }
+            if (null != OnDestroyFunction) { OnDestroyFunction.Call(className); }
             if (null != scriptEnv) scriptEnv.Dispose();
         }
 
 
         private void OnApplicationQuit()
         {
+            OnDestroy();
             OnDestroyFunction = null;
             UpdateFunction = null;
             StartFunction = null;
             AwakeFunction = null;
-            scriptEnv.Dispose();
             scriptEnv = null;
         }
 

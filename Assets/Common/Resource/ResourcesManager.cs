@@ -26,7 +26,7 @@ namespace Assets.Common.Resource
         Begin,
     };
 
-    public class ResourcesManager : GamObjSingleton<ResourcesManager>
+    public class ResourcesManager : GameObjSingleton<ResourcesManager>
     {
         private AssetBundleManifest m_Manifest = null;
         private string AssetBundlePath = Application.streamingAssetsPath + "/";
@@ -133,13 +133,17 @@ namespace Assets.Common.Resource
 
         public void UnloadAssetBundle(string[] arrPath)
         {
-#if !UNITY_EDITOR && !DEBUG_ASSETBUNDLE
+#if !UNITY_EDITOR || DEBUG_ASSETBUNDLE
             StartCoroutine(this._startMethod<Action<string[]>>(this._unloadAssetBundle, new object[] { arrPath }));
 #endif
         }
 
         private IEnumerator _hotUpdate(Action<HotUpdateRes, Int64, string> resCallback, Action<Int64> processCallback)
         {
+#if UNITY_EDITOR && !DEBUG_ASSETBUNDLE
+            yield return 0;
+            resCallback(HotUpdateRes.Complete, 0, "");
+#else
             VersionFileData curData = null;
             if (!File.Exists(Application.persistentDataPath + "/" + s_VersionFileName))
             {
@@ -262,6 +266,7 @@ namespace Assets.Common.Resource
                 m_DicFileData = curFileData.data;
                 resCallback(HotUpdateRes.Complete, 0, "");
             }
+#endif
         }
 
         private IEnumerator _init(Action callback)

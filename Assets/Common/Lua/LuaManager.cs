@@ -14,7 +14,7 @@ using XLua;
 
 namespace Assets.Common.Lua
 {
-    class LuaManager : GamObjSingleton<LuaManager>
+    class LuaManager : GameObjSingleton<LuaManager>
     {
         private LuaEnv m_LuaEnv = null;
 

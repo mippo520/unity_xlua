@@ -47,15 +47,18 @@ public static class XLuaConfig
 
     static bool isExcluded(Type type)
     {
-       var fullName = type.FullName;
-       for (int i = 0; i < exclude.Count; i++)
-       {
-           if (fullName.Contains(exclude[i]))
-           {
-               return true;
-           }
-       }
-       return false;
+        var fullName = type.FullName;
+        if (null != fullName)
+        {
+            for (int i = 0; i < exclude.Count; i++)
+            {
+                if (fullName.Contains(exclude[i]))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     [LuaCallCSharp]

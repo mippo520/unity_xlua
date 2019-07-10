@@ -21,7 +21,7 @@ Launcher = {}
 function Launcher.start()
     NetManagerInst:init()
     TimeManagerInst:init()
-    UnitySceneManager.LoadSceneAsync("Main", UnitySceneMode.Additive)
+    UnitySceneManager.LoadSceneAsync("Main")
 end
 
 function Launcher.update()

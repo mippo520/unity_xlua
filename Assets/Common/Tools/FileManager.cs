@@ -12,7 +12,7 @@ using UnityEngine;
 
 namespace Assets.Common.Tools
 {
-    public class FileManager : GamObjSingleton<FileManager>
+    public class FileManager : GameObjSingleton<FileManager>
     {
         public delegate void CallbackFunc(ref byte[] data);
 
