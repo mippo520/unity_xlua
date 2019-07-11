@@ -70,6 +70,7 @@ public static class XLuaConfig
             {
                 "UnityEngine",
                 "UnityEngine.UI",
+                "UnityEngine.Events",
             };
             var unityTypes = (from assembly in AppDomain.CurrentDomain.GetAssemblies()
                                 where !(assembly.ManifestModule is System.Reflection.Emit.ModuleBuilder)

@@ -1,5 +1,5 @@
 
-main = {}
+local main = class("main", Behaviour)
 
 local function receiveLogin(self, msg)
     local text = self.transform:GetChild(4).gameObject
@@ -42,7 +42,7 @@ local function onceFinish(self)
     Info.Debug("onceFinish timesup " .. Now())
 end
 
-function main:awake()
+function main:_awake()
     print("main.Awake")
     EventManagerInst:registEvent(Event.ConnectSuccess, self, connectSuccess)
     EventManagerInst:registEvent(Event.ConnectFailed, self, connectFailed)
@@ -55,7 +55,7 @@ function main:awake()
     NetManagerInst:registMessage("c_gs.S2CLogin", self, receiveLogin)
 end
 
-function main:start()
+function main:_start()
     -- local matable = getmetatable(self)
     -- matable.__index = matable
     -- self = matable
@@ -66,11 +66,13 @@ function main:start()
     end)
 end
 
-function main:update()
+function main:_update()
 
 end
 
-function main:onDestroy()
+function main:_destroy()
     print("main.OnDestroy")
 
 end
+
+return main

@@ -12,6 +12,10 @@ using XLua;
 
 public class Launcher : MonoBehaviour
 {
+    ~Launcher()
+    {
+        Info.Debug("release launcher!");
+    }
     // Start is called before the first frame update
     void Start()
     {

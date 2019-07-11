@@ -3,6 +3,13 @@ local TimeManager = class("TimeManager")
 
 local sInstance = nil
 
+function TimeManager.GetInstance()
+    if nil == sInstance then
+        sInstance = TimeManager.new()
+    end
+    return sInstance
+end
+
 function _addTimer(self, timer)
     if not timer then
         Info.Error("_addTimer error! timer is null")
@@ -43,13 +50,6 @@ function _modifyTimer(self, time, obj, func, interval, count)
         table.insert(self.arrTimer, newTimer)
     end
     return self.id
-end
-
-function TimeManager.GetInstance()
-    if nil == sInstance then
-        sInstance = TimeManager.new()
-    end
-    return sInstance
 end
 
 function TimeManager:ctor()
