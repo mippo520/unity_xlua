@@ -1,5 +1,5 @@
 ﻿// #define DEBUG_ASSETBUNDLE
-// 
+
 using Assets.Common.Log;
 using Assets.Common.Singleton;
 using Assets.Common.Tools;
@@ -145,16 +145,22 @@ namespace Assets.Common.Resource
             resCallback(HotUpdateRes.Complete, 0, "");
 #else
             VersionFileData curData = null;
+            var localText = Resources.Load<TextAsset>(s_VersionFile);
+            var localData = JsonConvert.DeserializeObject<VersionFileData>(localText.text);
             if (!File.Exists(Application.persistentDataPath + "/" + s_VersionFileName))
             {
-                var localText = Resources.Load<TextAsset>(s_VersionFile);
-                curData = JsonConvert.DeserializeObject<VersionFileData>(localText.text);
+                curData = localData;
                 File.WriteAllText(Application.persistentDataPath + "/" + s_VersionFileName, localText.text);
             }
             else
             {
                 var downloadText = File.ReadAllText(Application.persistentDataPath + "/" + s_VersionFileName);
                 curData = JsonConvert.DeserializeObject<VersionFileData>(downloadText);
+                if (compareVersion(localData.version, curData.version) > 0)
+                {
+                    curData = localData;
+                    File.WriteAllText(Application.persistentDataPath + "/" + s_VersionFileName, localText.text);
+                }
             }
 
 

@@ -17,7 +17,6 @@ namespace Assets.Common
         public LuaFunction StartFunction;
         public LuaFunction UpdateFunction;
         public LuaFunction QuitFunction;
-        private LuaTable scriptEnv;
 
         private void Start()
         {
@@ -33,19 +32,17 @@ namespace Assets.Common
                             {
                                 Info.Debug(string.Format("complete {0}", Assets.Common.Tools.Time.now()));
                                 var luaEnv = LuaManager.GetInstance().Env;
-                                scriptEnv = luaEnv.NewTable();
 
-                                // 为每个脚本设置一个独立的环境，可一定程度上防止脚本间全局变量、函数冲突
-                                LuaTable meta = luaEnv.NewTable();
-                                meta.Set("__index", luaEnv.Global);
-                                scriptEnv.SetMetaTable(meta);
-                                meta.Dispose();
-
-                                LuaManager.GetInstance().Env.DoString("require 'launcher'", "Launcher", scriptEnv);
-                                LuaTable className = scriptEnv.Get<LuaTable>("Launcher");
+                                LuaManager.GetInstance().Env.DoString("require 'launcher'", "Launcher");
+                                LuaTable className = luaEnv.Global.Get<LuaTable>("Launcher");
                                 StartFunction = className.Get<LuaFunction>("start");
                                 QuitFunction = className.Get<LuaFunction>("appQuit");
                                 UpdateFunction = className.Get<LuaFunction>("update");
+
+                                var luaBehaviourManager = luaEnv.Global.Get<LuaTable>("BehaviourManager");
+                                LuaBehaviour.s_CreateBehaviour = luaBehaviourManager.Get<LuaFunction>("create");
+                                LuaBehaviour.s_GetBehaviour = luaBehaviourManager.Get<LuaFunction>("getBehaviour");
+
 
                                 if (null != StartFunction)
                                 {

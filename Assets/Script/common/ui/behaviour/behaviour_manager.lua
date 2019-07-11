@@ -5,7 +5,7 @@ BehaviourManager.arrBehaviour = {}
 function BehaviourManager.create(id, name)
     local behaviourClass = require(name)
     local obj = behaviourClass.new()
-
+    obj.id = id
     BehaviourManager.arrBehaviour[id] = obj
     return obj
 end

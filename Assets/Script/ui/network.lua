@@ -17,16 +17,10 @@ function network:c1()
     -- ResourcesManagerInst:LoadAssetBundleAsync({"test_ui"}, nil, function (arrRes)
     --     local tex = ResourcesManagerInst:LoadAsset("Assets/Prefabs/bg122.jpg")
     --     img.sprite = Unity.Sprite.Create(tex, Unity.Rect(0, 0, 200, 100), Unity.Vector2(0, 0))
-    -- end)    
-    local addr = self
-    print("delete ============> " .. self.luaScript)
-    print(addr)
-    if #openList > 0 then
-        Unity.Object.Destroy(openList[#openList])
-        table.remove(openList, #openList)
-        ResourcesManagerInst:UnloadAssetBundle({"test_ui"})
-    end
+    -- end)   
+    self:closeSelf() 
 end
+
 function network:c2()
     -- NetManagerInst:send("c_gs.C2SLogin", {
     --     account_id = 10086,
@@ -38,25 +32,20 @@ function network:c2()
     -- print(addr)
     -- Info.Debug(self.n)
 
-    ResourcesManagerInst:LoadAssetBundleAsync({"test_ui"}, nil, function (arrRes)
-        local res = ResourcesManagerInst:LoadAsset("Assets/Prefabs/NetworkUI.prefab")
-        local ui = Unity.Object.Instantiate(res)
-        table.insert(openList, ui)
+    self:LoadAssetBundleAsync({"test_ui_png"}, nil, function (arrRes)
+        local png = self:LoadAsset("Assets/Prefabs/home_menu.png")
+        local img = self.gameObject.transform:GetChild(5).gameObject:GetComponent(typeof(UnityUI.Image))
+        img.sprite = Unity.Sprite.Create(png, Unity.Rect(0, 0, 200, 100), Unity.Vector2(0, 0))
     end)
 end
 
 function network:_start()
     local v = Behaviour.new()
     local btn = self.gameObject.transform:GetChild(0).gameObject:GetComponent(typeof(UnityUI.Button))
-    self.onClick = btn.onClick
-    self.onClick:AddListener(handler(self, network.c1))
+    self:addListener(btn.onClick, handler(self, network.c1))
 
     local btn2 = self.gameObject.transform:GetChild(1).gameObject:GetComponent(typeof(UnityUI.Button))
-    self.onClick2 = btn2.onClick
-    self.onClick2:AddListener(handler(self, network.c2))
-    local addr = self
-    print("add listener! ============> " .. self.luaScript)
-    print(addr)
+    self:addListener(btn2.onClick, handler(self, network.c2))
 
     -- local btn3 = self.gameObject.transform:GetChild(2).gameObject
     -- btn3:GetComponent(typeof(UnityUI.Button)).onClick:AddListener(function ()
@@ -70,10 +59,6 @@ end
 
 function network:_destroy()
     print("network.OnDestroy")
-    self.onClick:RemoveAllListeners()
-    self.onClick:Invoke()
-    self.onClick2:RemoveAllListeners()
-    self.onClick2:Invoke()
 end
 
 return network

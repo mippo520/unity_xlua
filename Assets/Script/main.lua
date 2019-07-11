@@ -60,9 +60,8 @@ function main:_start()
     -- matable.__index = matable
     -- self = matable
 
-    ResourcesManagerInst:LoadAssetBundleAsync({"test_ui"}, nil, function (arrRes)
-        local res = ResourcesManagerInst:LoadAsset("Assets/Prefabs/NetworkUI.prefab")
-        Unity.Object.Instantiate(res)
+    DialogManagerInst:open(DialogType.NetWorkUI, function (id)
+        Info.Debug("open ui id = " .. id)
     end)
 end
 
