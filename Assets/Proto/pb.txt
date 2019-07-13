@@ -1,13 +1,12 @@
 syntax = "proto3";
 package c_gs;
 
-
-message C2SLogin {
+message C2S_Login {
     int64 account_id = 1;
     string token = 2;
 }
 
-message S2CLogin {
+message S2C_Login {
     int32 code = 1;
     int64 player_id = 2;
     int64 server_time = 3;
@@ -15,16 +14,26 @@ message S2CLogin {
     int64 open_server_time = 5;
 }
 
-message c2s_create_character {
+message C2S_CreateCharacter {
     string name = 1;
     int32 head = 2;
 }
 
-message s2c_create_character {
+message S2C_CreateCharacter {
     int32 code = 1;
     int64 player_id = 2;
 }
 
-message s2c_disconnect {
+message S2C_Disconnect {
     int32 code = 1;
+}
+
+message S2C_PlayerData {
+    PlayerBaseData base_data = 1;
+}
+
+message PlayerBaseData {
+    int64 player_id = 1;
+    string name = 2;
+    int32 head = 3;
 }

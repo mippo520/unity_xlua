@@ -44,12 +44,12 @@ end
 
 function main:_awake()
     print("main.Awake")
-    EventManagerInst:registEvent(Event.ConnectSuccess, self, connectSuccess)
-    EventManagerInst:registEvent(Event.ConnectFailed, self, connectFailed)
-    EventManagerInst:registEvent(Event.Closed, self, close)
-    EventManagerInst:registEvent(Event.Disconnect, self, Disconnect)
-    EventManagerInst:registEvent(Event.BeginWaitMessage, self, BeginWaitMessage)
-    EventManagerInst:registEvent(Event.FinishWaitMessage, self, FinishWaitMessage)
+    -- EventManagerInst:registEvent(Event.ConnectSuccess, self, connectSuccess)
+    -- EventManagerInst:registEvent(Event.ConnectFailed, self, connectFailed)
+    -- EventManagerInst:registEvent(Event.Closed, self, close)
+    -- EventManagerInst:registEvent(Event.Disconnect, self, Disconnect)
+    -- EventManagerInst:registEvent(Event.BeginWaitMessage, self, BeginWaitMessage)
+    -- EventManagerInst:registEvent(Event.FinishWaitMessage, self, FinishWaitMessage)
     -- EventManagerInst:registEvent(Event.FrameUpdate, self, FrameUpdate)
 
     NetManagerInst:registMessage("c_gs.S2CLogin", self, receiveLogin)
@@ -60,9 +60,7 @@ function main:_start()
     -- matable.__index = matable
     -- self = matable
 
-    DialogManagerInst:open(DialogType.NetWorkUI, function (id)
-        Info.Debug("open ui id = " .. id)
-    end)
+    DialogManagerInst:open(DialogType.Login)
 end
 
 function main:_update()

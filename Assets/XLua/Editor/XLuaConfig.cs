@@ -80,7 +80,7 @@ public static class XLuaConfig
                                 select type);
 
             string[] customAssemblys = new string[] {
-                "Assembly-CSharp"
+                "Assembly-CSharp",
             };
             var customTypes = (from assembly in customAssemblys.Select(s => Assembly.Load(s))
                                 from type in assembly.GetExportedTypes()
@@ -131,9 +131,11 @@ public static class XLuaConfig
                         }
                     }
                 }
-           }
-           return delegate_types.Distinct().ToList();
-       }
+            }
+            var list = delegate_types.Distinct().ToList();
+            list.Add(typeof(System.Collections.IEnumerator));
+            return list;
+        }
     }
 
     [BlackList]

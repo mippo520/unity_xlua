@@ -62,4 +62,13 @@ function Behaviour:closeSelf()
     DialogManagerInst:close(self.id)
 end
 
+function Behaviour:StartCoroutine(...)
+    return self.behaviour:StartCoroutine(XLuaUtil.cs_generator(...))
+end
+
+function Behaviour:StopCoroutine(co)
+    return self.behaviour:StopCoroutine(co)
+end
+
+
 return Behaviour

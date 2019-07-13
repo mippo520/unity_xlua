@@ -4,11 +4,6 @@ local network = class("network", Behaviour)
 local openList = {}
 
 function network:c1()
-    -- FileManagerInst:readAllBytesAsync("pb", "Assets/Proto/msg_login.proto", function (data)
-    --     Protoc:load(data)
-    --     NetManagerInst:connect("192.168.3.192", 9101)
-    --     NetManagerInst:registPairMessage("c_gs.C2SLogin", "c_gs.S2CLogin")
-    -- end)
 
     -- Info.Debug(Now())
     -- id = TimeManagerInst:loopTimer(50, 100, self, loopFinish, "forever")
@@ -22,10 +17,6 @@ function network:c1()
 end
 
 function network:c2()
-    -- NetManagerInst:send("c_gs.C2SLogin", {
-    --     account_id = 10086,
-    --     token = "seal;kngilwea"
-    -- })
 
     -- self.n = self.n + 1
     -- local addr = self

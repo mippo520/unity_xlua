@@ -1,6 +1,6 @@
 local Timer = class("Timer")
 
-function Timer:ctor(id, time, obj, func, interval, count)
+function Timer:ctor(id, time, obj, func, interval, count, ...)
     self._id = id
     self._time = time
     self._obj = obj
@@ -8,10 +8,11 @@ function Timer:ctor(id, time, obj, func, interval, count)
     self._interval = interval
     self._count = count
     self._handler = handler(obj, func)
+    self._args = {...}
 end
 
 function Timer:call()
-    self._handler()
+    self._handler(table.unpack(self._args))
 end
 
 function Timer:updateTime()

@@ -1,11 +1,11 @@
 local Net = CS.Assets.Common.Net.NetManager
 local EndianType = CS.Assets.Common.Net.EndianType
 local NetState = CS.Assets.Common.Net.NetState
+local MsgWaitData = require("common.net.msg_wait_data")
 
 local NetManager = class("NetManager")
 
 local sInstance = nil
-local MsgWaitData = require("common.net.msg_wait_data")
 
 function NetManager.GetInstance()
     if nil == sInstance then
@@ -21,6 +21,7 @@ function NetManager:ctor()
     self.arrWaitReceive = {}
     self.connectCount = 0
     self.reconnectTimerId = 0
+    self.isConnected = false
 end
 
 local function _clearWaitData(self)
@@ -47,7 +48,7 @@ end
 
 local function _reconnect(self)
     if self.connectCount >= NetReconnectCount then
-        EventManagerInst:fireEvent(Event.Closed)
+        EventManagerInst:fireEvent(Event.NetClosed)
         _resetConnectData(self)
         return
     end
@@ -63,8 +64,8 @@ local function receiveCallback(self, data, state)
     if NetState.Connected == state then
         local id = string.unpack(">I4", data)
         local msg = self.mapIdMsg[id]
-        Info.Debug("receive msg : " .. msg)
         if msg then
+            Info.Debug("receive msg : " .. msg)
             local pb = assert(PB.decode(msg, string.sub( data, 5)))
             EventManagerInst:fireEvent(msg, pb)
 
@@ -82,23 +83,26 @@ local function receiveCallback(self, data, state)
             Info.Error("receive message error! id = " .. id)
         end
     elseif NetState.Closed == state then
-        EventManagerInst:fireEvent(Event.Closed)
+        EventManagerInst:fireEvent(Event.NetClosed)
         _clearWaitData(self)
+        self.isConnected = false
     else
-        EventManagerInst:fireEvent(Event.Disconnect)
+        EventManagerInst:fireEvent(Event.NetDisconnect)
         _clearWaitData(self)
-        _reconnect(self)
+        -- _reconnect(self)
+        self.isConnected = false
     end
 end
 
 local function connectCallback(self, state)
     if NetState.Connected == state then
-        EventManagerInst:fireEvent(Event.ConnectSuccess)
+        EventManagerInst:fireEvent(Event.NetConnectSuccess)
         Net.GetInstance():Receive(handler(self, receiveCallback))
         _resetConnectData(self)
     else
-        EventManagerInst:fireEvent(Event.ConnectFailed)
-        _reconnect(self)
+        EventManagerInst:fireEvent(Event.NetConnectFailed)
+        -- _reconnect(self)
+        self.isConnected = false
     end
 end
 
@@ -111,12 +115,26 @@ local function addMsgInfo(self, msg)
 end
 
 function NetManager:connect(ip, port)
+    if self.isConnected then
+        Info.Error("NetManager:connect error! socket is connected!")
+        return
+    end
     if self.reconnectTimerId > 0 then
         _resetConnectData(self)
         TimeManagerInst:unregistTimer(self.reconnectTimerId)
         self.reconnectTimerId = 0
     end
     Net.GetInstance():Connect(ip, port, handler(self, connectCallback))
+    self.isConnected = true
+end
+
+function NetManager:reconnect()
+    if self.isConnected then
+        Info.Error("NetManager:reconnect error! socket is connected!")
+        return
+    end
+    Net.GetInstance():Reconnect()
+    self.isConnected = true
 end
 
 function NetManager:release()

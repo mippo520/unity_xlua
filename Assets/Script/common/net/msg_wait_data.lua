@@ -2,13 +2,13 @@
 local MsgWaitData = class("MsgWaitData")
 
 local function _beginWait(self)
-    EventManagerInst:fireEvent(Event.BeginWaitMessage, self.msg)
+    EventManagerInst:fireEvent(self.beginWaitEvent, self.msg)
     self.isWait = true
 end
 
 local function _timeout(self)
     Info.Debug("message timeout! message is " .. self.msg)
-    EventManagerInst:fireEvent(Event.MessageTimeout, self.msg)
+    EventManagerInst:fireEvent(self.timeoutEvent, self.msg)
 end
 
 function MsgWaitData:ctor(msg)
@@ -17,6 +17,10 @@ function MsgWaitData:ctor(msg)
     self.beginWaitId = 0
     self.timeoutId = 0
     self.isWait = false
+    self.arg = nil
+    self.beginWaitEvent = Event.BeginWaitMessage
+    self.finishWaitEvent = Event.FinishWaitMessage
+    self.timeoutEvent = Event.MessageTimeout
 end
 
 function MsgWaitData:start()
@@ -27,7 +31,7 @@ end
 
 function MsgWaitData:release()
     if self.isWait then
-        EventManagerInst:fireEvent(Event.FinishWaitMessage, self.msg)
+        EventManagerInst:fireEvent(self.finishWaitEvent, self.msg)
     end
 
     if self.beginWaitId > 0 then

@@ -29,7 +29,7 @@ namespace Assets.Common.Tools
             byte[] s = md5.ComputeHash(content);
             for (int i = 0; i < s.Length; ++i)
             {
-                ret = ret + s[i].ToString("X");
+                ret = ret + s[i].ToString("X2");
             }
 
             return ret;

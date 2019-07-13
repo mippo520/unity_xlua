@@ -2,6 +2,13 @@
 require("common.functions")
 require("common.ui.behaviour.behaviour_manager")
 
+Event = require("define.event")
+DialogType = require("define.dialog_type")
+Error = require("define.error")
+LoginType = require("define.login_type")
+
+Tools = require("common.tools")
+
 UnityUI = CS.UnityEngine.UI
 Unity = CS.UnityEngine
 UnitySceneManager = CS.UnityEngine.SceneManagement.SceneManager
@@ -11,23 +18,26 @@ CSCommon = CS.Assets.Common
 CSLuaBehaviour = CSCommon.Lua.LuaBehaviour
 
 Info = CSCommon.Log.Info
-FileManagerInst = CSCommon.Tools.FileManager.GetInstance()
+FileManager = CSCommon.Tools.FileManager
+FileManagerInst = FileManager.GetInstance()
 ResourcesManagerInst = CSCommon.Resource.ResourcesManager.GetInstance()
 Time = CSCommon.Tools.Time
+HttpState = CS.Assets.Common.Net.HttpState
+
 
 NetManagerInst = require("common.net.net_manager").GetInstance()
 EventManagerInst = require("common.event.event_manager").GetInstance()
 TimeManagerInst = require("common.time.time_manager").GetInstance()
 DialogManagerInst = require("common.ui.dialog_manager").GetInstance()
-
-Event = require("define.event")
-DialogType = require("define.dialog_type")
-Tools = require("common.tools")
-Now = handler(TimeManagerInst, TimeManagerInst.now)
+HttpManagerInst = require("common.net.http_manager").GetInstance()
 
 Behaviour = require("common.ui.behaviour.behaviour")
+XLuaUtil = require 'xlua.util'
 
+Now = handler(TimeManagerInst, TimeManagerInst.now)
 
 RapidJson = require 'rapidjson'
 PB = require 'pb'
 Protoc = require 'common.pb.protoc'
+
+LoginControllerInst = require("controller.login_controller")

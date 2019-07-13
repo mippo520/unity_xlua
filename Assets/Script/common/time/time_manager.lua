@@ -29,12 +29,12 @@ function _addTimer(self, timer)
     end
 end
 
-function _modifyTimer(self, time, obj, func, interval, count)
+function _modifyTimer(self, time, obj, func, interval, count, ...)
     local bInsert = false
     for idx, timer in ipairs(self.arrTimer) do
         if timer._time > time then
             self.id = self.id + 1
-            local newTimer = Timer.new(self.id, time, obj, func, interval, count)
+            local newTimer = Timer.new(self.id, time, obj, func, interval, count, ...)
             table.insert(self.arrTimer, idx, newTimer)
             bInsert = true
             break
@@ -46,7 +46,7 @@ function _modifyTimer(self, time, obj, func, interval, count)
 
     if not bInsert then
         self.id = self.id + 1
-        local newTimer = Timer.new(self.id, time, obj, func, interval, count)
+        local newTimer = Timer.new(self.id, time, obj, func, interval, count, ...)
         table.insert(self.arrTimer, newTimer)
     end
     return self.id
@@ -93,15 +93,15 @@ function TimeManager:now()
     return self.currentTime
 end
 
-function TimeManager:onceTimer(interval, obj, func)
+function TimeManager:onceTimer(interval, obj, func, ...)
     if interval < 0 then
         interval = 0
     end
     local time = self:now() + interval
-    return _modifyTimer(self, time, obj, func, 0, 0)
+    return _modifyTimer(self, time, obj, func, 0, 0, ...)
 end
 
-function TimeManager:loopTimer(firstInterval, interval, obj, func, count)
+function TimeManager:loopTimer(firstInterval, interval, obj, func, count, ...)
     if interval <= 0 then
         Info.Error("TimeManager:loopTimer error! interval = " .. interval)
     end
@@ -110,7 +110,7 @@ function TimeManager:loopTimer(firstInterval, interval, obj, func, count)
     end
 
     local time = self:now() + firstInterval
-    return _modifyTimer(self, time, obj, func, interval, count)
+    return _modifyTimer(self, time, obj, func, interval, count, ...)
 end
 
 

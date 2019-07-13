@@ -1,13 +1,23 @@
 
 local event = {
-    ConnectSuccess = "ConnectSuccess",
-    ConnectFailed = "ConnectFailed",
-    Disconnect  = "Disconnect",
-    Closed = "Closed",
-    FrameUpdate = "FrameUpdate",
+    -- Net
+    NetConnectSuccess = "NetConnectSuccess",
+    NetConnectFailed = "NetConnectFailed",
+    NetDisconnect  = "NetDisconnect",
+    NetClosed = "NetClosed",
+    NetReconnectFailed = "NetReconnectFailed",
     BeginWaitMessage = "BeginWaitMessage",
     FinishWaitMessage = "FinishWaitMessage",
     MessageTimeout = "MessageTimeout",
+
+    -- Http
+    HttpBeginWaitMessage = "HttpBeginWaitMessage",
+    HttpFinishWaitMessage = "HttpFinishWaitMessage",
+    HttpMessageTimeout = "HttpMessageTimeout",
+
+    -- frame
+    FrameUpdate = "FrameUpdate",
+
 }
 
 return event

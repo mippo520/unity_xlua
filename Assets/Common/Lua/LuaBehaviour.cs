@@ -50,6 +50,7 @@ namespace Assets.Common.Lua
             UpdateFunction = luaBehaviour.Get<LuaFunction>("update");
             OnDestroyFunction = luaBehaviour.Get<LuaFunction>("destroy");
             this.luaBehaviour.Set("gameObject", this.gameObject);
+            this.luaBehaviour.Set("behaviour", this);
             this.luaBehaviour.Set("luaScript", this.luaScript);
             this.luaBehaviour.Set("id", this.m_Id);
 
