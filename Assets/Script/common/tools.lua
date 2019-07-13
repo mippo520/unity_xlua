@@ -13,4 +13,14 @@ function Tools.Hash(data)
     return hash
 end
 
+function Tools.Sign(...)
+    local args = {...}
+    local content = ""
+    for i, v in ipairs(args) do
+        content = content .. tostring(v)
+    end
+    content = content .. "vgcli"
+    return FileManager.md5(content)
+end
+
 return Tools

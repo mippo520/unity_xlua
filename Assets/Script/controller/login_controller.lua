@@ -11,10 +11,18 @@ end
 
 local _login = nil
 
+local function _clearNetData(self)
+    self.connectCount = 0
+    if self.reconnectTimerId > 0 then
+        TimeManagerInst:unregistTimer(self.reconnectTimerId)
+        self.reconnectTimerId = 0
+    end
+end 
+
 local function _reconnect(self)
     if self.connectCount >= NetReconnectCount then
-        self.connectCount = 0
         EventManagerInst:fireEvent(Event.NetReconnectFailed)
+        _clearNetData(self)
         return
     end
 
@@ -29,22 +37,14 @@ local function _reconnect(self)
 end
 
 _login = function (self)
-    if self.reconnectTimerId > 0 then
-        TimeManagerInst:unregistTimer(self.reconnectTimerId)
-        self.reconnectTimerId = 0
-        self.connectCount = 0
-    end
-
-    local time = Now()
-    local sign = tostring(self.loginType) .. self.account .. self.password .. tostring(time) .. "vgcli"
-    
+    local time = Now()    
     HttpManagerInst:Get("http://192.168.3.192:8000/login", 
     {
         login_type = self.loginType,
         account_name = self.account,
         password = self.password,
         time = time,
-        sign = FileManager.md5(sign),
+        sign = Tools.Sign(self.loginType, self.account, self.password, time),
     }, 
     function (id, state, content)
         if HttpState.Complete ~= state then
@@ -58,25 +58,6 @@ _login = function (self)
             self.token = res.token
             self.expireTime = res.expire_ts
             NetManagerInst:connect("192.168.3.192", 9101)
-            -- local time = Now()
-            -- HttpManagerInst:Get("http://192.168.3.192:8100/login", 
-            -- {
-            --     account_id = res.account_id,
-            --     token = res.token,
-            --     time = time,
-            --     sign = FileManager.md5(tostring(res.account_id) .. res.token .. tostring(time) .. "vgcli"),
-            -- }, 
-            -- function (id, state, content)
-            --     if HttpState.Complete ~= state then
-            --         Info.Debug(content)
-            --         _reconnect(self)
-            --         return
-            --     end
-    
-            --     local res = RapidJson.decode(content)
-            --     if Error.Success == res.code then
-            --     end
-            -- end)
         else
             Info.Debug("error code = " .. res.code)
         end
@@ -95,11 +76,12 @@ local function _connectSuccess(self, msg)
 end
 
 local function _disconnect(self, msg)
+    Info.Debug("socket disconnect!")
     _reconnect(self)
 end
 
 local function _closed(self, msg)
-    
+    Info.Debug("socket closed!")
 end
 
 local function _s2c_login(self, msg)
@@ -132,8 +114,13 @@ end
 function LoginController:login(account, password)
     self.account = account
     self.password = password
+    _clearNetData(self)
     _login(self)
 end
 
+function LoginController:logout()
+    NetManagerInst:close()
+    _clearNetData(self)
+end
 
 return LoginController

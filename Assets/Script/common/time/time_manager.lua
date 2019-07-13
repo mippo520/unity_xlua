@@ -104,6 +104,7 @@ end
 function TimeManager:loopTimer(firstInterval, interval, obj, func, count, ...)
     if interval <= 0 then
         Info.Error("TimeManager:loopTimer error! interval = " .. interval)
+        return
     end
     if firstInterval < 0 then
         firstInterval = 0

@@ -34,12 +34,22 @@ function Behaviour:destroy()
         self:_destroy()
     end
 
+    EventManagerInst:delObject(self)
+    NetManagerInst:unregistMessage(self)
     BehaviourManager.remove(self.id)
 end
 
 function Behaviour:addListener(unityEvent, callback)
     unityEvent:AddListener(callback)
     table.insert(self.registedEvent, unityEvent)
+end
+
+function Behaviour:registEvent(event, callback)
+    EventManagerInst:registEvent(event, self, callback)
+end
+
+function Behaviour:registMessage(msg, callback)
+    NetManagerInst:registMessage(msg, self, callback)
 end
 
 function Behaviour:LoadAssetBundleAsync(arrRes, processCallback, completeCallback)

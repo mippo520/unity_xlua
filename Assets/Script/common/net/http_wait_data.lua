@@ -7,6 +7,7 @@ function HttpWaitData:ctor(msg)
     self.beginWaitEvent = Event.HttpBeginWaitMessage
     self.finishWaitEvent = Event.HttpFinishWaitMessage
     self.timeoutEvent = Event.HttpMessageTimeout
+    self.waitTime = HttpResponseWaitTime
 end
 
 return HttpWaitData

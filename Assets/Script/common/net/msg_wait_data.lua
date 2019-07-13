@@ -21,12 +21,13 @@ function MsgWaitData:ctor(msg)
     self.beginWaitEvent = Event.BeginWaitMessage
     self.finishWaitEvent = Event.FinishWaitMessage
     self.timeoutEvent = Event.MessageTimeout
+    self.waitTime = NetBackMessageWaitTime
 end
 
 function MsgWaitData:start()
     local now = Now()
     self.beginWaitId = TimeManagerInst:onceTimer(self.time + 500 - now, self, _beginWait)
-    self.timeoutId = TimeManagerInst:onceTimer(self.time + NetBackMessageWaitTime - now, self, _timeout)
+    self.timeoutId = TimeManagerInst:onceTimer(self.time + self.waitTime - now, self, _timeout)
 end
 
 function MsgWaitData:release()

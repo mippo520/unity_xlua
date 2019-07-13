@@ -19,8 +19,9 @@ function login:_start()
 
     local registBtn = self.gameObject.transform:GetChild(2).gameObject:GetComponent(typeof(UnityUI.Button))
     self:addListener(registBtn.onClick, function ()
-        self:closeSelf()
-        DialogManagerInst:open(DialogType.Regist)
+        -- self:closeSelf()
+        -- DialogManagerInst:open(DialogType.Regist)
+        LoginControllerInst:logout()
     end)
 end
 
