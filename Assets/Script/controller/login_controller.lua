@@ -40,9 +40,9 @@ _login = function (self)
     
     HttpManagerInst:Get("http://192.168.3.192:8000/login", 
     {
-        login_type = login_type,
-        account_name = account_name,
-        password = password,
+        login_type = self.loginType,
+        account_name = self.account,
+        password = self.password,
         time = time,
         sign = FileManager.md5(sign),
     }, 
@@ -56,26 +56,29 @@ _login = function (self)
         if Error.Success == res.code then
             self.account_id = res.account_id
             self.token = res.token
-            local time = Now()
-            HttpManagerInst:Get("http://192.168.3.192:8100/login", 
-            {
-                account_id = res.account_id,
-                token = res.token,
-                time = time,
-                sign = FileManager.md5(tostring(res.account_id) .. res.token .. tostring(time) .. "vgcli"),
-            }, 
-            function (id, state, content)
-                if HttpState.Complete ~= state then
-                    Info.Debug(content)
-                    _reconnect(self)
-                    return
-                end
+            self.expireTime = res.expire_ts
+            NetManagerInst:connect("192.168.3.192", 9101)
+            -- local time = Now()
+            -- HttpManagerInst:Get("http://192.168.3.192:8100/login", 
+            -- {
+            --     account_id = res.account_id,
+            --     token = res.token,
+            --     time = time,
+            --     sign = FileManager.md5(tostring(res.account_id) .. res.token .. tostring(time) .. "vgcli"),
+            -- }, 
+            -- function (id, state, content)
+            --     if HttpState.Complete ~= state then
+            --         Info.Debug(content)
+            --         _reconnect(self)
+            --         return
+            --     end
     
-                local res = RapidJson.decode(content)
-                if Error.Success == res.code then
-                    NetManagerInst:connect("192.168.3.192", 9101)
-                end
-            end)
+            --     local res = RapidJson.decode(content)
+            --     if Error.Success == res.code then
+            --     end
+            -- end)
+        else
+            Info.Debug("error code = " .. res.code)
         end
     end)        
 end
@@ -85,7 +88,7 @@ local function _connectFailed(self, msg)
 end
 
 local function _connectSuccess(self, msg)
-    NetManagerInst:send("c_gs.C2S_Login", {
+    NetManagerInst:send(c_gs.C2S_Login, {
         account_id = self.account_id,
         token = self.token
     })
@@ -99,8 +102,14 @@ local function _closed(self, msg)
     
 end
 
-local function _s2c_login(msg)
+local function _s2c_login(self, msg)
     Info.Debug(msg.code)
+end
+
+local function _s2c_playerData(self, msg)
+    Info.Debug("player_id = " .. msg.base_data.player_id)
+    Info.Debug("name = " .. msg.base_data.name)
+    Info.Debug("head = " .. msg.base_data.head)
 end
 
 function LoginController:ctor()
@@ -116,7 +125,8 @@ function LoginController:ctor()
     EventManagerInst:registEvent(Event.NetDisconnect, self, _disconnect)
     EventManagerInst:registEvent(Event.NetClosed, self, _closed)
 
-    NetManagerInst:registMessage("c_gs.S2C_Login", self, _s2c_login)
+    NetManagerInst:registMessage(c_gs.S2C_Login, self, _s2c_login)
+    NetManagerInst:registMessage(c_gs.S2C_PlayerData, self, _s2c_playerData)
 end
 
 function LoginController:login(account, password)

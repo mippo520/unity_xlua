@@ -39,5 +39,6 @@ Now = handler(TimeManagerInst, TimeManagerInst.now)
 RapidJson = require 'rapidjson'
 PB = require 'pb'
 Protoc = require 'common.pb.protoc'
+c_gs = require("pb.pb")
 
-LoginControllerInst = require("controller.login_controller")
+LoginControllerInst = require("controller.login_controller").GetInstance()

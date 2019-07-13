@@ -27,9 +27,11 @@ namespace Assets
         [MenuItem("Custom/mergeProto")]
         static void mergeProto()
         {
-            string all = "syntax = \"proto3\";\npackage c_gs;\n";
+            string ns = "c_gs";
+            string all = string.Format("syntax = \"proto3\";\npackage {0};\n", ns);
             var listPackage = new List<string>();
-            _readProto(ref all, ref listPackage, Application.dataPath + "/Proto");
+            var listMsg = new List<string>();
+            _readProto(ref all, ref listPackage, ref listMsg, Application.dataPath + "/Proto");
 
             foreach (string package in listPackage)
             {
@@ -40,6 +42,21 @@ namespace Assets
             }
 
             File.WriteAllText(Application.dataPath + "/Proto/pb.txt", all);
+
+            string lua = string.Format("local {0} = {{\n", ns);
+            foreach (string msg in listMsg)
+            {
+                lua += string.Format("    {0} = \"{1}.{0}\",\n", msg, ns);
+            }
+            lua += string.Format("}}\n return {0}", ns);
+
+            DirectoryInfo dirInfo = new DirectoryInfo(Application.dataPath + "/Script/pb");
+            if (!dirInfo.Exists)
+            {
+                dirInfo.Create();
+            }
+
+            File.WriteAllText(Application.dataPath + "/Script/pb/pb.lua", lua);
         }
 
         static void _changeFileExtension(DirectoryInfo dirInfo, string oldExt, string newExt)
@@ -61,14 +78,14 @@ namespace Assets
             }
         }
 
-        static void _readProto(ref string content, ref List<string> listPackage, string filePath)
+        static void _readProto(ref string content, ref List<string> listPackage, ref List<string> listMsg, string filePath)
         {
             DirectoryInfo dirInfo = new DirectoryInfo(filePath);
             foreach (FileSystemInfo fsInfo in dirInfo.GetFileSystemInfos())
             {
                 if (fsInfo is DirectoryInfo)
                 {
-                    _readProto(ref content, ref listPackage, fsInfo.FullName);
+                    _readProto(ref content, ref listPackage, ref listMsg, fsInfo.FullName);
                 }
                 else if (fsInfo.FullName.EndsWith(".proto"))
                 {
@@ -87,6 +104,15 @@ namespace Assets
                         else if (!line.StartsWith("syntax") && !line.StartsWith("import"))
                         {
                             content += line + "\n";
+
+                            var begin = line.IndexOf("message");
+                            if (begin >= 0)
+                            {
+                                var end = line.LastIndexOf("{");
+                                var msg = line.Substring(begin + 8, end - begin - 9).Trim();
+                                listMsg.Add(msg);
+                                Info.Debug("msg = " + msg);
+                            }
                         }
                     }
                     sr.Close();

@@ -18,13 +18,14 @@ require("define.common")
 
 Launcher = {}
 
-function Launcher.start()
+local PBManager = require("pb.pb_manager")
 
+function Launcher.start()
     NetManagerInst:init()
     TimeManagerInst:init()
     FileManagerInst:readAllBytesAsync("pb", "Assets/Proto/pb.txt", function (data)
         Protoc:load(data)
-        NetManagerInst:registPairMessage("c_gs.C2S_Login", "c_gs.S2C_Login")
+        PBManager.GetInstance():registPairMessage()
         UnitySceneManager.LoadSceneAsync("Main")
     end)
 
