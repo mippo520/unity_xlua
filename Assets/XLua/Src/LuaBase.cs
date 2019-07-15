@@ -17,7 +17,6 @@ using LuaCSFunction = XLua.LuaDLL.lua_CSFunction;
 #endif
 
 using System;
-using Assets.Common.Log;
 
 namespace XLua
 {
