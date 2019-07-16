@@ -1,4 +1,5 @@
-﻿using Assets.Common.Resource;
+﻿using Assets.Common.Log;
+using Assets.Common.Resource;
 using Assets.Common.Tools;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -17,7 +18,7 @@ namespace Assets.Editor
     class PackageVersion : EditorWindow
     {
         private string m_Version = "0.0.0";
-        private string m_Url = "";
+        private string m_Url = "http://";
         private string m_conetent = "";
 
         PackageVersion()
@@ -29,6 +30,25 @@ namespace Assets.Editor
         static void showWindow()
         {
             EditorWindow.GetWindow(typeof(PackageVersion));
+        }
+
+        private void Awake()
+        {
+            try
+            {
+                var text = File.ReadAllText(Application.dataPath + "/Resources/" + ResourcesManager.s_VersionFileName);
+                if ("" != text)
+                {
+                    var localData = JsonConvert.DeserializeObject<VersionFileData>(text);
+                    m_Version = localData.version;
+                    m_Url = localData.url;
+                    Info.Debug(localData.url);
+                }
+            }
+            catch
+            {
+                Info.Debug("version file not exist!");
+            }
         }
 
         private void OnGUI()
@@ -108,6 +128,8 @@ namespace Assets.Editor
             File.WriteAllBytes(Application.dataPath + "/Resources/file_data.txt", System.Text.Encoding.Default.GetBytes(JsonConvert.SerializeObject(vfd)));
 
             m_conetent = "complete!";
+            m_Version = vfd.version;
+            m_Url = vfd.url;
             Repaint();
         }
 
