@@ -141,9 +141,9 @@ namespace Assets.Common.Resource
         private IEnumerator _hotUpdate(Action<HotUpdateRes, Int64, string> resCallback, Action<Int64> processCallback)
         {
 #if UNITY_EDITOR && !DEBUG_ASSETBUNDLE
-//             yield return 0;
-//             resCallback(HotUpdateRes.Complete, 0, "");
-// #else
+            yield return 0;
+            resCallback(HotUpdateRes.Complete, 0, "");
+#else
             VersionFileData curData = null;
             var localText = Resources.Load<TextAsset>(s_VersionFile);
             var localData = JsonConvert.DeserializeObject<VersionFileData>(localText.text);
