@@ -26,29 +26,34 @@ namespace Assets.Common
                 {
                     ResourcesManager.GetInstance().Init(() =>
                     {
-                        ResourcesManager.GetInstance().LoadAssetBundleAsync(new string[] { "lua_script" },
-                            null,
-                            (string[] arrPath) =>
-                            {
-                                Info.Debug(string.Format("complete {0}", Assets.Common.Tools.Time.now()));
-                                var luaEnv = LuaManager.GetInstance().Env;
-
-                                LuaManager.GetInstance().Env.DoString("require 'launcher'", "Launcher");
-                                LuaTable className = luaEnv.Global.Get<LuaTable>("Launcher");
-                                StartFunction = className.Get<LuaFunction>("start");
-                                QuitFunction = className.Get<LuaFunction>("appQuit");
-                                UpdateFunction = className.Get<LuaFunction>("update");
-
-                                var luaBehaviourManager = luaEnv.Global.Get<LuaTable>("BehaviourManager");
-                                LuaBehaviour.s_CreateBehaviour = luaBehaviourManager.Get<LuaFunction>("create");
-                                LuaBehaviour.s_GetBehaviour = luaBehaviourManager.Get<LuaFunction>("getBehaviour");
-
-
-                                if (null != StartFunction)
-                                {
-                                    StartFunction.Call();
-                                }
-                            });
+                        ResourcesManager.GetInstance().LoadAssetBundleAsync(new string[] { "login", "test_ui" }, null, (string[] arrPath) =>
+                        {
+                            ResourcesManager.GetInstance().UnloadAssetBundle(new string[] { "login" });
+                            ResourcesManager.GetInstance().UnloadAssetBundle(new string[] { "test_ui" });
+                        });
+//                         ResourcesManager.GetInstance().LoadAssetBundleAsync(new string[] { "lua_script" },
+//                             null,
+//                             (string[] arrPath) =>
+//                             {
+//                                 Info.Debug(string.Format("complete {0}", Assets.Common.Tools.Time.now()));
+//                                 var luaEnv = LuaManager.GetInstance().Env;
+// 
+//                                 LuaManager.GetInstance().Env.DoString("require 'launcher'", "Launcher");
+//                                 LuaTable className = luaEnv.Global.Get<LuaTable>("Launcher");
+//                                 StartFunction = className.Get<LuaFunction>("start");
+//                                 QuitFunction = className.Get<LuaFunction>("appQuit");
+//                                 UpdateFunction = className.Get<LuaFunction>("update");
+// 
+//                                 var luaBehaviourManager = luaEnv.Global.Get<LuaTable>("BehaviourManager");
+//                                 LuaBehaviour.s_CreateBehaviour = luaBehaviourManager.Get<LuaFunction>("create");
+//                                 LuaBehaviour.s_GetBehaviour = luaBehaviourManager.Get<LuaFunction>("getBehaviour");
+// 
+// 
+//                                 if (null != StartFunction)
+//                                 {
+//                                     StartFunction.Call();
+//                                 }
+//                             });
                     });
 
                 }

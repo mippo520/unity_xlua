@@ -1,4 +1,4 @@
-﻿// #define DEBUG_ASSETBUNDLE
+﻿#define DEBUG_ASSETBUNDLE
 
 using Assets.Common.Log;
 using Assets.Common.Singleton;
@@ -83,12 +83,12 @@ namespace Assets.Common.Resource
 
         public void Hotupdate(Action<HotUpdateRes, Int64, string> resCallback, Action<Int64> processCallback)
         {
-            StartCoroutine(this._hotUpdate(resCallback, processCallback));
+            StartCoroutine(this._startAsyncMethod(this._hotUpdate(resCallback, processCallback)));
         }
 
         public void Init(Action callback = null)
         {
-            StartCoroutine(this._init(callback));
+            StartCoroutine(this._startAsyncMethod(this._init(callback)));
         }
 
         public void LoadAssetBundleAsync(string[] arrPath, Action<float> frameCallback, Action<string[]> completeCallback)
@@ -356,11 +356,12 @@ namespace Assets.Common.Resource
             Dictionary<string, AssetBundleRequest> assetDicReq = new Dictionary<string, AssetBundleRequest>();
             List<AssetBundle> listAssetBundle = new List<AssetBundle>();
             // 先计算依赖的ab
-            HashSet<string> setPath = new HashSet<string>();
+            List<string> setPath = new List<string>();
             this._getAllAssetBundles(arrPath, ref setPath);
 
             int nCount = setPath.Count;
             float oneResPercent = 1.0f / nCount;
+            var dirInLoading = new Dictionary<string, Int32>();
 
             foreach (string path in setPath)
             {
@@ -370,10 +371,15 @@ namespace Assets.Common.Resource
                     ++m_DicAssetBundlesCount[pathTmp].Count;
                     totalProgress += oneResPercent;
                 }
-                else
+                else if (!dirInLoading.ContainsKey(pathTmp))
                 {  
                     var request = AssetBundle.LoadFromFileAsync(pathTmp);
-                    abDicReq.Add(pathTmp, request);                    
+                    abDicReq.Add(pathTmp, request);
+                    dirInLoading[pathTmp] = 0;
+                }
+                else
+                {
+                    ++dirInLoading[pathTmp];
                 }
             }
 
@@ -394,7 +400,7 @@ namespace Assets.Common.Resource
                         totalProgress += oneResPercent / 2;
                         listRemKey.Add(pair.Key);
                         var arrAssetName = pair.Value.assetBundle.GetAllAssetNames();
-                        m_DicAssetBundlesCount.Add(pair.Key, new ResourcesInfo<string[]>(1, arrAssetName));
+                        m_DicAssetBundlesCount.Add(pair.Key, new ResourcesInfo<string[]>(1 + dirInLoading[pair.Key], arrAssetName));
                         listAssetBundle.Add(pair.Value.assetBundle);
 
                         foreach (string assetName in arrAssetName)
@@ -468,10 +474,8 @@ namespace Assets.Common.Resource
 
         private void _unloadAssetBundle(string[] arrPath)
         {
-            Info.Debug("Begin unload assetBundle!");
-
             // 先计算依赖的ab
-            HashSet<string> setPath = new HashSet<string>();
+            List<string> setPath = new List<string>();
             this._getAllAssetBundles(arrPath, ref setPath);
 
             foreach (string path in setPath)
@@ -487,7 +491,7 @@ namespace Assets.Common.Resource
                         {
                             if (m_DicAsset.ContainsKey(assetName))
                             {
-                                Info.Debug("unload asset name is " + assetName);
+                                Info.Log("unload asset name is " + assetName);
                                 if (!assetName.EndsWith(".prefab"))
                                 {
                                     Resources.UnloadAsset(m_DicAsset[assetName]);
@@ -512,15 +516,12 @@ namespace Assets.Common.Resource
             Resources.UnloadUnusedAssets();
         }
 
-        private void _getAllAssetBundles(string[] arrPath, ref HashSet<string> outSetPath)
+        private void _getAllAssetBundles(string[] arrPath, ref List<string> outSetPath)
         {
             foreach (string path in arrPath)
             {
-                if (!outSetPath.Contains(path))
-                {
-                    outSetPath.Add(path);
-                    this._getAllAssetBundles(m_Manifest.GetAllDependencies(path), ref outSetPath);
-                }
+                outSetPath.Add(path);
+                this._getAllAssetBundles(m_Manifest.GetAllDependencies(path), ref outSetPath);
             }
         }
 

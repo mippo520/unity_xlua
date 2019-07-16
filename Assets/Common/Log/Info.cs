@@ -11,6 +11,7 @@ namespace Assets.Common.Log
     public enum eLogLevel
     {
         Debug = 0,
+        Log,
         Warn,
         Error,
     }
@@ -23,7 +24,15 @@ namespace Assets.Common.Log
         {
             if (m_Level <= eLogLevel.Debug)
             {
-                UnityEngine.Debug.Log(content);
+                UnityEngine.Debug.Log("Debug: " + content);
+            }
+        }
+
+        public static void Log(string content)
+        {
+            if (m_Level <= eLogLevel.Log)
+            {
+                UnityEngine.Debug.Log("Log: " + content);
             }
         }
 
