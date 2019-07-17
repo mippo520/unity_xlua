@@ -302,6 +302,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   luaScript: main
+  listStrArg: []
 --- !u!114 &901809584
 MonoBehaviour:
   m_ObjectHideFlags: 0

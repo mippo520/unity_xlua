@@ -26,6 +26,7 @@ local function _reconnect(self)
         return
     end
 
+    self.connectCount = self.connectCount + 1
     self.reconnectTimerId = TimeManagerInst:onceTimer(NetReconnectWaitTime, self, function (self)
         local now = Now()
         if now < self.expireTime then

@@ -21,6 +21,15 @@ namespace Assets.Common.Lua
         static Int64 s_Id = 10086;
         public string luaScript;
 
+        [System.Serializable]
+        public struct StringArg
+        {
+            public string key;
+            public string value;
+        }
+
+        public List<StringArg> listStrArg = new List<StringArg>();
+
         public LuaFunction AwakeFunction;
         public LuaFunction StartFunction;
         public LuaFunction UpdateFunction;
@@ -33,6 +42,7 @@ namespace Assets.Common.Lua
         }
 
         void Awake()
+
         {
             m_Id = ++s_Id;
             var luaEnv = LuaManager.GetInstance().Env;
@@ -53,6 +63,11 @@ namespace Assets.Common.Lua
             this.luaBehaviour.Set("behaviour", this);
             this.luaBehaviour.Set("luaScript", this.luaScript);
             this.luaBehaviour.Set("id", this.m_Id);
+
+            foreach (StringArg arg in listStrArg)
+            {
+                this.luaBehaviour.Set(arg.key, arg.value);
+            }
 
             Info.Debug("lua awake! " + luaScript);
             if (null != AwakeFunction)

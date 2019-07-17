@@ -18,6 +18,9 @@ local event = {
     -- frame
     FrameUpdate = "FrameUpdate",
 
+    -- language
+    LanguageChange = "LanguageChange",
+
 }
 
 return event

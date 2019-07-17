@@ -6,6 +6,7 @@ Event = require("define.event")
 DialogType = require("define.dialog_type")
 Error = require("define.error")
 LoginType = require("define.login_type")
+LanguageType = require("define.language_type")
 
 Tools = require("common.tools")
 
@@ -30,6 +31,7 @@ EventManagerInst = require("common.event.event_manager").GetInstance()
 TimeManagerInst = require("common.time.time_manager").GetInstance()
 DialogManagerInst = require("common.ui.dialog_manager").GetInstance()
 HttpManagerInst = require("common.net.http_manager").GetInstance()
+LanguageManagerInst = require("common.language.language_manager").GetInstance()
 
 Behaviour = require("common.ui.behaviour.behaviour")
 XLuaUtil = require 'xlua.util'
