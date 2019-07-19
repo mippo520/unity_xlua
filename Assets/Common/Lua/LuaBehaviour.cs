@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEditor;
@@ -14,6 +15,13 @@ using XLua;
 
 namespace Assets.Common.Lua
 {
+    public enum BehaviourType
+    {
+        Int = 0,
+        Int64,
+        String,
+        Double
+    }
     public class LuaBehaviour : MonoBehaviour
     {
         public static LuaFunction s_CreateBehaviour = null;
@@ -22,13 +30,14 @@ namespace Assets.Common.Lua
         public string luaScript;
 
         [System.Serializable]
-        public struct StringArg
+        public struct Param
         {
-            public string key;
+            public string name;
             public string value;
+            public BehaviourType type;
         }
 
-        public List<StringArg> listStrArg = new List<StringArg>();
+        public List<Param> listParames = new List<Param>();
 
         public LuaFunction AwakeFunction;
         public LuaFunction StartFunction;
@@ -42,7 +51,6 @@ namespace Assets.Common.Lua
         }
 
         void Awake()
-
         {
             m_Id = ++s_Id;
             var luaEnv = LuaManager.GetInstance().Env;
@@ -59,17 +67,30 @@ namespace Assets.Common.Lua
             StartFunction = luaBehaviour.Get<LuaFunction>("start");
             UpdateFunction = luaBehaviour.Get<LuaFunction>("update");
             OnDestroyFunction = luaBehaviour.Get<LuaFunction>("destroy");
-            this.luaBehaviour.Set("gameObject", this.gameObject);
-            this.luaBehaviour.Set("behaviour", this);
-            this.luaBehaviour.Set("luaScript", this.luaScript);
-            this.luaBehaviour.Set("id", this.m_Id);
+            this.luaBehaviour.Set("behaviourObject", this);
 
-            foreach (StringArg arg in listStrArg)
+            foreach (Param arg in listParames)
             {
-                this.luaBehaviour.Set(arg.key, arg.value);
+                switch(arg.type)
+                {
+                    case BehaviourType.Int:
+                        this.luaBehaviour.Set(arg.name, Convert.ToInt32(arg.value));
+                        break;
+                    case BehaviourType.Int64:
+                        this.luaBehaviour.Set(arg.name, Convert.ToInt64(arg.value));
+                        break;
+                    case BehaviourType.String:
+                        this.luaBehaviour.Set(arg.name, arg.value);
+                        break;
+                    case BehaviourType.Double:
+                        this.luaBehaviour.Set(arg.name, Convert.ToDouble(arg.value));
+                        break;
+                    default:
+                        Info.Error(string.Format("set param error! type is ", arg.type));
+                        break;
+                }
             }
 
-            Info.Debug("lua awake! " + luaScript);
             if (null != AwakeFunction)
             {
                 AwakeFunction.Call(this.luaBehaviour);
@@ -79,7 +100,6 @@ namespace Assets.Common.Lua
         // Use this for initialization
         void Start()
         {
-            Info.Debug("lua start! " + luaScript);
             if (null != StartFunction) { StartFunction.Call(luaBehaviour); }
         }
 
@@ -87,6 +107,7 @@ namespace Assets.Common.Lua
         void Update()
         {
             if (null != UpdateFunction) { UpdateFunction.Call(luaBehaviour); }
+
         }
 
         void OnDestroy()

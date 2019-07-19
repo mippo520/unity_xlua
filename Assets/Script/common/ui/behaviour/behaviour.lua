@@ -6,13 +6,25 @@ function Behaviour:ctor()
     self.id = 0
 end
 
+function Behaviour:awakeLogic()
+    self.gameObject = self.behaviourObject.gameObject
+    self.luaScript = self.behaviourObject.luaScript
+    self.id = self.behaviourObject.id
+end
+
 function Behaviour:awake()
+    self:awakeLogic()
     if self._awake then
         self:_awake()
     end
 end
 
+function Behaviour:startLogic()
+
+end
+
 function Behaviour:start()
+    self:awakeLogic()
     if self._start then
         self:_start()
     end
@@ -73,11 +85,11 @@ function Behaviour:closeSelf()
 end
 
 function Behaviour:StartCoroutine(...)
-    return self.behaviour:StartCoroutine(XLuaUtil.cs_generator(...))
+    return self.behaviourObject:StartCoroutine(XLuaUtil.cs_generator(...))
 end
 
 function Behaviour:StopCoroutine(co)
-    return self.behaviour:StopCoroutine(co)
+    return self.behaviourObject:StopCoroutine(co)
 end
 
 

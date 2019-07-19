@@ -1,5 +1,4 @@
-local login = class("login", Behaviour)
-
+local login = class("login", DialogBehaviour)
 
 function login:_start()
     -- self:StartCoroutine(function ()
@@ -7,17 +6,16 @@ function login:_start()
 
     --     Info.Debug("coroutine!")
     -- end)
+    local input = self.wrap.transform:GetChild(1).gameObject:GetComponent(typeof(UnityUI.InputField))
 
-    local input = self.gameObject.transform:GetChild(1).gameObject:GetComponent(typeof(UnityUI.InputField))
+    local input1 = self.wrap.transform:GetChild(2).gameObject:GetComponent(typeof(UnityUI.InputField))
 
-    local input1 = self.gameObject.transform:GetChild(2).gameObject:GetComponent(typeof(UnityUI.InputField))
-
-    local loginBtn = self.gameObject.transform:GetChild(4).gameObject:GetComponent(typeof(UnityUI.Button))
+    local loginBtn = self.wrap.transform:GetChild(4).gameObject:GetComponent(typeof(UnityUI.Button))
     self:addListener(loginBtn.onClick, function ()
         LoginControllerInst:login(input.text, input1.text)
     end)
 
-    local registBtn = self.gameObject.transform:GetChild(3).gameObject:GetComponent(typeof(UnityUI.Button))
+    local registBtn = self.wrap.transform:GetChild(3).gameObject:GetComponent(typeof(UnityUI.Button))
     self:addListener(registBtn.onClick, function ()
         -- self:closeSelf()
         -- DialogManagerInst:open(DialogType.Regist)

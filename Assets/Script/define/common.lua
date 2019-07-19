@@ -34,6 +34,7 @@ HttpManagerInst = require("common.net.http_manager").GetInstance()
 LanguageManagerInst = require("common.language.language_manager").GetInstance()
 
 Behaviour = require("common.ui.behaviour.behaviour")
+DialogBehaviour = require("common.ui.behaviour.dialog_behaviour")
 XLuaUtil = require 'xlua.util'
 
 Now = handler(TimeManagerInst, TimeManagerInst.now)
