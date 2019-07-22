@@ -43,14 +43,19 @@ function DialogManager:close(id)
     end
 
     dialog:close()
-    self.mapDialog[id] = nil
 end
 
-function DialogManager:closeAll()
+function DialogManager:clearAll()
     for k, v in pairs(self.mapDialog) do
-        v:close()
+        v:closeComplete()
     end
     self.mapDialog = {}
 end
+
+
+function DialogManager:destroy(id)
+    self.mapDialog[id] = nil
+end
+
 
 return DialogManager

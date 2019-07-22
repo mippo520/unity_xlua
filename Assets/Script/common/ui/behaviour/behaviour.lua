@@ -51,6 +51,11 @@ function Behaviour:destroy()
     BehaviourManager.remove(self.id)
 end
 
+function Behaviour.getLuaBehaviour(gameOjbect)
+    local scriptBehaviour = gameOjbect:GetComponent(typeof(CSLuaBehaviour))
+    return BehaviourManager.getBehaviour(scriptBehaviour.id)
+end
+
 function Behaviour:addListener(unityEvent, callback)
     unityEvent:AddListener(callback)
     table.insert(self.registedEvent, unityEvent)

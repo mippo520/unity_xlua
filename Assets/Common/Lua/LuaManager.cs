@@ -16,6 +16,10 @@ namespace Assets.Common.Lua
 {
     class LuaManager : GameObjSingleton<LuaManager>
     {
+        public LuaFunction s_CreateBehaviour = null;
+        public LuaFunction s_GetBehaviour = null;
+
+        private Int64 s_Id = 10086;
         private LuaEnv m_LuaEnv = null;
 
         public LuaEnv Env
@@ -24,6 +28,21 @@ namespace Assets.Common.Lua
             {
                 return m_LuaEnv;
             }
+        }
+
+        public Int64 GetId()
+        {
+            return ++s_Id;
+        }
+
+        public object[] CreateBehaviour(Int64 id, string script)
+        {
+            return s_CreateBehaviour.Call(id, script);
+        }
+
+        public LuaTable GetBehaviour(Int64 id)
+        {
+            return s_GetBehaviour.Call(id)[0] as LuaTable;
         }
         public LuaManager()
         {

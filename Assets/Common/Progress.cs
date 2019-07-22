@@ -40,8 +40,8 @@ namespace Assets.Common
                                 UpdateFunction = className.Get<LuaFunction>("update");
 
                                 var luaBehaviourManager = luaEnv.Global.Get<LuaTable>("BehaviourManager");
-                                LuaBehaviour.s_CreateBehaviour = luaBehaviourManager.Get<LuaFunction>("create");
-                                LuaBehaviour.s_GetBehaviour = luaBehaviourManager.Get<LuaFunction>("getBehaviour");
+                                LuaManager.GetInstance().s_CreateBehaviour = luaBehaviourManager.Get<LuaFunction>("create");
+                                LuaManager.GetInstance().s_GetBehaviour = luaBehaviourManager.Get<LuaFunction>("getBehaviour");
 
 
                                 if (null != StartFunction)

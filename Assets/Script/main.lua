@@ -60,7 +60,7 @@ function main:_start()
     -- matable.__index = matable
     -- self = matable
 
-    DialogManagerInst:open(DialogType.Login)
+    DialogManagerInst:open(DialogType.Regist)
 end
 
 function main:_update()

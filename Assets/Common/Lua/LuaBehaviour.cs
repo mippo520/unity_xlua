@@ -24,9 +24,6 @@ namespace Assets.Common.Lua
     }
     public class LuaBehaviour : MonoBehaviour
     {
-        public static LuaFunction s_CreateBehaviour = null;
-        public static LuaFunction s_GetBehaviour = null;
-        static Int64 s_Id = 10086;
         public string luaScript;
 
         [System.Serializable]
@@ -39,10 +36,10 @@ namespace Assets.Common.Lua
 
         public List<Param> listParames = new List<Param>();
 
-        public LuaFunction AwakeFunction;
-        public LuaFunction StartFunction;
-        public LuaFunction UpdateFunction;
-        public LuaFunction OnDestroyFunction;
+        private LuaFunction AwakeFunction;
+        private LuaFunction StartFunction;
+        private LuaFunction UpdateFunction;
+        private LuaFunction OnDestroyFunction;
         private LuaTable luaBehaviour = null;
         private Int64 m_Id = 0;
         public Int64 id { get {
@@ -52,7 +49,7 @@ namespace Assets.Common.Lua
 
         void Awake()
         {
-            m_Id = ++s_Id;
+            m_Id = LuaManager.GetInstance().GetId();
             var luaEnv = LuaManager.GetInstance().Env;
             var beginIndex = luaScript.LastIndexOf(".") + 1;
             var scriptName = luaScript;
@@ -61,8 +58,8 @@ namespace Assets.Common.Lua
                 scriptName = scriptName.Substring(beginIndex);
             }
 
-            s_CreateBehaviour.Call(m_Id, luaScript);
-            this.luaBehaviour = s_GetBehaviour.Call(m_Id)[0] as LuaTable;
+            LuaManager.GetInstance().CreateBehaviour(m_Id, luaScript);
+            this.luaBehaviour = LuaManager.GetInstance().GetBehaviour(m_Id);
             AwakeFunction = luaBehaviour.Get<LuaFunction>("awake");
             StartFunction = luaBehaviour.Get<LuaFunction>("start");
             UpdateFunction = luaBehaviour.Get<LuaFunction>("update");

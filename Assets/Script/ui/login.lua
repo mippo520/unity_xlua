@@ -12,18 +12,26 @@ function login:_start()
 
     local loginBtn = self.wrap.transform:GetChild(4).gameObject:GetComponent(typeof(UnityUI.Button))
     self:addListener(loginBtn.onClick, function ()
-        LoginControllerInst:login(input.text, input1.text)
+        -- LoginControllerInst:login(input.text, input1.text)
+        DialogManagerInst:clearAll()
     end)
 
     local registBtn = self.wrap.transform:GetChild(3).gameObject:GetComponent(typeof(UnityUI.Button))
     self:addListener(registBtn.onClick, function ()
         -- self:closeSelf()
         -- DialogManagerInst:open(DialogType.Regist)
+        if not self.diaId then
+            self.diaId = DialogManagerInst:open(DialogType.Regist)
+        else
+            DialogManagerInst:close(self.diaId)
+            self.diaId = nil
+        end
 
         if LanguageType.en == LanguageManagerInst:getLanguage() then
             LanguageManagerInst:setLanguage(LanguageType.zh)
         else
             LanguageManagerInst:setLanguage(LanguageType.en)
+
         end
     end)
 end
