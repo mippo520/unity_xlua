@@ -1,21 +1,19 @@
 local dialog_type = {
-    NetWorkUI = {
-        Type = "NetWorkUI",
+    NetworkUI = {
+        Type = "NetworkUI",
         AssetBundles = {"test_ui"},
         Path = "Assets/Prefabs/NetworkUI.prefab"
     },
     Regist = {
         Type = "Regist",
-        AssetBundles = {"regist"},
-        Path = "Assets/Prefabs/Regist.prefab"
+        AssetBundles = {"ui/regist"},
+        Path = "Assets/Prefabs/ui/Regist.prefab"
     },
     Login = {
         Type = "Login",
-        AssetBundles = {"login"},
-        Path = "Assets/Prefabs/Login.prefab"
+        AssetBundles = {"ui/login"},
+        Path = "Assets/Prefabs/ui/Login.prefab"
     },
-
-
 }
 
 return dialog_type

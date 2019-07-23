@@ -1,5 +1,5 @@
-﻿// #define DEBUG_ASSETBUNDLE
-// 
+﻿#define DEBUG_ASSETBUNDLE
+
 using Assets.Common.Log;
 using Assets.Common.Resource;
 using Assets.Common.Singleton;
