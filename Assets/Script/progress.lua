@@ -16,27 +16,23 @@ end
 require("setting")
 require("define.common")
 
-Launcher = {}
+Progress = class("Progress")
 
-local PBManager = require("pb.pb_manager")
-
-function Launcher.start()
+function Progress:start()
     NetManagerInst:init()
     TimeManagerInst:init()
-    FileManagerInst:readAllBytesAsync("pb", "Assets/Proto/pb.txt", function (data)
-        Protoc:load(data)
-        PBManager.GetInstance():registPairMessage()
-        UnitySceneManager.LoadSceneAsync("Main")
-    end)
-
+    UnitySceneManager.LoadSceneAsync(SceneType.Main)
 end
 
-function Launcher.update()
+function Progress:update()
     EventManagerInst:update()
     TimeManagerInst:update()
 end
 
-function Launcher.appQuit()
+function Progress:appQuit()
     NetManagerInst:release()
 end
 
+function Progress:restart()
+    UnitySceneManager.LoadSceneAsync(SceneType.Launcher)
+end

@@ -1,4 +1,4 @@
-﻿#define DEBUG_ASSETBUNDLE
+﻿// #define DEBUG_ASSETBUNDLE
 
 using Assets.Common.Log;
 using Assets.Common.Singleton;
@@ -19,12 +19,19 @@ using UnityEngine.Networking;
 
 namespace Assets.Common.Resource
 {
+
     public enum HotUpdateRes
     {
         Failed = 0,
         Complete,
         Begin,
-    };
+    }
+
+    struct stWebRequestData
+    {
+        public UnityWebRequest req;
+        public FileData fileData;
+    }
 
     public class ResourcesManager : GameObjSingleton<ResourcesManager>
     {
@@ -36,6 +43,13 @@ namespace Assets.Common.Resource
         private Coroutine m_CurCoroutine = null;
         private bool m_bInWaiting = false;
         private Dictionary<string, FileData> m_DicFileData = new Dictionary<string, FileData>();
+        // hot update
+        private Int64 m_UpdateTotalSize = 0;
+        private Dictionary<string, FileData> m_DicUpdateFile = new Dictionary<string, FileData>();
+        private VersionFileData m_CurData = null;
+        private VersionFileData m_CurFileData = null;
+        private string m_NetText = "";
+        private string m_NetFileDataText = "";
 
         public const string s_VersionFile = "version";
         public const string s_VersionFileName = "version.txt";
@@ -81,7 +95,12 @@ namespace Assets.Common.Resource
             return n;
         }
 
-        public void Hotupdate(Action<HotUpdateRes, Int64, string> resCallback, Action<Int64> processCallback)
+        public void CompareUpdateFile(Action<HotUpdateRes, Int64, string> resCallback)
+        {
+            StartCoroutine(this._startAsyncMethod(this._compareUpdateFile(resCallback)));
+        }
+
+        public void Hotupdate(Action<HotUpdateRes, Int64, string> resCallback, Action<double> processCallback)
         {
             StartCoroutine(this._startAsyncMethod(this._hotUpdate(resCallback, processCallback)));
         }
@@ -130,7 +149,6 @@ namespace Assets.Common.Resource
 #endif
         }
 
-
         public void UnloadAssetBundle(string[] arrPath)
         {
 #if !UNITY_EDITOR || DEBUG_ASSETBUNDLE
@@ -138,12 +156,26 @@ namespace Assets.Common.Resource
 #endif
         }
 
-        private IEnumerator _hotUpdate(Action<HotUpdateRes, Int64, string> resCallback, Action<Int64> processCallback)
+        public void UnloadAllAssetBundle()
+        {
+#if !UNITY_EDITOR || DEBUG_ASSETBUNDLE
+            StartCoroutine(this._startMethod<Action>(this._unloadAllAssetBundle));
+#endif
+        }
+
+
+        private IEnumerator _compareUpdateFile(Action<HotUpdateRes, Int64, string> resCallback)
         {
 #if UNITY_EDITOR && !DEBUG_ASSETBUNDLE
             yield return 0;
             resCallback(HotUpdateRes.Complete, 0, "");
 #else
+            m_UpdateTotalSize = 0;
+            m_DicUpdateFile.Clear();
+            m_CurData = null;
+            m_CurFileData = null;
+            m_NetFileDataText = "";
+            m_NetText = "";
             VersionFileData curData = null;
             var localText = Resources.Load<TextAsset>(s_VersionFile);
             var localData = JsonConvert.DeserializeObject<VersionFileData>(localText.text);
@@ -194,7 +226,7 @@ namespace Assets.Common.Resource
                 yield break;
             }
 
-            var netText = getData.downloadHandler.text;
+            m_NetText = getData.downloadHandler.text;
             curData = netVersion;
             getData = UnityWebRequest.Get(curData.url + "/" + s_FileDataFileName);
             yield return getData.SendWebRequest();
@@ -205,72 +237,134 @@ namespace Assets.Common.Resource
                 yield break;
             }
 
-            var netFileDataText = getData.downloadHandler.text;
-            var netFileData = JsonConvert.DeserializeObject<VersionFileData>(netFileDataText);
-            VersionFileData curFileData = null;
+            m_NetFileDataText = getData.downloadHandler.text;
+            var netFileData = JsonConvert.DeserializeObject<VersionFileData>(m_NetFileDataText);
             if (!File.Exists(Application.persistentDataPath + "/" + s_FileDataFileName))
             {
                 var localFileDataText = Resources.Load<TextAsset>(s_FileData);
                 File.WriteAllText(Application.persistentDataPath + "/" + s_FileDataFileName, localFileDataText.text);
-                curFileData = JsonConvert.DeserializeObject<VersionFileData>(localFileDataText.text);
+                m_CurFileData = JsonConvert.DeserializeObject<VersionFileData>(localFileDataText.text);
             }
             else
-            { 
+            {
                 var downloadFileDataText = File.ReadAllText(Application.persistentDataPath + "/" + s_FileDataFileName);
-                curFileData = JsonConvert.DeserializeObject<VersionFileData>(downloadFileDataText);
+                m_CurFileData = JsonConvert.DeserializeObject<VersionFileData>(downloadFileDataText);
             }
 
-            Int64 totalSize = 0;
-            Int64 completeSize = 0;
-            Dictionary<string, FileData> dicUpdateFile = new Dictionary<string, FileData>();
             foreach (KeyValuePair<string, FileData> pair in netFileData.data)
             {
-                if (!curFileData.data.ContainsKey(pair.Key) || curFileData.data[pair.Key].md5 != pair.Value.md5)
+                if (!m_CurFileData.data.ContainsKey(pair.Key) || m_CurFileData.data[pair.Key].md5 != pair.Value.md5)
                 {
-                    totalSize += pair.Value.size;
-                    dicUpdateFile.Add(pair.Key, pair.Value);
+                    m_UpdateTotalSize += pair.Value.size;
+                    m_DicUpdateFile.Add(pair.Key, pair.Value);
                 }
             }
+            m_CurData = curData;
+            resCallback(HotUpdateRes.Begin, m_UpdateTotalSize, "");
+#endif
+        }
 
-            if (totalSize > 0 && dicUpdateFile.Count() > 0)
+        private IEnumerator _hotUpdate(Action<HotUpdateRes, Int64, string> resCallback, Action<double> processCallback)
+        {
+#if UNITY_EDITOR && !DEBUG_ASSETBUNDLE
+            yield return 0;
+            resCallback(HotUpdateRes.Complete, 0, "");
+#else
+            if (null == m_CurFileData)
             {
-                resCallback(HotUpdateRes.Begin, totalSize, "");
-                foreach (KeyValuePair<string, FileData> pair in dicUpdateFile)
+                yield return 0;
+                resCallback(HotUpdateRes.Failed, 0, "current file data is null!");
+                yield break;
+            }
+            double completePercent = 0.0f;
+            double percentTmp = 0.0f;
+            if (m_UpdateTotalSize > 0 && m_DicUpdateFile.Count() > 0 && null != m_CurData)
+            {
+                Dictionary<string, stWebRequestData> dicReq = new Dictionary<string, stWebRequestData>();
+                while (dicReq.Count > 0 || m_DicUpdateFile.Count > 0)
                 {
-                    getData = UnityWebRequest.Get(curData.url + "/" + pair.Key);
-                    yield return getData.SendWebRequest();
-                    if (getData.isHttpError || getData.isNetworkError)
+                    if (m_DicUpdateFile.Count > 0 && dicReq.Count < 5)
                     {
-                        Info.Error("download " + pair.Key + " error! " + getData.error);
-                        resCallback(HotUpdateRes.Failed, 0, getData.error);
-                        yield break;
-                    }
-                    var data = getData.downloadHandler.data;
-                    if (FileManager.md5(ref data) != pair.Value.md5)
-                    {
-                        Info.Error(pair.Key + " compare md5 error! ");
-                        resCallback(HotUpdateRes.Failed, 0, getData.error);
-                        yield break;
-                    }
-                    File.WriteAllBytes(Application.persistentDataPath + "/" + pair.Key, getData.downloadHandler.data);
-                    completeSize += pair.Value.size;
-                    processCallback(completeSize);
+                        var firstPair = m_DicUpdateFile.First();
 
-                    pair.Value.local = false;
-                    curFileData.data[pair.Key] = pair.Value;
-                    File.WriteAllText(Application.persistentDataPath + "/" + s_FileDataFileName, JsonConvert.SerializeObject(curFileData));
+                        var getData = UnityWebRequest.Get(m_CurData.url + "/" + firstPair.Key);
+                        var value = new stWebRequestData();
+                        getData.SendWebRequest();
+                        value.req = getData;
+                        value.fileData = firstPair.Value;
+                        dicReq[firstPair.Key] = value;
+
+                        m_DicUpdateFile.Remove(firstPair.Key);
+                    }
+
+                    List<string> listKeys = new List<string>();
+                    foreach (KeyValuePair<string, stWebRequestData> pair in dicReq)
+                    {
+                        var value = pair.Value;
+                        if (value.req.isHttpError || value.req.isNetworkError)
+                        {
+                            var err = "download " + pair.Key + " error! " + value.req.error;
+                            resCallback(HotUpdateRes.Failed, 0, err);
+                            yield break;
+                        }
+
+                        if (value.req.isDone)
+                        {
+                            var data = value.req.downloadHandler.data;
+                            if (FileManager.md5(ref data) != value.fileData.md5)
+                            {
+                                var err = pair.Key + " compare md5 error! ";
+                                resCallback(HotUpdateRes.Failed, 0, err);
+                                yield break;
+                            }
+                            var lastIdx = pair.Key.LastIndexOf('/');
+                            if (lastIdx > 0)
+                            {
+                                var key = pair.Key.Substring(0, lastIdx);
+
+                                var arrDir = key.Split('/');
+                                var pathTmp = Application.persistentDataPath;
+                                foreach (var dir in arrDir)
+                                {
+                                    pathTmp += "/" + dir;
+                                    DirectoryInfo info = new DirectoryInfo(pathTmp);
+                                    if (!info.Exists)
+                                    {
+                                        info.Create();
+                                    }
+                                }
+                            }
+                            File.WriteAllBytes(Application.persistentDataPath + "/" + pair.Key, value.req.downloadHandler.data);
+                            completePercent += (double)value.fileData.size / (double)m_UpdateTotalSize;
+                            value.fileData.local = false;
+                            m_CurFileData.data[pair.Key] = value.fileData;
+                            listKeys.Add(pair.Key);
+                        }
+                        else
+                        {
+                            percentTmp += value.req.downloadProgress * (double)value.fileData.size / (double)m_UpdateTotalSize;
+                        }
+                    }
+                    processCallback(completePercent + percentTmp);
+                    percentTmp = 0.0f;
+                    if (listKeys.Count > 0)
+                    {
+                        foreach(var key in listKeys)
+                        {
+                            dicReq.Remove(key);
+                        }
+                        File.WriteAllText(Application.persistentDataPath + "/" + s_FileDataFileName, JsonConvert.SerializeObject(m_CurFileData));
+                    }
+                    yield return 0;
                 }
-                File.WriteAllText(Application.persistentDataPath + "/" + s_VersionFileName, netText);
-                File.WriteAllText(Application.persistentDataPath + "/" + s_FileDataFileName, netFileDataText);
-                m_DicFileData = curFileData.data;
-                resCallback(HotUpdateRes.Complete, completeSize, "");
+
+                File.WriteAllText(Application.persistentDataPath + "/" + s_VersionFileName, m_NetText);
+                m_DicFileData = m_CurFileData.data;
+                resCallback(HotUpdateRes.Complete, m_UpdateTotalSize, "");
             }
             else
             {
-                File.WriteAllText(Application.persistentDataPath + "/" + s_VersionFileName, netText);
-                File.WriteAllText(Application.persistentDataPath + "/" + s_FileDataFileName, netFileDataText);
-                m_DicFileData = curFileData.data;
-                resCallback(HotUpdateRes.Complete, 0, "");
+                resCallback(HotUpdateRes.Failed, 0, "hot update error! nothing to download!");
             }
 #endif
         }
@@ -285,16 +379,32 @@ namespace Assets.Common.Resource
                 callback();
             }
 #else
+            var downloadDataPath = Application.persistentDataPath + "/" + s_FileDataFileName;
+            if (!File.Exists(downloadDataPath))
+            {
+                var localFileDataText = Resources.Load<TextAsset>(s_FileData);
+                m_DicFileData = JsonConvert.DeserializeObject<VersionFileData>(localFileDataText.text).data;
+            }
+            else
+            {
+                var downloadFileDataText = File.ReadAllText(downloadDataPath);
+                m_DicFileData = JsonConvert.DeserializeObject<VersionFileData>(downloadFileDataText).data;
+            }
+
+            UnloadAllAssetBundle();
+            if (null != m_Manifest)
+            {
+                Resources.UnloadAsset(m_Manifest);
+                m_Manifest = null;
+                Resources.UnloadUnusedAssets();
+            }
+
             var request = AssetBundle.LoadFromFileAsync(this._getFullPath("StreamingAssets"));
             yield return request;
             var manifestReq = request.assetBundle.LoadAssetAsync<AssetBundleManifest>("AssetBundleManifest");
             yield return manifestReq;
             m_Manifest = manifestReq.asset as AssetBundleManifest;
             request.assetBundle.Unload(false);
-            foreach (string ab in m_Manifest.GetAllAssetBundles())
-            {
-                print(ab);
-            }
             if (null != callback)
             {
                 callback();
@@ -492,6 +602,7 @@ namespace Assets.Common.Resource
                             if (m_DicAsset.ContainsKey(assetName))
                             {
                                 Info.Log("unload asset name is " + assetName);
+                                // prefab文件不能unload
                                 if (!assetName.EndsWith(".prefab"))
                                 {
                                     Resources.UnloadAsset(m_DicAsset[assetName]);
@@ -513,6 +624,20 @@ namespace Assets.Common.Resource
                 }
             }
 
+            Resources.UnloadUnusedAssets();
+        }
+
+        private void _unloadAllAssetBundle()
+        {
+            foreach (KeyValuePair<string, UnityEngine.Object> pair in m_DicAsset)
+            {
+                if (!pair.Key.EndsWith(".prefab"))
+                {
+                    Resources.UnloadAsset(pair.Value);
+                }
+            }
+            m_DicAsset.Clear();
+            m_DicAssetBundlesCount.Clear();
             Resources.UnloadUnusedAssets();
         }
 

@@ -1,4 +1,4 @@
-﻿#define DEBUG_ASSETBUNDLE
+﻿// #define DEBUG_ASSETBUNDLE
 
 using Assets.Common.Log;
 using Assets.Common.Resource;
@@ -49,8 +49,14 @@ namespace Assets.Common.Lua
 
         }
 
-        protected override void _init()
+        public void startup()
         {
+            if (null != m_LuaEnv)
+            {
+                m_LuaEnv.Dispose();
+                m_LuaEnv = null;
+            }
+
             m_LuaEnv = new LuaEnv();
             m_LuaEnv.AddBuildin("rapidjson", XLua.LuaDLL.Lua.LoadRapidJson);
             m_LuaEnv.AddBuildin("pb", XLua.LuaDLL.Lua.LoadLuaProtobuf);

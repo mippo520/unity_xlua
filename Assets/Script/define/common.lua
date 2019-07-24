@@ -7,6 +7,7 @@ DialogType = require("define.dialog_type")
 Error = require("define.error")
 LoginType = require("define.login_type")
 LanguageType = require("define.language_type")
+SceneType = require("define.scene_type")
 
 Tools = require("common.tools")
 

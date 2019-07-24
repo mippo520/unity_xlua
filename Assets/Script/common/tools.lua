@@ -23,4 +23,10 @@ function Tools.Sign(...)
     return FileManager.md5(content)
 end
 
+function Tools.Assert(obj, message)
+    if not obj then
+        Info.Error("Tools Assert! " .. message)
+    end
+end
+
 return Tools

@@ -40,7 +40,7 @@ namespace Assets.Common.Log
         {
             if (m_Level <= eLogLevel.Warn)
             {
-                UnityEngine.Debug.LogWarning(content);
+                UnityEngine.Debug.LogWarning("Warn: " + content);
             }
         }
 
@@ -48,7 +48,7 @@ namespace Assets.Common.Log
         {
             if (m_Level <= eLogLevel.Error)
             {
-                UnityEngine.Debug.LogError(content);
+                UnityEngine.Debug.LogError("Error: " + content);
             }
         }
     }

@@ -14,6 +14,11 @@ local dialog_type = {
         AssetBundles = {"ui/login"},
         Path = "Assets/Prefabs/ui/Login.prefab"
     },
+    Tips = {
+        Type = "Tips",
+        AssetBundles = {"ui/common"},
+        Path = "Assets/Prefabs/ui/common/Tips.prefab"
+    },
 }
 
 return dialog_type

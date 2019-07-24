@@ -24,7 +24,7 @@ function Behaviour:startLogic()
 end
 
 function Behaviour:start()
-    self:awakeLogic()
+    self:startLogic()
     if self._start then
         self:_start()
     end

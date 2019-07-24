@@ -42,12 +42,11 @@ namespace Assets.Editor
                     var localData = JsonConvert.DeserializeObject<VersionFileData>(text);
                     m_Version = localData.version;
                     m_Url = localData.url;
-                    Info.Debug(localData.url);
                 }
             }
             catch
             {
-                Info.Debug("version file not exist!");
+                Info.Log("version file not exist!");
             }
         }
 

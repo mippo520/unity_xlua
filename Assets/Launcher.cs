@@ -12,9 +12,10 @@ using XLua;
 
 public class Launcher : MonoBehaviour
 {
+    public LuaFunction StartFunction;
     // Start is called before the first frame update
     void Start()
     {
-        Progress.GetInstance();
+        Progress.GetInstance().begin();
     }
 }

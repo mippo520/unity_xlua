@@ -14,48 +14,37 @@ namespace Assets.Common
 {
     class Progress : GameObjSingleton<Progress>
     {
-        public LuaFunction StartFunction;
-        public LuaFunction UpdateFunction;
-        public LuaFunction QuitFunction;
+        private LuaTable Launcher;
+        private LuaFunction StartFunction;
+        private LuaFunction UpdateFunction;
+        private LuaFunction QuitFunction;
 
-        private void Start()
+        public void begin()
         {
-            ResourcesManager.GetInstance().Hotupdate((HotUpdateRes res, long totalSize, string err) =>
+            ResourcesManager.GetInstance().Init(() =>
             {
-                if (HotUpdateRes.Complete == res)
-                {
-                    ResourcesManager.GetInstance().Init(() =>
+                ResourcesManager.GetInstance().LoadAssetBundleAsync(new string[] { "lua_script" },
+                    null,
+                    (string[] arrPath) =>
                     {
-                        ResourcesManager.GetInstance().LoadAssetBundleAsync(new string[] { "lua_script" },
-                            null,
-                            (string[] arrPath) =>
-                            {
-                                Info.Debug(string.Format("complete {0}", Assets.Common.Tools.Time.now()));
-                                var luaEnv = LuaManager.GetInstance().Env;
+                        LuaManager.GetInstance().startup();
+                        var luaEnv = LuaManager.GetInstance().Env;
 
-                                LuaManager.GetInstance().Env.DoString("require 'launcher'", "Launcher");
-                                LuaTable className = luaEnv.Global.Get<LuaTable>("Launcher");
-                                StartFunction = className.Get<LuaFunction>("start");
-                                QuitFunction = className.Get<LuaFunction>("appQuit");
-                                UpdateFunction = className.Get<LuaFunction>("update");
+                        LuaManager.GetInstance().Env.DoString("require 'progress'", "Progress");
+                        Launcher = luaEnv.Global.Get<LuaTable>("Progress");
+                        StartFunction = Launcher.Get<LuaFunction>("start");
+                        UpdateFunction = Launcher.Get<LuaFunction>("update");
+                        QuitFunction = Launcher.Get<LuaFunction>("appQuit");
 
-                                var luaBehaviourManager = luaEnv.Global.Get<LuaTable>("BehaviourManager");
-                                LuaManager.GetInstance().s_CreateBehaviour = luaBehaviourManager.Get<LuaFunction>("create");
-                                LuaManager.GetInstance().s_GetBehaviour = luaBehaviourManager.Get<LuaFunction>("getBehaviour");
+                        var luaBehaviourManager = luaEnv.Global.Get<LuaTable>("BehaviourManager");
+                        LuaManager.GetInstance().s_CreateBehaviour = luaBehaviourManager.Get<LuaFunction>("create");
+                        LuaManager.GetInstance().s_GetBehaviour = luaBehaviourManager.Get<LuaFunction>("getBehaviour");
 
-
-                                if (null != StartFunction)
-                                {
-                                    StartFunction.Call();
-                                }
-                            });
+                        if (null != StartFunction)
+                        {
+                            StartFunction.Call(Launcher);
+                        }
                     });
-
-                }
-            },
-            (long completeSize) =>
-            {
-                Info.Debug(string.Format("completeSize = {0}", completeSize));
             });
         }
 
@@ -63,7 +52,7 @@ namespace Assets.Common
         {
             if (null != UpdateFunction)
             {
-                UpdateFunction.Call();
+                UpdateFunction.Call(Launcher);
             }
         }
 
@@ -71,14 +60,8 @@ namespace Assets.Common
         {
             if (null != QuitFunction)
             {
-                QuitFunction.Call();
+                QuitFunction.Call(Launcher);
             }
         }
-
-        private void OnDestroy()
-        {
-
-        }
-
     }
 }

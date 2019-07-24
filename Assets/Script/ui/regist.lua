@@ -33,8 +33,8 @@ function regist:_start()
         --         DialogManagerInst:open(DialogType.Login)
         --     end
         -- end)        
-        DialogManagerInst:open(DialogType.Login)
 
+        UnitySceneManager.LoadSceneAsync(SceneType.Update)
     end)
 end
 

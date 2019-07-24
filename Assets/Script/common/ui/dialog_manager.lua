@@ -14,19 +14,20 @@ function DialogManager:ctor()
     self.mapDialog = {}
 end
 
-function DialogManager:open(dialogType, callback, ...)
+function DialogManager:open(dialogType, ...)
     local args = {...}
     ResourcesManagerInst:LoadAssetBundleAsync(dialogType.AssetBundles, nil, function (arrRes)
         local dialog = Dialog.new()
         local res = ResourcesManagerInst:LoadAsset(dialogType.Path)
+        Tools.Assert(res, dialogType.Path .. " is null!")
         dialog.res = Unity.Object.Instantiate(res)
         local luaBehaviour = dialog.res:GetComponent(typeof(CSLuaBehaviour))
         dialog.id = luaBehaviour.id
         dialog.data = clone(dialogType)
         self.mapDialog[dialog.id] = dialog
-
-        if callback then
-            callback(dialog.id, table.unpack(args))
+        local behaviour = BehaviourManager.getBehaviour(luaBehaviour.id)
+        if behaviour.setValues then
+            behaviour:setValues(table.unpack(args))
         end
     end)
 end

@@ -21,6 +21,8 @@ local event = {
     -- language
     LanguageChange = "LanguageChange",
 
+    -- hot update
+    HotUpdateBeginDownload = "HotUpdateBeginDownload",
 }
 
 return event
