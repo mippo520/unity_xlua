@@ -13,9 +13,9 @@ local function _beginDownload(self)
 
     ResourcesManagerInst:Hotupdate(function (res, totalSize, err)
         if HotUpdateRes.Complete == res then
-            self.slider.value = 1
-            self.percentText.text = "100%"
-            self.speedText.text = ""
+            self.sliderCon.value = 1
+            self.percentTextCon.text = "100%"
+            self.speedTextCon.text = ""
             TimeManagerInst:onceTimer(800, self, function ()
                 Progress.restart()
             end)
@@ -24,22 +24,22 @@ local function _beginDownload(self)
         end
     end, function (percent)
         Info.Debug("download complete percent is " .. tostring(percent))
-        self.slider.value = percent
-        self.percentText.text = string.format("%.02f", percent * 100) .. "%"
+        self.sliderCon.value = percent
+        self.percentTextCon.text = string.format("%.02f", percent * 100) .. "%"
         local timeOffset = Now() - self.beginTime
         if 0 == percent or 0 == timeOffset then
-            self.speedText.text = ""
+            self.speedTextCon.text = ""
         else
             local curSize = self.totalSize * percent * 1000 / timeOffset
             if curSize < 1000 then
-                self.speedText.text = string.format("%.02f", curSize) .. "B/S"
+                self.speedTextCon.text = string.format("%.02f", curSize) .. "B/S"
             else
                 curSize = curSize / 1024
                 if curSize < 1000 then
-                    self.speedText.text = string.format("%.02f", curSize) .. "KB/S"
+                    self.speedTextCon.text = string.format("%.02f", curSize) .. "KB/S"
                 else
                     curSize = curSize / 1024
-                    self.speedText.text = string.format("%.02f", curSize) .. "M/S"
+                    self.speedTextCon.text = string.format("%.02f", curSize) .. "M/S"
                 end
             end    
         end
@@ -48,10 +48,13 @@ end
 
 function update:_awake()
     self:registEvent(Event.HotUpdateBeginDownload, handler(self, _beginDownload))
-    self.slider = self.gameObject.transform:GetChild(0):GetComponent(typeof(UnityUI.Slider))
-    self.percentText = self.gameObject.transform:GetChild(1):GetComponent(typeof(UnityUI.Text))
-    self.speedText = self.gameObject.transform:GetChild(2):GetComponent(typeof(UnityUI.Text))
+    self.sliderCon = self.slider:GetComponent(typeof(UnityUI.Slider))
+    self.percentTextCon = self.percentText:GetComponent(typeof(UnityUI.Text))
+    self.speedTextCon = self.speedText:GetComponent(typeof(UnityUI.Text))
     self.canvasGroup = self.gameObject:GetComponent(typeof(Unity.CanvasGroup))
+    self.canvasGroup.alpha = 0
+    self.canvasGroup.interactable = false
+    self.canvasGroup.blocksRaycasts = false
     self.totalSize = 0
     self.beginTime = 0
 end

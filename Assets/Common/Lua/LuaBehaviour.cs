@@ -22,19 +22,26 @@ namespace Assets.Common.Lua
         String,
         Double
     }
+
+    [Serializable]
+    public class stParamObj
+    {
+        public string name;
+        public UnityEngine.Object obj;
+        public string type;
+    }
+
+    [Serializable]
+    public class stStringObj
+    {
+        public string name;
+        public string obj;
+        public string type;
+    }
+
     public class LuaBehaviour : MonoBehaviour
     {
         public string luaScript;
-
-        [System.Serializable]
-        public struct Param
-        {
-            public string name;
-            public string value;
-            public BehaviourType type;
-        }
-
-        public List<Param> listParames = new List<Param>();
 
         private LuaFunction AwakeFunction;
         private LuaFunction StartFunction;
@@ -46,6 +53,12 @@ namespace Assets.Common.Lua
                 return m_Id;
             }
         }
+
+        [HideInInspector]
+        public List<stParamObj> listParams = new List<stParamObj>();
+
+        [HideInInspector]
+        public List<stStringObj> listStrings = new List<stStringObj>();
 
         void Awake()
         {
@@ -66,27 +79,31 @@ namespace Assets.Common.Lua
             OnDestroyFunction = luaBehaviour.Get<LuaFunction>("destroy");
             this.luaBehaviour.Set("behaviourObject", this);
 
-            foreach (Param arg in listParames)
+            foreach (stStringObj so in listStrings)
             {
-                switch(arg.type)
+                if (typeof(int).Name == so.type)
                 {
-                    case BehaviourType.Int:
-                        this.luaBehaviour.Set(arg.name, Convert.ToInt32(arg.value));
-                        break;
-                    case BehaviourType.Int64:
-                        this.luaBehaviour.Set(arg.name, Convert.ToInt64(arg.value));
-                        break;
-                    case BehaviourType.String:
-                        this.luaBehaviour.Set(arg.name, arg.value);
-                        break;
-                    case BehaviourType.Double:
-                        this.luaBehaviour.Set(arg.name, Convert.ToDouble(arg.value));
-                        break;
-                    default:
-                        Info.Error(string.Format("set param error! type is ", arg.type));
-                        break;
+                    this.luaBehaviour.Set(so.name, Convert.ToInt32(so.obj));
+                }
+                else if (typeof(Double).Name == so.type)
+                {
+                    this.luaBehaviour.Set(so.name, Convert.ToDouble(so.obj));
+                }
+                else if (typeof(string).Name == so.type)
+                {
+                    this.luaBehaviour.Set(so.name, so.obj);
+                }
+                else
+                {
+                    Info.Error("luaBehaviour awake error! arg type error! type is " + so.type);
                 }
             }
+
+            foreach (stParamObj po in listParams)
+            {
+                this.luaBehaviour.Set(po.name, po.obj);
+            }
+
 
             if (null != AwakeFunction)
             {

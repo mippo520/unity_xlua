@@ -472,7 +472,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   luaScript: ui.regist
-  listParames: []
+  listParams:
+  - name: userName
+    obj: {fileID: 7325731097243783182}
+    type: InputField
+  - name: password
+    obj: {fileID: 4980195591795226750}
+    type: InputField
+  - name: registBtn
+    obj: {fileID: 7041590461845367945}
+    type: Button
+  listStrings: []
 --- !u!1 &3887168719165307562
 GameObject:
   m_ObjectHideFlags: 0

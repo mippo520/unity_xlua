@@ -602,7 +602,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: New Text
+  m_Text: Text
 --- !u!222 &1245336301
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -623,8 +623,8 @@ GameObject:
   - component: {fileID: 1305342965}
   - component: {fileID: 1305342964}
   - component: {fileID: 1305342963}
-  - component: {fileID: 1305342962}
   - component: {fileID: 1305342967}
+  - component: {fileID: 1305342962}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -646,6 +646,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   luaScript: scene.update
   listParames: []
+  listObj: []
 --- !u!114 &1305342963
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -736,7 +737,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1305342961}
   m_Enabled: 1
-  m_Alpha: 0
+  m_Alpha: 1
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0

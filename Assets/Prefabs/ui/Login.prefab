@@ -172,10 +172,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   luaScript: common.language.localization
-  listParames:
-  - name: key
-    value: login
-    type: 2
+  a: 0
 --- !u!1 &2083426434607007140
 GameObject:
   m_ObjectHideFlags: 0
@@ -1136,7 +1133,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   luaScript: ui.login
-  listParames: []
+  a: 15
 --- !u!1 &8730858299332071732
 GameObject:
   m_ObjectHideFlags: 0
@@ -1342,6 +1339,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Interactable
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4170240427216915002, guid: 12aba4ffab5acfc419e3025f2d5f642d,
+        type: 3}
+      propertyPath: a
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6372935980601618429, guid: 12aba4ffab5acfc419e3025f2d5f642d,
         type: 3}

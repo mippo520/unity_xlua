@@ -8,12 +8,7 @@ function regist:_start()
     --     Info.Debug("coroutine!")
     -- end)
 
-    local input = self.wrap.transform:GetChild(0).gameObject:GetComponent(typeof(UnityUI.InputField))
-
-    local input1 = self.wrap.transform:GetChild(1).gameObject:GetComponent(typeof(UnityUI.InputField))
-
-    local btn = self.wrap.transform:GetChild(2).gameObject:GetComponent(typeof(UnityUI.Button))
-    self:addListener(btn.onClick, function ()
+    self:addListener(self.registBtn.onClick, function ()
         -- local account_name = input.text
         -- local password = input1.text
         -- local time = Now()
@@ -34,7 +29,10 @@ function regist:_start()
         --     end
         -- end)        
 
-        UnitySceneManager.LoadSceneAsync(SceneType.Update)
+        Info.Debug(self.userName.text)
+        Info.Debug(self.password.text)
+
+        -- UnitySceneManager.LoadSceneAsync(SceneType.Update)
     end)
 end
 
