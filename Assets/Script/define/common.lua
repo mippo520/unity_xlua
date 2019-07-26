@@ -36,6 +36,7 @@ LanguageManagerInst = require("common.language.language_manager").GetInstance()
 
 Behaviour = require("common.ui.behaviour.behaviour")
 DialogBehaviour = require("common.ui.behaviour.dialog_behaviour")
+BindProperty = require("common.bind.bind_property")
 XLuaUtil = require 'xlua.util'
 
 Now = handler(TimeManagerInst, TimeManagerInst.now)

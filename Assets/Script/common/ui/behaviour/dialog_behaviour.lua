@@ -23,6 +23,11 @@ function DialogBehaviour:awakeLogic()
     self:registEvent(Event.LanguageChange, _languageChange)
 end
 
+-- 关闭自己
+function DialogBehaviour:closeSelf()
+    DialogManagerInst:close(self.id)
+end
+
 function DialogBehaviour:close()
     local luaWrapBehaviour = self.wrap:GetComponent(typeof(CSLuaBehaviour))
     local luaWrap = BehaviourManager.getBehaviour(luaWrapBehaviour.id)

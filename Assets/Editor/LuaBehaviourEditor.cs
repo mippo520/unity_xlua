@@ -45,6 +45,10 @@ public class LuaBehaviourEditor : UnityEditor.Editor
             {
                 po.obj = EditorGUILayout.ObjectField("", po.obj as UnityEngine.Object, typeof(Slider), true);
             }
+            else if (typeof(Animator).Name == po.type)
+            {
+                po.obj = EditorGUILayout.ObjectField("", po.obj as UnityEngine.Object, typeof(Animator), true);
+            }
             else
             {
                 EditorGUILayout.LabelField("Type Error! error type is " + po.type);
@@ -114,6 +118,7 @@ public class LuaBehaviourEditor : UnityEditor.Editor
             AddParam<Slider>();
             AddParam<Button>();
             AddParam<InputField>();
+            AddParam<Animator>();
 
             GUILayout.EndScrollView();
         }

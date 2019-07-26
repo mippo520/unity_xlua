@@ -91,4 +91,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   luaScript: animate.ui.scale_fade.behaviour
-  listParames: []
+  listParams:
+  - name: animator
+    obj: {fileID: 6372935980601618429}
+    type: Animator
+  listStrings: []

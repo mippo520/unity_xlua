@@ -139,5 +139,9 @@ namespace Assets.Common.Lua
             AwakeFunction = null;
         }
 
+        public void onValueChanged()
+        {
+
+        }
     }
 }

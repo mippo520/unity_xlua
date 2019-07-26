@@ -1,23 +1,31 @@
 local login = class("login", DialogBehaviour)
 
+function login:ctor()
+    DialogBehaviour.ctor(self)
+    self.value = BindProperty.new("")
+end
+
+function login:_awake()
+    self:DoBindProperty(self.value, function (self, oldVlue, curValue)
+        self.username.text = curValue
+    end)
+end
+
+
 function login:_start()
     -- self:StartCoroutine(function ()
     --     coroutine.yield(Unity.WaitForSeconds(1))
 
     --     Info.Debug("coroutine!")
     -- end)
-    local input = self.wrap.transform:GetChild(1).gameObject:GetComponent(typeof(UnityUI.InputField))
 
-    local input1 = self.wrap.transform:GetChild(2).gameObject:GetComponent(typeof(UnityUI.InputField))
-
-    local loginBtn = self.wrap.transform:GetChild(4).gameObject:GetComponent(typeof(UnityUI.Button))
-    self:addListener(loginBtn.onClick, function ()
-        -- LoginControllerInst:login(input.text, input1.text)
-        DialogManagerInst:clearAll()
+    self:addListener(self.loginBtn.onClick, function ()
+        -- LoginControllerInst:login(self.username.text, self.password.text)
+        -- DialogManagerInst:clearAll()
+        self.value:set("abc") 
     end)
 
-    local registBtn = self.wrap.transform:GetChild(3).gameObject:GetComponent(typeof(UnityUI.Button))
-    self:addListener(registBtn.onClick, function ()
+    self:addListener(self.registBtn.onClick, function ()
         -- self:closeSelf()
         -- DialogManagerInst:open(DialogType.Regist)
         if not self.diaId then
@@ -31,7 +39,6 @@ function login:_start()
             LanguageManagerInst:setLanguage(LanguageType.zh)
         else
             LanguageManagerInst:setLanguage(LanguageType.en)
-
         end
     end)
 end

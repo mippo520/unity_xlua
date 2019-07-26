@@ -36,3 +36,4 @@ end
 function Progress:restart()
     UnitySceneManager.LoadSceneAsync(SceneType.Launcher)
 end
+
