@@ -7,13 +7,17 @@ function BindProperty:ctor(value)
 end
 
 function BindProperty:set(value)
-    Tools.Assert(self.type == type(value), "BindProperty set value type error! Object type is " .. self.type .. ", value type is " .. type(value))
+    if type(nil) ~= self.type then
+        Tools.Assert(self.type == type(value), "BindProperty set value type error! Object type is " .. self.type .. ", value type is " .. type(value))
+    end
     local bChanged = self.value ~= value
     if bChanged then
         local old = self.value
         self.value = value
-        for _, handler in pairs(self.mapListeners) do
-            handler(old, self.value)
+        for _, listener in pairs(self.mapListeners) do
+            for _, handler in pairs(listener) do
+                handler(old, self.value)
+            end
         end
     end
 end
@@ -28,7 +32,12 @@ end
 
 function BindProperty:bind(obj, func)
     if not self.mapListeners[obj] then
-        self.mapListeners[obj] = handler(obj, func)
+        self.mapListeners[obj] = {}
+    end
+    if not self.mapListeners[obj][func] then
+        local handler = handler(obj, func)
+        self.mapListeners[obj][func] = handler
+        handler(self.value, self.value)
     else
         Info.Error(obj.class.__cname .. " is already bind!")
     end

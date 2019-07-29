@@ -29,7 +29,11 @@ public class LuaBehaviourEditor : UnityEditor.Editor
             GUILayout.BeginHorizontal();
             po.name = EditorGUILayout.TextField("", po.name, GUILayout.Width(150));
 
-            if (typeof(Text).Name == po.type)
+            if (typeof(GameObject).Name == po.type)
+            {
+                po.obj = EditorGUILayout.ObjectField("", po.obj as UnityEngine.Object, typeof(GameObject), true);
+            }
+            else if (typeof(Text).Name == po.type)
             {
                 po.obj = EditorGUILayout.ObjectField("", po.obj as UnityEngine.Object, typeof(Text), true);
             }
@@ -48,6 +52,18 @@ public class LuaBehaviourEditor : UnityEditor.Editor
             else if (typeof(Animator).Name == po.type)
             {
                 po.obj = EditorGUILayout.ObjectField("", po.obj as UnityEngine.Object, typeof(Animator), true);
+            }
+            else if (typeof(Image).Name == po.type)
+            {
+                po.obj = EditorGUILayout.ObjectField("", po.obj as UnityEngine.Object, typeof(Image), true);
+            }
+            else if (typeof(CanvasGroup).Name == po.type)
+            {
+                po.obj = EditorGUILayout.ObjectField("", po.obj as UnityEngine.Object, typeof(CanvasGroup), true);
+            }
+            else if (typeof(RectTransform).Name == po.type)
+            {
+                po.obj = EditorGUILayout.ObjectField("", po.obj as UnityEngine.Object, typeof(RectTransform), true);
             }
             else
             {
@@ -114,11 +130,15 @@ public class LuaBehaviourEditor : UnityEditor.Editor
             AddParam<int>();
             AddParam<String>();
             AddParam<Double>();
+            AddParam<GameObject>();
             AddParam<Text>();
             AddParam<Slider>();
             AddParam<Button>();
             AddParam<InputField>();
             AddParam<Animator>();
+            AddParam<Image>();
+            AddParam<CanvasGroup>();
+            AddParam<RectTransform>();
 
             GUILayout.EndScrollView();
         }

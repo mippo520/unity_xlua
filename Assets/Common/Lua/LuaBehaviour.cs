@@ -139,9 +139,22 @@ namespace Assets.Common.Lua
             AwakeFunction = null;
         }
 
-        public void onValueChanged()
+        public void onValueChanged(string name)
         {
-
+            if (null == name || "" == name)
+            {
+                Info.Error("LuaBehaviour onValueChanged error! Do not declare a name for this function in lua!");
+                return;
+            }
+            var func = luaBehaviour.Get<LuaFunction>("onValueChanged_" + name);
+            if (null != func)
+            {
+                func.Call(luaBehaviour);
+            }
+            else
+            {
+                Info.Error("LuaBehaviour onValueChanged error! Can not finded function name " + name + "!");
+            }
         }
     }
 }

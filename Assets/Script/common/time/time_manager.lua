@@ -115,7 +115,7 @@ function TimeManager:loopTimer(firstInterval, interval, obj, func, count, ...)
 end
 
 
-function TimeManager:unregistTimer(id)
+function TimeManager:stopTimer(id)
     local bRet = false
 
     for i, timer in ipairs(self.arrTimer) do

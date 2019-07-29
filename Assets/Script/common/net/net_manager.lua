@@ -121,7 +121,7 @@ function NetManager:connect(ip, port)
     end
     if self.reconnectTimerId > 0 then
         _resetConnectData(self)
-        TimeManagerInst:unregistTimer(self.reconnectTimerId)
+        TimeManagerInst:stopTimer(self.reconnectTimerId)
         self.reconnectTimerId = 0
     end
     Net.GetInstance():Connect(ip, port, handler(self, connectCallback))

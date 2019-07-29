@@ -6,17 +6,20 @@ function Timer:ctor(id, time, obj, func, interval, count, ...)
     self._obj = obj
     self._func = func
     self._interval = interval
-    self._count = count
+    if "number" ~= count then
+        count = tonumber(count)
+    end
+    self._count = math.floor(count)
     self._handler = handler(obj, func)
     self._args = {...}
 end
 
 function Timer:call()
-    self._handler(table.unpack(self._args))
+    self._handler(self, table.unpack(self._args))
 end
 
 function Timer:updateTime()
-    if not self._interval or 0 == self._interval or not self._count or 0 == self._count then
+    if not self._interval or self._interval <= 0 or not self._count or self._count <= 0 then
         return false
     else
         self._time = self._time + self._interval
@@ -25,6 +28,10 @@ function Timer:updateTime()
         end
         return true
     end
+end
+
+function Timer:getCount()
+    return self._count
 end
 
 return Timer

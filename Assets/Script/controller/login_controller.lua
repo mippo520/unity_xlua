@@ -14,7 +14,7 @@ local _login = nil
 local function _clearNetData(self)
     self.connectCount = 0
     if self.reconnectTimerId > 0 then
-        TimeManagerInst:unregistTimer(self.reconnectTimerId)
+        TimeManagerInst:stopTimer(self.reconnectTimerId)
         self.reconnectTimerId = 0
     end
 end 

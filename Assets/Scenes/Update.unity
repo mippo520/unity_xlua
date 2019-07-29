@@ -645,8 +645,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   luaScript: scene.update
-  listParames: []
-  listObj: []
+  listParams:
+  - name: slider
+    obj: {fileID: 1592926257}
+    type: Slider
+  - name: percent
+    obj: {fileID: 354429326}
+    type: Text
+  - name: speed
+    obj: {fileID: 1245336300}
+    type: Text
+  - name: canvasGroup
+    obj: {fileID: 1305342967}
+    type: CanvasGroup
+  listStrings: []
 --- !u!114 &1305342963
 MonoBehaviour:
   m_ObjectHideFlags: 0

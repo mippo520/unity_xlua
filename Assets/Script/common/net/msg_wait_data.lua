@@ -36,10 +36,10 @@ function MsgWaitData:release()
     end
 
     if self.beginWaitId > 0 then
-        TimeManagerInst:unregistTimer(self.beginWaitId)
+        TimeManagerInst:stopTimer(self.beginWaitId)
     end
     if self.timeoutId > 0 then
-        TimeManagerInst:unregistTimer(self.timeoutId)
+        TimeManagerInst:stopTimer(self.timeoutId)
     end
 end
 

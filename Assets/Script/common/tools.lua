@@ -29,4 +29,13 @@ function Tools.Assert(obj, message)
     end
 end
 
+function Tools.IsNumberEqual(n1, n2)
+    local n = n1 - n2
+    if n < 0.00001 and n > -0.00001 then
+        return true
+    else
+        return false
+    end
+end
+
 return Tools

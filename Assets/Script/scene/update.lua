@@ -11,35 +11,36 @@ local function _beginDownload(self)
     self.canvasGroup.interactable = true
     self.canvasGroup.blocksRaycasts = true
 
-    ResourcesManagerInst:Hotupdate(function (res, totalSize, err)
+    ResourcesManagerInst:Hotupdate(function (res, totalSize, msg)
         if HotUpdateRes.Complete == res then
+            Version.set(msg)
             self.sliderCon.value = 1
-            self.percentTextCon.text = "100%"
-            self.speedTextCon.text = ""
+            self.percent.text = "100%"
+            self.speed.text = ""
             TimeManagerInst:onceTimer(800, self, function ()
                 Progress.restart()
             end)
         else
-            Info.Error("hot update download error! " .. err);
+            Info.Error("hot update download error! " .. msg);
         end
     end, function (percent)
         Info.Debug("download complete percent is " .. tostring(percent))
         self.sliderCon.value = percent
-        self.percentTextCon.text = string.format("%.02f", percent * 100) .. "%"
+        self.percent.text = string.format("%.02f", percent * 100) .. "%"
         local timeOffset = Now() - self.beginTime
         if 0 == percent or 0 == timeOffset then
-            self.speedTextCon.text = ""
+            self.speed.text = ""
         else
             local curSize = self.totalSize * percent * 1000 / timeOffset
             if curSize < 1000 then
-                self.speedTextCon.text = string.format("%.02f", curSize) .. "B/S"
+                self.speed.text = string.format("%.02f", curSize) .. "B/S"
             else
                 curSize = curSize / 1024
                 if curSize < 1000 then
-                    self.speedTextCon.text = string.format("%.02f", curSize) .. "KB/S"
+                    self.speed.text = string.format("%.02f", curSize) .. "KB/S"
                 else
                     curSize = curSize / 1024
-                    self.speedTextCon.text = string.format("%.02f", curSize) .. "M/S"
+                    self.speed.text = string.format("%.02f", curSize) .. "M/S"
                 end
             end    
         end
@@ -48,10 +49,6 @@ end
 
 function update:_awake()
     self:registEvent(Event.HotUpdateBeginDownload, handler(self, _beginDownload))
-    self.sliderCon = self.slider:GetComponent(typeof(UnityUI.Slider))
-    self.percentTextCon = self.percentText:GetComponent(typeof(UnityUI.Text))
-    self.speedTextCon = self.speedText:GetComponent(typeof(UnityUI.Text))
-    self.canvasGroup = self.gameObject:GetComponent(typeof(Unity.CanvasGroup))
     self.canvasGroup.alpha = 0
     self.canvasGroup.interactable = false
     self.canvasGroup.blocksRaycasts = false
@@ -60,8 +57,9 @@ function update:_awake()
 end
 
 function update:_start()
-    ResourcesManagerInst:CompareUpdateFile(function (res, totalSize, err)
+    ResourcesManagerInst:CompareUpdateFile(function (res, totalSize, msg)
         if HotUpdateRes.Complete == res then
+            Version:set(msg)
             _updateComplete(self)
         elseif HotUpdateRes.Begin == res then
             local size = totalSize / 1024
@@ -76,7 +74,7 @@ function update:_start()
             end, "check_download", size, unit)
             self.totalSize = totalSize
         else
-            Info.Error("CompareUpdateFile error! " .. err);
+            Info.Error("CompareUpdateFile error! " .. msg);
         end
     end)
 end

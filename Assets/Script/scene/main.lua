@@ -34,7 +34,7 @@ local function loopFinish(self)
     Info.Debug("loopFinish timesup " .. Now())
     n = n + 1
     if n == 20 then
-        TimeManagerInst:unregistTimer(id)
+        TimeManagerInst:stopTimer(id)
     end
 end
 

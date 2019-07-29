@@ -98,7 +98,42 @@ function Behaviour:DoBindProperty(property, func)
     table.insert(self.arrBindpropertys, property)
 end
 
+-- 绑定Text控件,会在对象destroy的时候解绑
+function Behaviour:DoBindText(property, text, ani, ...)
+    local arg = {...}
+    self:DoBindProperty(property, function (self, oldValue, curValue)
+        if not ani then
+            if "string" == type(curValue) then
+                text.text = curValue
+            else
+                text.text = tostring(curValue)
+            end
+        else
+            ani(text, curValue, table.unpack(arg))
+        end
+    end)
+end
+
+-- 双向绑定InputField控件,会在对象destroy的时候解绑
+function Behaviour:DoBindInputField(property, input)
+    self:DoBindProperty(property, function (self, oldValue, curValue)
+        if "string" == type(curValue) then
+            input.text = curValue
+        else
+            input.text = tostring(curValue)
+        end
+    end)
+
+    self:addListener(input.onValueChanged, function ()
+        property:set(input.text)
+    end)
+end
+
 -- 加载Asset
+function Behaviour:LoadAssetAs(path, type)
+    return ResourcesManagerInst:LoadAsset(path, type)
+end
+
 function Behaviour:LoadAsset(path)
     return ResourcesManagerInst:LoadAsset(path)
 end

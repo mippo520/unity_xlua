@@ -8,6 +8,7 @@ Error = require("define.error")
 LoginType = require("define.login_type")
 LanguageType = require("define.language_type")
 SceneType = require("define.scene_type")
+StorageKey = require("define.storage_key")
 
 Tools = require("common.tools")
 
@@ -26,6 +27,10 @@ ResourcesManagerInst = CSCommon.Resource.ResourcesManager.GetInstance()
 Time = CSCommon.Tools.Time
 HttpState = CS.Assets.Common.Net.HttpState
 
+RapidJson = require 'rapidjson'
+PB = require 'pb'
+Protoc = require 'common.pb.protoc'
+c_gs = require("pb.pb")
 
 NetManagerInst = require("common.net.net_manager").GetInstance()
 EventManagerInst = require("common.event.event_manager").GetInstance()
@@ -33,6 +38,7 @@ TimeManagerInst = require("common.time.time_manager").GetInstance()
 DialogManagerInst = require("common.ui.dialog_manager").GetInstance()
 HttpManagerInst = require("common.net.http_manager").GetInstance()
 LanguageManagerInst = require("common.language.language_manager").GetInstance()
+StorageInst = require("common.storage.storage").GetInstance()
 
 Behaviour = require("common.ui.behaviour.behaviour")
 DialogBehaviour = require("common.ui.behaviour.dialog_behaviour")
@@ -41,9 +47,8 @@ XLuaUtil = require 'xlua.util'
 
 Now = handler(TimeManagerInst, TimeManagerInst.now)
 
-RapidJson = require 'rapidjson'
-PB = require 'pb'
-Protoc = require 'common.pb.protoc'
-c_gs = require("pb.pb")
 
 LoginControllerInst = require("controller.login_controller").GetInstance()
+AccountDataInst = require("module.account_data").GetInstance()
+
+Version = BindProperty.new("0.0.0")

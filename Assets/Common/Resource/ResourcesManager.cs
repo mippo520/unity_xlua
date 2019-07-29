@@ -132,6 +132,23 @@ namespace Assets.Common.Resource
 #endif
         }
 
+        public UnityEngine.Object LoadAsset(string path, Type type)
+        {
+#if UNITY_EDITOR && !DEBUG_ASSETBUNDLE
+            return AssetDatabase.LoadAssetAtPath(path, type);
+#else
+            path = path.ToLower();
+            if (m_DicAsset.ContainsKey(path))
+            {
+                return m_DicAsset[path] as type;
+            }
+            else
+            {
+                return null;
+            }
+#endif
+        }
+
         public T LoadAsset<T>(string path) where T : UnityEngine.Object
         {
 #if UNITY_EDITOR && !DEBUG_ASSETBUNDLE
@@ -168,7 +185,7 @@ namespace Assets.Common.Resource
         {
 #if UNITY_EDITOR && !DEBUG_ASSETBUNDLE
             yield return 0;
-            resCallback(HotUpdateRes.Complete, 0, "");
+            resCallback(HotUpdateRes.Complete, 0, "0.0.1");
 #else
             m_UpdateTotalSize = 0;
             m_DicUpdateFile.Clear();
@@ -222,7 +239,7 @@ namespace Assets.Common.Resource
                     m_DicFileData = JsonConvert.DeserializeObject<VersionFileData>(downloadFileDataText).data;
                 }
 
-                resCallback(HotUpdateRes.Complete, 0, "");
+                resCallback(HotUpdateRes.Complete, 0, curData.version);
                 yield break;
             }
 
@@ -268,7 +285,7 @@ namespace Assets.Common.Resource
         {
 #if UNITY_EDITOR && !DEBUG_ASSETBUNDLE
             yield return 0;
-            resCallback(HotUpdateRes.Complete, 0, "");
+            resCallback(HotUpdateRes.Complete, 0, "0.0.1");
 #else
             if (null == m_CurFileData)
             {
@@ -360,7 +377,7 @@ namespace Assets.Common.Resource
 
                 File.WriteAllText(Application.persistentDataPath + "/" + s_VersionFileName, m_NetText);
                 m_DicFileData = m_CurFileData.data;
-                resCallback(HotUpdateRes.Complete, m_UpdateTotalSize, "");
+                resCallback(HotUpdateRes.Complete, m_UpdateTotalSize, m_CurFileData.version);
             }
             else
             {

@@ -21,7 +21,7 @@ Progress = class("Progress")
 function Progress:start()
     NetManagerInst:init()
     TimeManagerInst:init()
-    UnitySceneManager.LoadSceneAsync(SceneType.Main)
+    UnitySceneManager.LoadSceneAsync(SceneType.Update)
 end
 
 function Progress:update()
