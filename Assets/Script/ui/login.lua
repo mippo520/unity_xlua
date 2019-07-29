@@ -4,6 +4,7 @@ local NumberAni = require("animate.ui.text.number")
 function login:ctor()
     DialogBehaviour.ctor(self)
     self.value = BindProperty.new(0)
+    self.sliderValue = BindProperty.new(0.0)
 end
 
 function login:_awake()
@@ -17,6 +18,9 @@ function login:_awake()
     self:DoBindProperty(AccountDataInst.password, function ()
         StorageInst:set(StorageKey.password, AccountDataInst.password:get())
     end)
+
+    self:DoBindSlider(self.sliderValue, self.slider)
+    self:DoBindText(self.sliderValue, self.testText)
 
 end
 
@@ -52,7 +56,8 @@ function login:_start()
         --     LanguageManagerInst:setLanguage(LanguageType.en)
         -- end
         -- AccountDataInst.username:set(AccountDataInst.username:get() .. "abc")
-        self.value:set(self.value:get() + 100)
+        -- self.value:set(self.value:get() + 100)
+        self.sliderValue:set(self.sliderValue:get() - 0.1)
     end)
 end
 

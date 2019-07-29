@@ -129,6 +129,21 @@ function Behaviour:DoBindInputField(property, input)
     end)
 end
 
+-- 双向绑定Slider控件,会在对象destroy的时候解绑
+function Behaviour:DoBindSlider(property, slider)
+    self:DoBindProperty(property, function (self, oldValue, curValue)
+        if "number" == type(curValue) then
+            slider.value = curValue
+        else
+            slider.value = tonumber(curValue)
+        end
+    end)
+
+    self:addListener(slider.onValueChanged, function ()
+        property:set(slider.value)
+    end)
+end
+
 -- 加载Asset
 function Behaviour:LoadAssetAs(path, type)
     return ResourcesManagerInst:LoadAsset(path, type)
