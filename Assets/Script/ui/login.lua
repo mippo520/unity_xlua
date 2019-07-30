@@ -4,11 +4,11 @@ local NumberAni = require("animate.ui.text.number")
 function login:ctor()
     DialogBehaviour.ctor(self)
     self.value = BindProperty.new(0)
-    self.sliderValue = BindProperty.new(0.0)
+    self.sliderValue = BindProperty.new(0)
 end
 
 function login:_awake()
-    self:DoBindText(self.value, self.testText, NumberAni.Roll, 1000)
+    self:DoBindText(self.value, self.testText, NumberAni, 1000)
     self:DoBindText(Version, self.version)
     self:DoBindInputField(AccountDataInst.username, self.username)
     self:DoBindInputField(AccountDataInst.password, self.password)
@@ -20,7 +20,7 @@ function login:_awake()
     end)
 
     self:DoBindSlider(self.sliderValue, self.slider)
-    self:DoBindText(self.sliderValue, self.testText)
+    -- self:DoBindText(self.sliderValue, self.testText)
 
 end
 
@@ -35,9 +35,10 @@ function login:_start()
     self:addListener(self.loginBtn.onClick, function ()
         -- LoginControllerInst:login(self.username.text, self.password.text)
         -- DialogManagerInst:clearAll()
-        self:LoadAssetBundleAsync({"test_ui_png"}, nil, function ()
-            self.background.sprite = self:LoadAssetAs("Assets/Prefabs/home_menu.png", typeof(Unity.Sprite))
-        end)
+        -- self:LoadAssetBundleAsync({"test_ui_png"}, nil, function ()
+        --     self.background.sprite = self:LoadAssetAs("Assets/Prefabs/home_menu.png", typeof(Unity.Sprite))
+        -- end)
+        self:closeSelf()
     end)
 
     self:addListener(self.registBtn.onClick, function ()
@@ -56,8 +57,8 @@ function login:_start()
         --     LanguageManagerInst:setLanguage(LanguageType.en)
         -- end
         -- AccountDataInst.username:set(AccountDataInst.username:get() .. "abc")
-        -- self.value:set(self.value:get() + 100)
-        self.sliderValue:set(self.sliderValue:get() - 0.1)
+        self.value:set(self.value:get() + 100)
+        -- self.sliderValue:set(self.sliderValue:get() - 0.1)
     end)
 end
 

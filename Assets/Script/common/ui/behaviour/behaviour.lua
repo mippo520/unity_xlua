@@ -5,6 +5,7 @@ function Behaviour:ctor()
     self.registedEvent = {}
     self.id = 0
     self.arrBindpropertys = {}
+    self.mapAnimate = {}
 end
 
 function Behaviour:awakeLogic()
@@ -46,6 +47,10 @@ function Behaviour:destroy()
 
     for i, v in ipairs(self.arrBindpropertys) do
         v:unbind(self)
+    end
+
+    for k, _ in pairs(self.mapAnimate) do
+        k:stop()
     end
 
     if self._destroy then
@@ -99,17 +104,21 @@ function Behaviour:DoBindProperty(property, func)
 end
 
 -- 绑定Text控件,会在对象destroy的时候解绑
-function Behaviour:DoBindText(property, text, ani, ...)
+function Behaviour:DoBindText(property, text, animate, ...)
     local arg = {...}
     self:DoBindProperty(property, function (self, oldValue, curValue)
-        if not ani then
+        if not animate then
             if "string" == type(curValue) then
                 text.text = curValue
             else
                 text.text = tostring(curValue)
             end
         else
-            ani(text, curValue, table.unpack(arg))
+            local ani = animate.new()
+            ani:init(text, curValue, function ()
+                self.mapAnimate[ani] = nil
+            end, table.unpack(arg))
+            self.mapAnimate[ani] = true
         end
     end)
 end
