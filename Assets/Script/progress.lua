@@ -15,6 +15,7 @@ end
 
 require("setting")
 require("define.common")
+require("define.engine_extend")
 
 Progress = class("Progress")
 

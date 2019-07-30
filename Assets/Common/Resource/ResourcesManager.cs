@@ -1,4 +1,4 @@
-﻿// #define DEBUG_ASSETBUNDLE
+﻿#define DEBUG_ASSETBUNDLE
 
 using Assets.Common.Log;
 using Assets.Common.Singleton;
@@ -124,23 +124,6 @@ namespace Assets.Common.Resource
             if (m_DicAsset.ContainsKey(path))
             {
                 return m_DicAsset[path];
-            }
-            else
-            {
-                return null;
-            }
-#endif
-        }
-
-        public UnityEngine.Object LoadAsset(string path, Type type)
-        {
-#if UNITY_EDITOR && !DEBUG_ASSETBUNDLE
-            return AssetDatabase.LoadAssetAtPath(path, type);
-#else
-            path = path.ToLower();
-            if (m_DicAsset.ContainsKey(path))
-            {
-                return m_DicAsset[path] as type;
             }
             else
             {
