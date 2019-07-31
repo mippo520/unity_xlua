@@ -86,6 +86,9 @@ namespace Assets.Editor
             m_conetent = "begin ...";
             Repaint();
 
+            CustomTools.textFile2Txt();
+            AssetDatabase.Refresh();
+
             string str = Application.dataPath + "/StreamingAssets";
             DirectoryInfo dirInfo = new DirectoryInfo(str);
             if (!dirInfo.Exists)
@@ -119,12 +122,22 @@ namespace Assets.Editor
             vfd.version = m_Version;
             vfd.url = m_Url;
             vfd.data = null;
+
+            DirectoryInfo resDir = new DirectoryInfo(Application.dataPath + "/Resources");
+            if (!resDir.Exists)
+            {
+                resDir.Create();
+            }
+
             File.WriteAllBytes(Application.dataPath + "/Resources/" + ResourcesManager.s_VersionFileName, System.Text.Encoding.Default.GetBytes(JsonConvert.SerializeObject(vfd)));
 
             vfd.data = new Dictionary<string, FileData>();
             // 生成版本文件
             createVersionFileData(vfd.data, "");
             File.WriteAllBytes(Application.dataPath + "/Resources/file_data.txt", System.Text.Encoding.Default.GetBytes(JsonConvert.SerializeObject(vfd)));
+
+            CustomTools.textFileRecover();
+            AssetDatabase.Refresh();
 
             m_conetent = "complete!";
             m_Version = vfd.version;

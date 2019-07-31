@@ -21,7 +21,6 @@ function login:_awake()
 
     self:DoBindSlider(self.sliderValue, self.slider)
     -- self:DoBindText(self.sliderValue, self.testText)
-
 end
 
 
@@ -31,12 +30,13 @@ function login:_start()
 
     --     Info.Debug("coroutine!")
     -- end)
+    local spineState = self.spine.AnimationState
 
     self:addListener(self.loginBtn.onClick, function ()
         -- LoginControllerInst:login(self.username.text, self.password.text)
         -- DialogManagerInst:clearAll()
-        self:LoadAssetBundleAsync({"test_ui_png"}, nil, function ()
-            self.background.sprite = Sprite.Create(self:LoadAssetAs("Assets/Prefabs/home_menu.png"))
+        self:LoadAssetBundleAsync({"animate/doi"}, nil, function ()
+            self.background.sprite = Sprite.Create(self:LoadAssetAs("Assets/Animation/spine/Doi/Doi.png"))
         end)
         -- self:closeSelf()
     end)
@@ -57,8 +57,9 @@ function login:_start()
         --     LanguageManagerInst:setLanguage(LanguageType.en)
         -- end
         -- AccountDataInst.username:set(AccountDataInst.username:get() .. "abc")
-        self.value:set(self.value:get() + 100)
+        -- self.value:set(self.value:get() + 100)
         -- self.sliderValue:set(self.sliderValue:get() - 0.1)
+        spineState:AddAnimation(0, "main", true, 0);
     end)
 end
 

@@ -1,5 +1,6 @@
 ﻿using Assets.Common.Log;
 using Assets.Common.Lua;
+using Spine.Unity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -64,6 +65,14 @@ public class LuaBehaviourEditor : UnityEditor.Editor
             else if (typeof(RectTransform).Name == po.type)
             {
                 po.obj = EditorGUILayout.ObjectField("", po.obj as UnityEngine.Object, typeof(RectTransform), true);
+            }
+            else if (typeof(SkeletonAnimation).Name == po.type)
+            {
+                po.obj = EditorGUILayout.ObjectField("", po.obj as UnityEngine.Object, typeof(SkeletonAnimation), true);
+            }
+            else if (typeof(SkeletonGraphic).Name == po.type)
+            {
+                po.obj = EditorGUILayout.ObjectField("", po.obj as UnityEngine.Object, typeof(SkeletonGraphic), true);
             }
             else
             {
@@ -139,6 +148,8 @@ public class LuaBehaviourEditor : UnityEditor.Editor
             AddParam<Image>();
             AddParam<CanvasGroup>();
             AddParam<RectTransform>();
+            AddParam<SkeletonAnimation>();
+            AddParam<SkeletonGraphic>();
 
             GUILayout.EndScrollView();
         }

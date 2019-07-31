@@ -10,15 +10,13 @@ namespace Assets.Editor
 {
     public class CustomTools
     {
-        [MenuItem("Custom/textFile2Txt")]
-        static void textFile2Txt()
+        public static void textFile2Txt()
         {
             DirectoryInfo dirInfo = new DirectoryInfo(Application.dataPath + "/Script");
             _changeFileExtension(dirInfo, ".lua", ".txt");
         }
 
-        [MenuItem("Custom/textFileRecover")]
-        static void textFileRecover()
+        public static void textFileRecover()
         {
             DirectoryInfo dirInfo = new DirectoryInfo(Application.dataPath + "/Script");
             _changeFileExtension(dirInfo, ".txt", ".lua");
