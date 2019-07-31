@@ -29,7 +29,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 5799216730251484608}
+  m_Father: {fileID: 2454617792555522976}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -110,8 +110,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
-  - {fileID: 6491680044514729979}
-  - {fileID: 5799216730251484608}
+  - {fileID: 1663337934221485672}
+  - {fileID: 2454617792555522976}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -192,8 +192,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12cb57cb843f8034d9bc192a02abdba5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  luaScript: ui.common.tips
-  listParames: []
+  luaScript: ui/common/tips.lua
+  listParams: []
+  listStrings: []
 --- !u!1 &5876935608231942121
 GameObject:
   m_ObjectHideFlags: 0
@@ -287,10 +288,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   luaScript: common.language.localization
-  listParames:
-  - name: key
-    value: ok
-    type: 2
+  listParams: []
+  listStrings: []
 --- !u!1 &6498690108371934474
 GameObject:
   m_ObjectHideFlags: 0
@@ -322,7 +321,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 6110151282515193822}
-  m_Father: {fileID: 5799216730251484608}
+  m_Father: {fileID: 2454617792555522976}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -531,7 +530,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bf04202584ddbd440aba0f0b9a41d1f8, type: 3}
---- !u!224 &6491680044514729979 stripped
+--- !u!224 &1663337934221485672 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3491249409564772014, guid: bf04202584ddbd440aba0f0b9a41d1f8,
     type: 3}
@@ -656,7 +655,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12aba4ffab5acfc419e3025f2d5f642d, type: 3}
---- !u!224 &5799216730251484608 stripped
+--- !u!224 &2454617792555522976 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6372935980601618424, guid: 12aba4ffab5acfc419e3025f2d5f642d,
     type: 3}

@@ -90,7 +90,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12cb57cb843f8034d9bc192a02abdba5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  luaScript: animate.ui.scale_fade.behaviour
+  luaScript: animate/ui/scale_fade/behaviour.lua
   listParams:
   - name: animator
     obj: {fileID: 6372935980601618429}

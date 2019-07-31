@@ -1,6 +1,7 @@
 ﻿using Assets.Common.Log;
 using Assets.Common.Net;
 using Assets.Common.Resource;
+using Assets.Common.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -41,6 +42,7 @@ namespace Assets.Common.Lua
 
     public class LuaBehaviour : MonoBehaviour
     {
+        [FilePath("Script", ".lua")]
         public string luaScript;
 
         private LuaFunction AwakeFunction;
@@ -64,6 +66,13 @@ namespace Assets.Common.Lua
         {
             m_Id = LuaManager.GetInstance().GetId();
             var luaEnv = LuaManager.GetInstance().Env;
+
+            var luaExtBegin = luaScript.LastIndexOf(".lua");
+            if (luaExtBegin >= 0)
+            {
+                luaScript = luaScript.Substring(0, luaExtBegin);
+            }
+
             var beginIndex = luaScript.LastIndexOf(".") + 1;
             var scriptName = luaScript;
             if (beginIndex >= 0 && beginIndex < luaScript.Length)
@@ -103,7 +112,6 @@ namespace Assets.Common.Lua
             {
                 this.luaBehaviour.Set(po.name, po.obj);
             }
-
 
             if (null != AwakeFunction)
             {

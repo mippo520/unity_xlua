@@ -117,7 +117,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12cb57cb843f8034d9bc192a02abdba5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  luaScript: ui.network
+  luaScript: luadebug.lua
+  listParams: []
+  listStrings: []
 --- !u!1 &5981393414294027849
 GameObject:
   m_ObjectHideFlags: 0
