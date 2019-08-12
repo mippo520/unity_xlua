@@ -1,6 +1,11 @@
 
 local Behaviour = class("Behaviour", AutoObject)
 
+function Behaviour.GetLuaBehaviour(gameOjbect)
+    local cellLuaCom = gameOjbect:GetComponent(typeof(CSLuaBehaviour))
+    return  BehaviourManager.getBehaviour(cellLuaCom.id)
+end
+
 function Behaviour:ctor()
     AutoObject.ctor(self)
     self.mapAnimate = {}

@@ -58,11 +58,13 @@ local function _updateList(self)
                     local cell = self.mapCells[i]
                     local pos = cell.anchoredPosition
                     if self.isVertical then
-                        pos.y = -posY
-                        posY = posY + cell.rect.height
+                        local height = cell.rect.height
+                        pos.y = -posY - (1 - cell.pivot.y) * height
+                        posY = posY + height
                     else
-                        pos.x = posX
-                        posX = posX + cell.rect.width
+                        local width = cell.rect.width
+                        pos.x = posX + cell.pivot.x * width
+                        posX = posX + width
                     end
                     cell.anchoredPosition = pos
                 end
@@ -97,11 +99,13 @@ local function _updateList(self)
             local pos = cell.anchoredPosition
             local cellHeight = 0
             if self.isVertical then
-                pos.y = 0
-                cellHeight = cell.rect.height
+                local height = cell.rect.height
+                pos.y =  -(1 - cell.pivot.y) * height
+                cellHeight = height
             else
-                pos.x = 0
-                cellHeight = cell.rect.width
+                local width = cell.rect.width
+                pos.x = cell.pivot.x * width
+                cellHeight = width
             end
             cell.anchoredPosition = pos
      
@@ -124,11 +128,13 @@ local function _updateList(self)
             local cell = self.mapCells[i]
             local pos = cell.anchoredPosition
             if self.isVertical then
-                pos.y = -posY
-                posY = posY + cell.rect.height
+                local height = cell.rect.height
+                pos.y = -posY - (1 - cell.pivot.y) * height
+                posY = posY + height
             else
-                pos.x = posX
-                posX = posX + cell.rect.width
+                local width = cell.rect.width
+                pos.x = posX + cell.pivot.x * width
+                posX = posX + width
             end
             cell.anchoredPosition = pos
         end
@@ -146,11 +152,13 @@ local function _updateList(self)
         -- 设置坐标
         local pos = cell.anchoredPosition
         if self.isVertical then
-            pos.y = -curHeight
-            curHeight = curHeight + cell.rect.height
+            local height = cell.rect.height
+            pos.y = -curHeight - (1 - cell.pivot.y) * height
+            curHeight = curHeight + height
         else
-            pos.x = curHeight
-            curHeight = curHeight + cell.rect.width
+            local width = cell.rect.width
+            pos.x = curHeight + cell.pivot.x * width
+            curHeight = curHeight + width
         end
         cell.anchoredPosition = pos
         -- 设置可见和可操作
@@ -204,7 +212,7 @@ function ListView:ctor()
 end
 
 function ListView:_getCount()
-    Info.Error("Please rewrite this function to set list count!")
+    Info.Error("Please override _getCount function to set cell count!")
     return 0
 end
 
@@ -228,8 +236,8 @@ function ListView:_insertToPool(self, cell)
 end
 
 function ListView:_initCell(cellBehaviour, index)
-    Info.Error("Please rewrite this function to init cell!")
-    return cellBehaviour
+    Info.Error("Please override _initCell function to init cell!")
+    return nil
 end
 
 function ListView:_start()
@@ -269,7 +277,7 @@ end
 
 function ListView:onDrag(eventData)
     if not Tools.IsNumberEqual(self.onDrageMovementDis, 0) then
-        -- 即使代码修改了content的位置但是通过的时候引擎计算的仍然是原来的位置,所以拖动的时候要减去位置差
+        -- 即使代码修改了content的位置但是通过的时候引擎计算的仍然是原来的位置,所以拖动的时候要减去代码移动的位置差
         if self.isVertical then
             self.content.anchoredPosition = Unity.Vector2(self.content.anchoredPosition.x, self.content.anchoredPosition.y + self.onDrageMovementDis)
         else
