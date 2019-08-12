@@ -66,6 +66,10 @@ public class LuaBehaviourEditor : UnityEditor.Editor
             {
                 po.obj = EditorGUILayout.ObjectField("", po.obj as UnityEngine.Object, typeof(RectTransform), true);
             }
+            else if (typeof(ScrollRect).Name == po.type)
+            {
+                po.obj = EditorGUILayout.ObjectField("", po.obj as UnityEngine.Object, typeof(ScrollRect), true);
+            }
             else if (typeof(SkeletonAnimation).Name == po.type)
             {
                 po.obj = EditorGUILayout.ObjectField("", po.obj as UnityEngine.Object, typeof(SkeletonAnimation), true);
@@ -148,6 +152,7 @@ public class LuaBehaviourEditor : UnityEditor.Editor
             AddParam<Image>();
             AddParam<CanvasGroup>();
             AddParam<RectTransform>();
+            AddParam<ScrollRect>();
             AddParam<SkeletonAnimation>();
             AddParam<SkeletonGraphic>();
 

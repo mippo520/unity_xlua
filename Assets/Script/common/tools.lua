@@ -26,6 +26,7 @@ end
 function Tools.Assert(obj, message)
     if not obj then
         Info.Error("Tools Assert! " .. message)
+        assert(false)
     end
 end
 

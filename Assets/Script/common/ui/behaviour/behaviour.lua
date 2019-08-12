@@ -1,11 +1,10 @@
 
-local Behaviour = class("Behaviour")
+local Behaviour = class("Behaviour", AutoObject)
 
 function Behaviour:ctor()
-    self.registedEvent = {}
-    self.id = 0
-    self.arrBindpropertys = {}
+    AutoObject.ctor(self)
     self.mapAnimate = {}
+    self.id = 0
 end
 
 function Behaviour:awakeLogic()
@@ -39,26 +38,14 @@ function Behaviour:update()
 end
 
 function Behaviour:destroy()
-    for i, v in ipairs(self.registedEvent) do
-        v:RemoveAllListeners()
-        v:Invoke()
-    end
-    self.registedEvent = {}
+    AutoObject.destroy(self)
 
-    for i, v in ipairs(self.arrBindpropertys) do
-        v:unbind(self)
-    end
-
+    -- 停止动画
     for k, _ in pairs(self.mapAnimate) do
         k:stop()
     end
+    self.mapAnimate = {}
 
-    if self._destroy then
-        self:_destroy()
-    end
-
-    EventManagerInst:delObject(self)
-    NetManagerInst:unregistMessage(self)
     BehaviourManager.remove(self.id)
 end
 
@@ -66,22 +53,6 @@ end
 function Behaviour.getLuaBehaviour(gameOjbect)
     local scriptBehaviour = gameOjbect:GetComponent(typeof(CSLuaBehaviour))
     return BehaviourManager.getBehaviour(scriptBehaviour.id)
-end
-
--- 调用unityEvent的AddListener,会在对象destroy的时候移除
-function Behaviour:addListener(unityEvent, callback)
-    unityEvent:AddListener(callback)
-    table.insert(self.registedEvent, unityEvent)
-end
-
--- 注册事件,会在对象destroy的时候移除
-function Behaviour:registEvent(event, callback)
-    EventManagerInst:registEvent(event, self, callback)
-end
-
--- 注册网络消息,会在对象destroy的时候移除
-function Behaviour:registMessage(msg, callback)
-    NetManagerInst:registMessage(msg, self, callback)
 end
 
 -- 异步加载AssetBundle,会在对象destroy的时候移除
@@ -95,12 +66,6 @@ function Behaviour:LoadAssetBundleAsync(arrRes, processCallback, completeCallbac
     for k, v in pairs(arrRes) do
         table.insert(dialog.data.AssetBundles, v)
     end
-end
-
--- 参数绑定,会在对象destroy的时候解绑
-function Behaviour:DoBindProperty(property, func)
-    property:bind(self, func)
-    table.insert(self.arrBindpropertys, property)
 end
 
 -- 绑定Text控件,会在对象destroy的时候解绑
@@ -171,6 +136,5 @@ end
 function Behaviour:StopCoroutine(co)
     return self.behaviourObject:StopCoroutine(co)
 end
-
 
 return Behaviour

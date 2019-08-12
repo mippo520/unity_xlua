@@ -19,6 +19,7 @@ UnitySceneMode = CS.UnityEngine.SceneManagement.LoadSceneMode
 
 CSCommon = CS.Assets.Common
 CSLuaBehaviour = CSCommon.Lua.LuaBehaviour
+CSLuaScrollRect = CSCommon.UI.LuaScrollRect
 
 Info = CSCommon.Log.Info
 FileManager = CSCommon.Tools.FileManager
@@ -40,6 +41,7 @@ HttpManagerInst = require("common.net.http_manager").GetInstance()
 LanguageManagerInst = require("common.language.language_manager").GetInstance()
 StorageInst = require("common.storage.storage").GetInstance()
 
+AutoObject = require("common.auto_object")
 Behaviour = require("common.ui.behaviour.behaviour")
 DialogBehaviour = require("common.ui.behaviour.dialog_behaviour")
 BindProperty = require("common.bind.bind_property")
@@ -52,3 +54,6 @@ LoginControllerInst = require("controller.login_controller").GetInstance()
 AccountDataInst = require("module.account_data").GetInstance()
 
 Version = BindProperty.new("0.0.0")
+
+ListView = require("common.ui.list_view.list_view")
+

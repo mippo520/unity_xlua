@@ -10,10 +10,8 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using XLua;
 
-public class Launcher : MonoBehaviour
+class Launcher : MonoBehaviour
 {
-    public LuaFunction StartFunction;
-    // Start is called before the first frame update
     void Start()
     {
         Progress.GetInstance().begin();

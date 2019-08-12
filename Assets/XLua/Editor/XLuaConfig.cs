@@ -3,6 +3,7 @@ using System;
 using XLua;
 using System.Reflection;
 using System.Linq;
+using UnityEngine;
 
 public static class XLuaConfig
 {
@@ -135,6 +136,7 @@ public static class XLuaConfig
             }
             var list = delegate_types.Distinct().ToList();
             list.Add(typeof(System.Collections.IEnumerator));
+            list.Add(typeof(UnityEngine.Events.UnityAction<UnityEngine.Vector2>));
             return list;
         }
     }
