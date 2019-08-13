@@ -98,8 +98,16 @@ public class LuaBehaviourEditor : UnityEditor.Editor
         {
             var po = listString[i];
             GUILayout.BeginHorizontal();
-            po.name = EditorGUILayout.TextField("", po.name, GUILayout.Width(150));
 
+            if (GUILayout.Button("X", GUILayout.Width(17), GUILayout.Height(17)))
+            {
+                LuaBehaviour lua = target as LuaBehaviour;
+                listString.RemoveAt(i);
+                --i;
+            }
+
+            po.name = EditorGUILayout.TextField("", po.name, GUILayout.Width(120));
+            EditorGUILayout.LabelField(po.type, GUILayout.Width(60));
             if (typeof(int).Name == po.type)
             {
                 po.obj = Convert.ToString(EditorGUILayout.IntField("", Convert.ToInt32(po.obj)));
@@ -115,13 +123,6 @@ public class LuaBehaviourEditor : UnityEditor.Editor
             else
             {
                 po.obj = EditorGUILayout.TextField("", po.obj as string);
-            }
-
-            if (GUILayout.Button("X", GUILayout.Width(15)))
-            {
-                LuaBehaviour lua = target as LuaBehaviour;
-                listString.RemoveAt(i);
-                --i;
             }
             GUILayout.EndHorizontal();
         }

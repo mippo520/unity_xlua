@@ -32,7 +32,7 @@ function login:_start()
     -- end)
     local spineState = self.spine.AnimationState
     local vscrollLua = Behaviour.getLuaBehaviour(self.vscroll)
-    vscrollLua:toIndex(14)
+    vscrollLua:toBottom()
     -- local hscrollLua = Behaviour.getLuaBehaviour(self.hscroll)
     -- hscrollLua:toIndex(12)
 
@@ -46,6 +46,7 @@ function login:_start()
 
         local vscrollLua = Behaviour.getLuaBehaviour(self.vscroll)
         vscrollLua:toIndex(14)
+        Info.Debug("login!")
     end)
 
     self:addListener(self.registBtn.onClick, function ()

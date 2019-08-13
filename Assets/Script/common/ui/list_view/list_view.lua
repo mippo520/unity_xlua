@@ -2,7 +2,7 @@ local ListView = class("ListView", Behaviour)
 local MovementType = UnityUI.ScrollRect.MovementType
 
 local function _updateList(self)
-    local count = self:_getCount()
+    local count = self:getCount()
     local topRemoveHeight = 0   -- 顶部移除的cell的高度
     -- 如果是顶部有多出并且索引号不是第一个,才把底部多出的cell回收
     -- 底部也同理
@@ -57,18 +57,9 @@ local function _updateList(self)
                 local posX = 0
                 local posY = 0
                 for i = self.topIndex, self.bottomIndex do
-                    local cell = self.mapCells[i]
-                    local pos = cell.anchoredPosition
-                    if self.isVertical then
-                        local height = cell.rect.height
-                        pos.y = -posY - (1 - cell.pivot.y) * height
-                        posY = posY + height
-                    else
-                        local width = cell.rect.width
-                        pos.x = posX + cell.pivot.x * width
-                        posX = posX + width
-                    end
-                    cell.anchoredPosition = pos
+                    local rect = self:_setCellPos(i, posX, posY)
+                    posY = posY + rect.height
+                    posX = posX + rect.width
                 end
             end
         else
@@ -77,45 +68,12 @@ local function _updateList(self)
         end
     end
 
-    -- 计算当前已经存在的cell的高度
-    local curHeight = 0
-    for i = self.topIndex, self.bottomIndex do
-        if self.isVertical then
-            curHeight = self.mapCells[i].rect.height + curHeight
-        else
-            curHeight = self.mapCells[i].rect.width + curHeight
-        end
-    end
-
     -- 如果顶部多出的部分为负数则往上面补
     local topAddHeight = 0
     while self.topOffset < 0 do
         if self.topIndex > 0 then
             self.topIndex = self.topIndex - 1
-
-            local cell = self:_getCell()
-            local cellLuaCom = cell:GetComponent(typeof(CSLuaBehaviour))
-            local cellLuaBehaviour = BehaviourManager.getBehaviour(cellLuaCom.id)
-            self:_initCell(cellLuaBehaviour, self.topIndex)
-            self.mapCells[self.topIndex] = cell
-            local pos = cell.anchoredPosition
-            local cellHeight = 0
-            if self.isVertical then
-                local height = cell.rect.height
-                pos.y =  -(1 - cell.pivot.y) * height
-                cellHeight = height
-            else
-                local width = cell.rect.width
-                pos.x = cell.pivot.x * width
-                cellHeight = width
-            end
-            cell.anchoredPosition = pos
-     
-            curHeight = curHeight + cellHeight
-            local cg = cell:GetComponent(typeof(Unity.CanvasGroup))
-            cg.alpha = 1
-            cg.interactable = true
-            cg.blocksRaycasts = true
+            local cellHeight = self:_cellInsertToTop()
             self.topOffset = self.topOffset + cellHeight
             topAddHeight = topAddHeight + cellHeight
         else
@@ -128,18 +86,20 @@ local function _updateList(self)
         local posY = rect.height
         local posX = rect.width
         for i = self.topIndex + 1, self.bottomIndex do
-            local cell = self.mapCells[i]
-            local pos = cell.anchoredPosition
-            if self.isVertical then
-                local height = cell.rect.height
-                pos.y = -posY - (1 - cell.pivot.y) * height
-                posY = posY + height
-            else
-                local width = cell.rect.width
-                pos.x = posX + cell.pivot.x * width
-                posX = posX + width
-            end
-            cell.anchoredPosition = pos
+            local rect = self:_setCellPos(i, posX, posY)
+            posY = posY + rect.height
+            posX = posX + rect.width
+        end
+    end
+
+    -- 计算当前已经存在的cell的高度
+    local curHeight = 0
+    for i = self.topIndex, self.bottomIndex do
+        local rect = self:_getCellRect(i)
+        if self.isVertical then
+            curHeight = rect.height + curHeight
+        else
+            curHeight = rect.width + curHeight
         end
     end
 
@@ -147,28 +107,8 @@ local function _updateList(self)
     local viewHeight = self.viewHeight + self.topOffset
     while curHeight < viewHeight and self.bottomIndex < count - 1 do
         self.bottomIndex = self.bottomIndex + 1
-        local cell = self:_getCell()
-        local cellLuaCom = cell:GetComponent(typeof(CSLuaBehaviour))
-        local cellLuaBehaviour = BehaviourManager.getBehaviour(cellLuaCom.id)
-        self:_initCell(cellLuaBehaviour, self.bottomIndex)
-        self.mapCells[self.bottomIndex] = cell
-        -- 设置坐标
-        local pos = cell.anchoredPosition
-        if self.isVertical then
-            local height = cell.rect.height
-            pos.y = -curHeight - (1 - cell.pivot.y) * height
-            curHeight = curHeight + height
-        else
-            local width = cell.rect.width
-            pos.x = curHeight + cell.pivot.x * width
-            curHeight = curHeight + width
-        end
-        cell.anchoredPosition = pos
-        -- 设置可见和可操作
-        local cg = cell:GetComponent(typeof(Unity.CanvasGroup))
-        cg.alpha = 1
-        cg.interactable = true
-        cg.blocksRaycasts = true
+        local cellHeight = self:_cellInsertToBottom(curHeight)
+        curHeight = curHeight + cellHeight
     end
 
     local contentHeight = math.max(curHeight, viewHeight)
@@ -263,7 +203,7 @@ function ListView:toBottom()
         self.content.anchoredPosition = Unity.Vector2(self.viewHeight / 2, self.content.anchoredPosition.y)
     end
 
-    local count = self:_getCount()
+    local count = self:getCount()
     self.topIndex = count
     self.bottomIndex = count - 1
     self.topOffset = -self.viewHeight
@@ -277,7 +217,7 @@ function ListView:toIndex(index)
     if self.isOnDrag then
         return 
     end
-    local count = self:_getCount()
+    local count = self:getCount()
     if 0 >= index then
         self:toTop()
         if index < 0 then
@@ -290,6 +230,12 @@ function ListView:toIndex(index)
         end
     else
         _collectionCells(self)
+        -- 把content的坐标设置为起始坐标
+        if self.isVertical then
+            self.content.anchoredPosition = Unity.Vector2(self.content.anchoredPosition.x, self.viewHeight / 2)
+        else
+            self.content.anchoredPosition = Unity.Vector2(-self.viewHeight / 2, self.content.anchoredPosition.y)
+        end
         self.topIndex = index
         self.bottomIndex = index - 1
         self.topOffset = 0
@@ -302,8 +248,12 @@ function ListView:toIndex(index)
     end
 end
 
-function ListView:_getCount()
-    Info.Error("Please override _getCount function to set cell count!")
+function ListView:getCount()
+    if not self._getCount() then
+        Info.Error("Please implement the _getCount function to set cell count!")
+    else
+        return self:_getCount()
+    end
     return 0
 end
 
@@ -361,6 +311,72 @@ end
 
 function ListView:_start()
     _updateList(self)
+end
+
+function ListView:_getCellRect(index)
+    return self.mapCells[index].rect
+end
+
+function ListView:_cellInsertToTop()
+    local cell = self:_getCell()
+    local cellLuaCom = cell:GetComponent(typeof(CSLuaBehaviour))
+    local cellLuaBehaviour = BehaviourManager.getBehaviour(cellLuaCom.id)
+    self:_initCell(cellLuaBehaviour, self.topIndex)
+    self.mapCells[self.topIndex] = cell
+    local pos = cell.anchoredPosition
+    local cellHeight = 0
+    if self.isVertical then
+        cellHeight = cell.rect.height
+        pos.y =  -(1 - cell.pivot.y) * cellHeight
+    else
+        cellHeight = cell.rect.width
+        pos.x = cell.pivot.x * cellHeight
+    end
+    cell.anchoredPosition = pos
+    local cg = cell:GetComponent(typeof(Unity.CanvasGroup))
+    cg.alpha = 1
+    cg.interactable = true
+    cg.blocksRaycasts = true
+    return cellHeight
+end
+
+function ListView:_cellInsertToBottom(curHeight)
+    local cell = self:_getCell()
+    local cellLuaCom = cell:GetComponent(typeof(CSLuaBehaviour))
+    local cellLuaBehaviour = BehaviourManager.getBehaviour(cellLuaCom.id)
+    self:_initCell(cellLuaBehaviour, self.bottomIndex)
+    self.mapCells[self.bottomIndex] = cell
+    -- 设置坐标
+    local pos = cell.anchoredPosition
+    local cellHeight = 0
+    if self.isVertical then
+        cellHeight = cell.rect.height
+        pos.y = -curHeight - (1 - cell.pivot.y) * cellHeight
+    else
+        cellHeight = cell.rect.width
+        pos.x = curHeight + cell.pivot.x * cellHeight
+    end
+    cell.anchoredPosition = pos
+    -- 设置可见和可操作
+    local cg = cell:GetComponent(typeof(Unity.CanvasGroup))
+    cg.alpha = 1
+    cg.interactable = true
+    cg.blocksRaycasts = true
+    return cellHeight
+end
+
+function ListView:_setCellPos(index, posX, posY)
+    local cell = self.mapCells[index]
+    local pos = cell.anchoredPosition
+    if self.isVertical then
+        local height = cell.rect.height
+        pos.y = -posY - (1 - cell.pivot.y) * height
+    else
+        local width = cell.rect.width
+        pos.x = posX + cell.pivot.x * width
+    end
+    cell.anchoredPosition = pos
+    return cell.rect
 end
 
 function ListView:onBeginDrag()
