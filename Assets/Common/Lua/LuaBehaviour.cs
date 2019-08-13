@@ -103,9 +103,13 @@ namespace Assets.Common.Lua
                 {
                     this.luaBehaviour.Set(so.name, so.obj);
                 }
+                else if (typeof(bool).Name == so.type)
+                {
+                    this.luaBehaviour.Set(so.name, Convert.ToBoolean(so.obj));
+                }
                 else
                 {
-                    Info.Error("luaBehaviour awake error! arg type error! type is " + so.type);
+                    Info.Error("CS:LuaBehaviour Awake error! arg type error! type is " + so.type);
                 }
             }
 

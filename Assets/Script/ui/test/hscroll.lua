@@ -2,7 +2,7 @@ local HScroll = class("HScroll", ListView)
 
 
 function HScroll:_getCount()
-    return 50
+    return 20
 end
 
 function HScroll:_initCell(cellBehaviour, index)

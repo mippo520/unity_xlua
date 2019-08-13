@@ -2,7 +2,7 @@ local VScroll = class("VScroll", ListView)
 
 
 function VScroll:_getCount()
-    return 50
+    return 3
 end
 
 function VScroll:_initCell(cellBehaviour, index)

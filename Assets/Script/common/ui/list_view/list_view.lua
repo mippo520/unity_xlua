@@ -19,8 +19,9 @@ local function _updateList(self)
     
                 if self.bottomOffset > bottomCellHeight then
                     self.bottomOffset = self.bottomOffset - bottomCellHeight
+                    self:_insertToPool(bottomCell)
+                    self.mapCells[self.bottomIndex] = nil
                     self.bottomIndex = self.bottomIndex - 1
-                    self:_insertToPool(self, bottomCell)
                     bottomCell = self.mapCells[self.bottomIndex]
                 else
                     break
@@ -43,8 +44,9 @@ local function _updateList(self)
 
                 if self.topOffset > topCellHeight then
                     self.topOffset = self.topOffset - topCellHeight
+                    self:_insertToPool(topCell)
+                    self.mapCells[self.topIndex] = nil
                     self.topIndex = self.topIndex + 1
-                    self:_insertToPool(self, topCell)
                     topRemoveHeight = topRemoveHeight + topCellHeight
                     topCell = self.mapCells[self.topIndex]
                 else
@@ -91,7 +93,7 @@ local function _updateList(self)
         if self.topIndex > 0 then
             self.topIndex = self.topIndex - 1
 
-            local cell = self:_getCell(self)
+            local cell = self:_getCell()
             local cellLuaCom = cell:GetComponent(typeof(CSLuaBehaviour))
             local cellLuaBehaviour = BehaviourManager.getBehaviour(cellLuaCom.id)
             self:_initCell(cellLuaBehaviour, self.topIndex)
@@ -122,8 +124,9 @@ local function _updateList(self)
     end
     -- 顶部如果有添加则后面的cell位置要变化
     if topAddHeight > 0 then
-        local posY = self.mapCells[self.topIndex].rect.height
-        local posX = self.mapCells[self.topIndex].rect.width
+        local rect = self.mapCells[self.topIndex].rect
+        local posY = rect.height
+        local posX = rect.width
         for i = self.topIndex + 1, self.bottomIndex do
             local cell = self.mapCells[i]
             local pos = cell.anchoredPosition
@@ -142,9 +145,9 @@ local function _updateList(self)
 
     -- 计算后面的cell,移动坐标或者增加
     local viewHeight = self.viewHeight + self.topOffset
-    while curHeight < viewHeight and self.bottomIndex < self:_getCount() do
+    while curHeight < viewHeight and self.bottomIndex < count - 1 do
         self.bottomIndex = self.bottomIndex + 1
-        local cell = self:_getCell(self)
+        local cell = self:_getCell()
         local cellLuaCom = cell:GetComponent(typeof(CSLuaBehaviour))
         local cellLuaBehaviour = BehaviourManager.getBehaviour(cellLuaCom.id)
         self:_initCell(cellLuaBehaviour, self.bottomIndex)
@@ -167,18 +170,23 @@ local function _updateList(self)
         cg.interactable = true
         cg.blocksRaycasts = true
     end
-    self.bottomOffset = curHeight - viewHeight
+
+    local contentHeight = math.max(curHeight, viewHeight)
+    self.bottomOffset = contentHeight - viewHeight
     local movementDis = topAddHeight - topRemoveHeight
     self.onDrageMovementDis = self.onDrageMovementDis + movementDis  --[[ 计算content因为拖动而造成的位置差 ]]
     if self.isVertical then
-        self.content.sizeDelta = Unity.Vector2(self.content.sizeDelta.x, math.max(curHeight, self.viewHeight))
+        self.content.sizeDelta = Unity.Vector2(self.content.sizeDelta.x, contentHeight)
         self.content.anchoredPosition = Unity.Vector2(self.content.anchoredPosition.x, self.content.anchoredPosition.y + movementDis)
     else
-        self.content.sizeDelta = Unity.Vector2(math.max(curHeight, self.viewHeight), self.content.sizeDelta.y)
+        self.content.sizeDelta = Unity.Vector2(contentHeight, self.content.sizeDelta.y)
         self.content.anchoredPosition = Unity.Vector2(self.content.anchoredPosition.x - movementDis, self.content.anchoredPosition.y)
     end
 
     self.lastContentPos = self.content.anchoredPosition
+    if curHeight < viewHeight then
+        return true
+    end
 end
 
 local function _updateDragArea(self, moveVec2)
@@ -197,6 +205,13 @@ local function _updateDragArea(self, moveVec2)
     self.lastContentPos = self.content.anchoredPosition
 end
 
+local function _collectionCells(self)
+    for i = self.topIndex, self.bottomIndex do
+        self:_insertToPool(self.mapCells[i])
+        self.mapCells[i] = nil
+    end
+end
+
 function ListView:ctor()
     Behaviour.ctor(self)
     self.topIndex = 0           -- 顶部cell的索引号
@@ -208,7 +223,83 @@ function ListView:ctor()
     self.cellParent = nil
     self.lastContentPos = nil
     self.onDrageMovementDis = 0   -- 拖动时content重新计算的位置差
-    self.dragDistance = 0
+    self.viewHeight = 0           -- 可是范围的距离,纵向为y方向,横向为x方向
+    self.isOnDrag = false
+    self.reverse = false
+end
+
+function ListView:toTop()
+    -- 正在拖拉的时候不通过代码修改位置
+    if self.isOnDrag then
+        return 
+    end
+    _collectionCells(self)
+    -- 把content的坐标设置为起始坐标
+    if self.isVertical then
+        self.content.anchoredPosition = Unity.Vector2(self.content.anchoredPosition.x, self.viewHeight / 2)
+    else
+        self.content.anchoredPosition = Unity.Vector2(-self.viewHeight / 2, self.content.anchoredPosition.y)
+    end
+
+    self.topIndex = 0
+    self.bottomIndex = -1
+    self.topOffset = 0
+    self.bottomOffset = 0
+    _updateList(self)
+    self.scroll:StopMovement()
+end
+
+function ListView:toBottom()
+    -- 正在拖拉的时候不通过代码修改位置
+    if self.isOnDrag then
+        return 
+    end
+    
+    _collectionCells(self)
+    -- 把content的坐标设置为最底
+    if self.isVertical then
+        self.content.anchoredPosition = Unity.Vector2(self.content.anchoredPosition.x, -self.viewHeight / 2)
+    else
+        self.content.anchoredPosition = Unity.Vector2(self.viewHeight / 2, self.content.anchoredPosition.y)
+    end
+
+    local count = self:_getCount()
+    self.topIndex = count
+    self.bottomIndex = count - 1
+    self.topOffset = -self.viewHeight
+    self.bottomOffset = 0
+    _updateList(self)
+    self.scroll:StopMovement()
+end
+
+function ListView:toIndex(index)
+    -- 正在拖拉的时候不通过代码修改位置
+    if self.isOnDrag then
+        return 
+    end
+    local count = self:_getCount()
+    if 0 >= index then
+        self:toTop()
+        if index < 0 then
+            Info.Warn("ListView to index is error! index is " .. index)
+        end
+    elseif count - 1 <= index then
+        self:toBottom()
+        if index >= count then
+            Info.Warn("ListView to index is error! index is " .. index .. ", but cell count is " .. count)
+        end
+    else
+        _collectionCells(self)
+        self.topIndex = index
+        self.bottomIndex = index - 1
+        self.topOffset = 0
+        self.bottomOffset = 0
+        local notCover = _updateList(self)
+        if notCover and self.topIndex > 0 then
+            self:toBottom()
+        end
+        self.scroll:StopMovement()
+    end
 end
 
 function ListView:_getCount()
@@ -216,7 +307,7 @@ function ListView:_getCount()
     return 0
 end
 
-function ListView:_getCell(self)
+function ListView:_getCell()
     local cell = nil
     if #self.cellPool > 0 then
         cell = self.cellPool[1]
@@ -227,7 +318,7 @@ function ListView:_getCell(self)
     return cell
 end
 
-function ListView:_insertToPool(self, cell)
+function ListView:_insertToPool(cell)
     local cg = cell:GetComponent(typeof(Unity.CanvasGroup))
     cg.alpha = 0
     cg.interactable = false
@@ -240,17 +331,15 @@ function ListView:_initCell(cellBehaviour, index)
     return nil
 end
 
-function ListView:_start()
+function ListView:_awake()
     self.scroll = self.gameObject:GetComponent(typeof(CSLuaScrollRect))
     self.scrollRect = self.gameObject:GetComponent(typeof(Unity.RectTransform))
     self.scrollCanvasGroup = self.gameObject:GetComponent(typeof(Unity.CanvasGroup))
     self.content = self.gameObject.transform:GetChild(0):GetChild(0):GetComponent(typeof(Unity.RectTransform))
     self.orignCell = self.content:GetChild(0):GetComponent(typeof(Unity.RectTransform))
-
     Tools.Assert((self.scroll.vertical or self.scroll.horizontal), "Please set a scroll direction!")
     Tools.Assert((not (self.scroll.vertical and self.scroll.horizontal)), "Can not set both vertical and horizontal are true!")
     self.isVertical = self.scroll.vertical
-
     self.cellParent = self.orignCell.transform.parent
     local cg = self.orignCell:GetComponent(typeof(Unity.CanvasGroup))
     cg.alpha = 0
@@ -261,18 +350,27 @@ function ListView:_start()
     else
         self.viewHeight = self.scrollRect.rect.width
     end
-
     self:addListener(self.scroll.onValueChanged, _updateDragArea)
+    if self.reverse then
+        local rect = self.gameObject:GetComponent(typeof(Unity.RectTransform))
+        rect:Rotate(0, 0, 180)
+        local cellRect = self.orignCell:GetComponent(typeof(Unity.RectTransform))
+        cellRect:Rotate(0, 0, 180)
+    end
+end
 
+function ListView:_start()
     _updateList(self)
 end
 
 function ListView:onBeginDrag()
     self.onDrageMovementDis = 0
+    self.isOnDrag = true
 end
 
 function ListView:onEndDrag()
     self.onDrageMovementDis = 0
+    self.isOnDrag = false
 end
 
 function ListView:onDrag(eventData)

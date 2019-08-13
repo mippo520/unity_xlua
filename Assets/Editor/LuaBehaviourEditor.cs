@@ -108,6 +108,10 @@ public class LuaBehaviourEditor : UnityEditor.Editor
             {
                 po.obj = Convert.ToString(EditorGUILayout.DoubleField("", Convert.ToDouble(po.obj)));
             }
+            else if (typeof(bool).Name == po.type)
+            {
+                po.obj = Convert.ToString(EditorGUILayout.Toggle("", Convert.ToBoolean(po.obj)));
+            }
             else
             {
                 po.obj = EditorGUILayout.TextField("", po.obj as string);
@@ -143,6 +147,7 @@ public class LuaBehaviourEditor : UnityEditor.Editor
             AddParam<int>();
             AddParam<String>();
             AddParam<Double>();
+            AddParam<bool>();
             AddParam<GameObject>();
             AddParam<Text>();
             AddParam<Slider>();
@@ -171,7 +176,7 @@ public class LuaBehaviourEditor : UnityEditor.Editor
         {
 
             LuaBehaviour lua = target as LuaBehaviour;
-            if (typeof(int).Name == typeof(T).Name || typeof(Double).Name == typeof(T).Name || typeof(String).Name == typeof(T).Name)
+            if (typeof(int).Name == typeof(T).Name || typeof(Double).Name == typeof(T).Name || typeof(String).Name == typeof(T).Name || typeof(bool).Name == typeof(T).Name)
             {
                 var so = new stStringObj();
                 so.type = typeof(T).Name;
@@ -179,6 +184,10 @@ public class LuaBehaviourEditor : UnityEditor.Editor
                 if (typeof(int).Name == typeof(T).Name || typeof(Double).Name == typeof(T).Name)
                 {
                     so.obj = "0";
+                }
+                else if(typeof(bool).Name == typeof(T).Name)
+                {
+                    so.obj = "true";
                 }
                 else
                 {
