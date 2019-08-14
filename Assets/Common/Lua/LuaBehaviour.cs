@@ -63,25 +63,26 @@ namespace Assets.Common.Lua
         [HideInInspector]
         public List<stStringObj> listStrings = new List<stStringObj>();
 
-        void Awake()
+        protected void Awake()
         {
             m_Id = LuaManager.GetInstance().GetId();
             var luaEnv = LuaManager.GetInstance().Env;
 
             var luaExtBegin = luaScript.LastIndexOf(".lua");
+            var luaScriptTmp = luaScript;
             if (luaExtBegin >= 0)
             {
-                luaScript = luaScript.Substring(0, luaExtBegin);
+                luaScriptTmp = luaScript.Substring(0, luaExtBegin);
             }
 
-            var beginIndex = luaScript.LastIndexOf(".") + 1;
-            var scriptName = luaScript;
-            if (beginIndex >= 0 && beginIndex < luaScript.Length)
+            var beginIndex = luaScriptTmp.LastIndexOf(".") + 1;
+            var scriptName = luaScriptTmp;
+            if (beginIndex >= 0 && beginIndex < luaScriptTmp.Length)
             {
                 scriptName = scriptName.Substring(beginIndex);
             }
 
-            LuaManager.GetInstance().CreateBehaviour(m_Id, luaScript);
+            LuaManager.GetInstance().CreateBehaviour(m_Id, luaScriptTmp);
             this.luaBehaviour = LuaManager.GetInstance().GetBehaviour(m_Id);
             AwakeFunction = luaBehaviour.Get<LuaFunction>("awake");
             StartFunction = luaBehaviour.Get<LuaFunction>("start");
@@ -125,25 +126,25 @@ namespace Assets.Common.Lua
         }
 
         // Use this for initialization
-        void Start()
+        protected void Start()
         {
             if (null != StartFunction) { StartFunction.Call(luaBehaviour); }
         }
 
         // Update is called once per frame
-        void Update()
+        protected void Update()
         {
             if (null != UpdateFunction) { UpdateFunction.Call(luaBehaviour); }
 
         }
 
-        void OnDestroy()
+        protected void OnDestroy()
         {
             if (null != OnDestroyFunction) { OnDestroyFunction.Call(luaBehaviour); }
         }
 
 
-        private void OnApplicationQuit()
+        protected void OnApplicationQuit()
         {
             OnDestroy();
             OnDestroyFunction = null;
@@ -151,5 +152,6 @@ namespace Assets.Common.Lua
             StartFunction = null;
             AwakeFunction = null;
         }
+
     }
 }

@@ -11,6 +11,11 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
+[CustomEditor(typeof(LuaPointBehaviour))]
+public class LuaPointBehaviourEditor : LuaBehaviourEditor
+{ 
+}
+
 [CustomEditor(typeof(LuaBehaviour))]
 public class LuaBehaviourEditor : UnityEditor.Editor
 {
@@ -28,6 +33,14 @@ public class LuaBehaviourEditor : UnityEditor.Editor
         {
             var po = listObj[i];
             GUILayout.BeginHorizontal();
+
+            if (GUILayout.Button("X", GUILayout.Width(17), GUILayout.Height(17)))
+            {
+                LuaBehaviour lua = target as LuaBehaviour;
+                listObj.RemoveAt(i);
+                --i;
+            }
+
             po.name = EditorGUILayout.TextField("", po.name, GUILayout.Width(150));
 
             if (typeof(GameObject).Name == po.type)
@@ -81,13 +94,6 @@ public class LuaBehaviourEditor : UnityEditor.Editor
             else
             {
                 EditorGUILayout.LabelField("Type Error! error type is " + po.type);
-            }
-
-            if (GUILayout.Button("X", GUILayout.Width(15)))
-            {
-                LuaBehaviour lua = target as LuaBehaviour;
-                listObj.RemoveAt(i);
-                --i;
             }
             GUILayout.EndHorizontal();
         }

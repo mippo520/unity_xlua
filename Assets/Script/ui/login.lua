@@ -20,7 +20,7 @@ function login:_awake()
     end)
 
     self:DoBindSlider(self.sliderValue, self.slider)
-    -- self:DoBindText(self.sliderValue, self.testText)
+    self:DoBindText(self.sliderValue, self.testText)
 end
 
 
@@ -68,6 +68,7 @@ function login:_start()
         -- spineState:AddAnimation(0, "main", true, 0);
         DialogManagerInst:open(DialogType.PackageTest)
     end)
+
 end
 
 return login

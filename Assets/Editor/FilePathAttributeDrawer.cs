@@ -58,7 +58,6 @@ namespace Assets.Editor
                 bInitData = false;
             }
             GUILayout.Space(5);
-
         }
 
         static void _loadFiles(DirectoryInfo dirInfo, string path, string ext, ref List<string> outList)
