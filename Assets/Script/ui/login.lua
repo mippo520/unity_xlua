@@ -31,8 +31,8 @@ function login:_start()
     --     Info.Debug("coroutine!")
     -- end)
     local spineState = self.spine.AnimationState
-    local vscrollLua = Behaviour.getLuaBehaviour(self.vscroll)
-    vscrollLua:toBottom()
+    -- local vscrollLua = Behaviour.getLuaBehaviour(self.vscroll)
+    -- vscrollLua:toBottom()
     -- local hscrollLua = Behaviour.getLuaBehaviour(self.hscroll)
     -- hscrollLua:toIndex(12)
 
@@ -44,9 +44,7 @@ function login:_start()
         -- end)
         -- self:closeSelf()
 
-        local vscrollLua = Behaviour.getLuaBehaviour(self.vscroll)
-        vscrollLua:toIndex(14)
-        Info.Debug("login!")
+        DialogManagerInst:open(DialogType.ScrollTest)
     end)
 
     self:addListener(self.registBtn.onClick, function ()
@@ -68,6 +66,7 @@ function login:_start()
         -- self.value:set(self.value:get() + 100)
         -- self.sliderValue:set(self.sliderValue:get() - 0.1)
         -- spineState:AddAnimation(0, "main", true, 0);
+        DialogManagerInst:open(DialogType.PackageTest)
     end)
 end
 

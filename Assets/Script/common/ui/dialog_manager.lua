@@ -22,12 +22,14 @@ function DialogManager:open(dialogType, ...)
         Tools.Assert(res, dialogType.Path .. " is null!")
         dialog.res = Unity.Object.Instantiate(res)
         local luaBehaviour = dialog.res:GetComponent(typeof(CSLuaBehaviour))
-        dialog.id = luaBehaviour.id
-        dialog.data = clone(dialogType)
-        self.mapDialog[dialog.id] = dialog
-        local behaviour = BehaviourManager.getBehaviour(luaBehaviour.id)
-        if behaviour.setValues then
-            behaviour:setValues(table.unpack(args))
+        if luaBehaviour then
+            dialog.id = luaBehaviour.id
+            dialog.data = clone(dialogType)
+            self.mapDialog[dialog.id] = dialog
+            local behaviour = BehaviourManager.getBehaviour(luaBehaviour.id)
+            if behaviour.setValues then
+                behaviour:setValues(table.unpack(args))
+            end
         end
     end)
 end

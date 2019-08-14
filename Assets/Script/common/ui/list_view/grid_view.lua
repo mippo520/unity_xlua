@@ -8,10 +8,12 @@ end
 
 function GridView:_awake()
     ListView._awake(self)
+    self.scroll.vertical = true
+    self.scroll.horizontal = false
     self.isVertical = true
-    local cellRect = self.orignCell.rect
+    local cellRectWidth = self.orignCell.rect.width
     local viewWidth = self.scrollRect.rect.width
-    self.countPerLine = math.floor(viewWidth / cellRect)
+    self.countPerLine = math.floor(viewWidth / cellRectWidth)
 end
 
 function GridView:getCount()
@@ -25,7 +27,7 @@ function GridView:getCount()
 end
 
 function GridView:_insertToPool(mapCell)
-    for _, cell in pairs(mapCell) do
+    for _, cell in pairs(mapCell.cells) do
         local cg = cell:GetComponent(typeof(Unity.CanvasGroup))
         cg.alpha = 0
         cg.interactable = false
@@ -38,64 +40,39 @@ function GridView:_getCellRect(index)
     return self.orignCell.rect
 end
 
-function GridView:_cellInsertToTop()
-    local height = self.orignCell.rect.height
+function GridView:_insertCell(index, height)
+    local cellHeight = self.orignCell.rect.height
     local width = self.orignCell.rect.width
-    local posY = -(1 - self.orignCell.pivot.y) * height
-    if not self.mapCells[self.topIndex] then
-        self.mapCells[self.topIndex] = {}
+    local posY = -height - (1 - self.orignCell.pivot.y) * cellHeight
+    if not self.mapCells[index] then
+        self.mapCells[index] = {}
+        self.mapCells[index].cells = {}
+        self.mapCells[index].rect = self.orignCell.rect
     end
-    local mapCells = self.mapCells[self.topIndex]
+    local mapCells = self.mapCells[index].cells
+    local indexBegin = index * self.countPerLine
     for i = 0, self.countPerLine - 1 do
-        local cellIdx = self.topIndex + i
+        local cellIdx = indexBegin + i
         local cell = self:_getCell()
-        local cellLuaCom = cell:GetComponent(typeof(CSLuaBehaviour))
-        local cellLuaBehaviour = BehaviourManager.getBehaviour(cellLuaCom.id)
-        self:_initCell(cellLuaBehaviour, cellIdx)
-        mapCells[i] = cell
-        local pos = cell.anchoredPosition
-        pos.y = posY
-        pos.x = i * width + cell.pivot.x * width
-        cell.anchoredPosition = pos
-        local cg = cell:GetComponent(typeof(Unity.CanvasGroup))
-        cg.alpha = 1
-        cg.interactable = true
-        cg.blocksRaycasts = true
-    end
-
-    return height
-end
-
-function GridView:_cellInsertToBottom(curHeight)
-    local height = self.orignCell.rect.height
-    local width = self.orignCell.rect.width
-    local posY = -curHeight - (1 - self.orignCell.pivot.y) * height
-    if not self.mapCells[self.topIndex] then
-        self.mapCells[self.topIndex] = {}
-    end
-    local mapCells = self.mapCells[self.topIndex]
-    for i = 0, self.countPerLine - 1 do
-        local cellIdx = self.topIndex + i
-        local cell = self:_getCell()
-        local cellLuaCom = cell:GetComponent(typeof(CSLuaBehaviour))
-        local cellLuaBehaviour = BehaviourManager.getBehaviour(cellLuaCom.id)
-        self:_initCell(cellLuaBehaviour, cellIdx)
-        mapCells[i] = cell
-        local pos = cell.anchoredPosition
-        pos.y = posY
-        pos.x = i * width + cell.pivot.x * width
-        cell.anchoredPosition = pos
         -- 设置可见和可操作
         local cg = cell:GetComponent(typeof(Unity.CanvasGroup))
         cg.alpha = 1
         cg.interactable = true
         cg.blocksRaycasts = true    
+        local cellLuaCom = cell:GetComponent(typeof(CSLuaBehaviour))
+        local cellLuaBehaviour = BehaviourManager.getBehaviour(cellLuaCom.id)
+        self:_initCell(cellLuaBehaviour, cellIdx)
+        mapCells[i] = cell
+        local pos = cell.anchoredPosition
+        pos.y = posY
+        pos.x = i * width + cell.pivot.x * width
+        cell.anchoredPosition = pos
     end
-    return height
+    return cellHeight
 end
 
 function GridView:_setCellPos(index, posX, posY)
-    local mapCells = self.mapCells[index]
+    local mapCells = self.mapCells[index].cells
     local height = self.orignCell.rect.height
     for _, cell in pairs(mapCells) do
         local pos = cell.anchoredPosition

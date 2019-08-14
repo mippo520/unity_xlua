@@ -19,6 +19,16 @@ local dialog_type = {
         AssetBundles = {"ui/common"},
         Path = "Assets/Prefabs/ui/common/Tips.prefab"
     },
+    PackageTest = {
+        Type = "PackageTest",
+        AssetBundles = {"ui/test/package_test"},
+        Path = "Assets/Prefabs/ui/test/PackageTest.prefab"
+    },
+    ScrollTest = {
+        Type = "ScrollTest",
+        AssetBundles = {"ui/test/scroll"},
+        Path = "Assets/Prefabs/ui/test/ScrollTest.prefab"
+    },
 }
 
 return dialog_type

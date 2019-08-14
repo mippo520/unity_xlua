@@ -73,7 +73,7 @@ local function _updateList(self)
     while self.topOffset < 0 do
         if self.topIndex > 0 then
             self.topIndex = self.topIndex - 1
-            local cellHeight = self:_cellInsertToTop()
+            local cellHeight = self:_insertCell(self.topIndex, 0)
             self.topOffset = self.topOffset + cellHeight
             topAddHeight = topAddHeight + cellHeight
         else
@@ -107,7 +107,7 @@ local function _updateList(self)
     local viewHeight = self.viewHeight + self.topOffset
     while curHeight < viewHeight and self.bottomIndex < count - 1 do
         self.bottomIndex = self.bottomIndex + 1
-        local cellHeight = self:_cellInsertToBottom(curHeight)
+        local cellHeight = self:_insertCell(self.bottomIndex, curHeight)
         curHeight = curHeight + cellHeight
     end
 
@@ -249,7 +249,7 @@ function ListView:toIndex(index)
 end
 
 function ListView:getCount()
-    if not self._getCount() then
+    if not self._getCount then
         Info.Error("Please implement the _getCount function to set cell count!")
     else
         return self:_getCount()
@@ -287,8 +287,6 @@ function ListView:_awake()
     self.scrollCanvasGroup = self.gameObject:GetComponent(typeof(Unity.CanvasGroup))
     self.content = self.gameObject.transform:GetChild(0):GetChild(0):GetComponent(typeof(Unity.RectTransform))
     self.orignCell = self.content:GetChild(0):GetComponent(typeof(Unity.RectTransform))
-    Tools.Assert((self.scroll.vertical or self.scroll.horizontal), "Please set a scroll direction!")
-    Tools.Assert((not (self.scroll.vertical and self.scroll.horizontal)), "Can not set both vertical and horizontal are true!")
     self.isVertical = self.scroll.vertical
     self.cellParent = self.orignCell.transform.parent
     local cg = self.orignCell:GetComponent(typeof(Unity.CanvasGroup))
@@ -310,6 +308,8 @@ function ListView:_awake()
 end
 
 function ListView:_start()
+    Tools.Assert((self.scroll.vertical or self.scroll.horizontal), "Please set a scroll direction!")
+    Tools.Assert((not (self.scroll.vertical and self.scroll.horizontal)), "Can not set both vertical and horizontal are both true!")
     _updateList(self)
 end
 
@@ -317,51 +317,30 @@ function ListView:_getCellRect(index)
     return self.mapCells[index].rect
 end
 
-function ListView:_cellInsertToTop()
+function ListView:_insertCell(index, height)
     local cell = self:_getCell()
-    local cellLuaCom = cell:GetComponent(typeof(CSLuaBehaviour))
-    local cellLuaBehaviour = BehaviourManager.getBehaviour(cellLuaCom.id)
-    self:_initCell(cellLuaBehaviour, self.topIndex)
-    self.mapCells[self.topIndex] = cell
-    local pos = cell.anchoredPosition
-    local cellHeight = 0
-    if self.isVertical then
-        cellHeight = cell.rect.height
-        pos.y =  -(1 - cell.pivot.y) * cellHeight
-    else
-        cellHeight = cell.rect.width
-        pos.x = cell.pivot.x * cellHeight
-    end
-    cell.anchoredPosition = pos
-    local cg = cell:GetComponent(typeof(Unity.CanvasGroup))
-    cg.alpha = 1
-    cg.interactable = true
-    cg.blocksRaycasts = true
-    return cellHeight
-end
-
-function ListView:_cellInsertToBottom(curHeight)
-    local cell = self:_getCell()
-    local cellLuaCom = cell:GetComponent(typeof(CSLuaBehaviour))
-    local cellLuaBehaviour = BehaviourManager.getBehaviour(cellLuaCom.id)
-    self:_initCell(cellLuaBehaviour, self.bottomIndex)
-    self.mapCells[self.bottomIndex] = cell
-    -- 设置坐标
-    local pos = cell.anchoredPosition
-    local cellHeight = 0
-    if self.isVertical then
-        cellHeight = cell.rect.height
-        pos.y = -curHeight - (1 - cell.pivot.y) * cellHeight
-    else
-        cellHeight = cell.rect.width
-        pos.x = curHeight + cell.pivot.x * cellHeight
-    end
-    cell.anchoredPosition = pos
     -- 设置可见和可操作
     local cg = cell:GetComponent(typeof(Unity.CanvasGroup))
     cg.alpha = 1
     cg.interactable = true
     cg.blocksRaycasts = true
+    -- 获取cell对应的lua对象
+    local cellLuaCom = cell:GetComponent(typeof(CSLuaBehaviour))
+    local cellLuaBehaviour = BehaviourManager.getBehaviour(cellLuaCom.id)
+    -- 初始化
+    self:_initCell(cellLuaBehaviour, index)
+    self.mapCells[index] = cell
+    -- 设置坐标
+    local pos = cell.anchoredPosition
+    local cellHeight = 0
+    if self.isVertical then
+        cellHeight = cell.rect.height
+        pos.y = -height - (1 - cell.pivot.y) * cellHeight
+    else
+        cellHeight = cell.rect.width
+        pos.x = height + cell.pivot.x * cellHeight
+    end
+    cell.anchoredPosition = pos
     return cellHeight
 end
 
