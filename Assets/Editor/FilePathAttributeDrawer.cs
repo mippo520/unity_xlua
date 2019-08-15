@@ -41,6 +41,10 @@ namespace Assets.Editor
             }
 
             var value = property.stringValue;
+            if ("" == value)
+            {
+                value = "common/behaviour/behaviour.lua";
+            }
             int idx = 0;
             for(int i = 0; i < listPath.Count; ++i)
             {

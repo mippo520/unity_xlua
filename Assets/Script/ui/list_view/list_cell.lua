@@ -6,7 +6,9 @@ function ListCell:ctor()
 end
 
 function ListCell:onPointerClick()
-    self.scrollLuaObj.luaBehaviour:onCellClicked(self)
+    if self.bClick then
+        self.scrollLuaObj.luaBehaviour:onCellClicked(self)
+    end
     return false
 end
 

@@ -21,5 +21,8 @@ function PackageTest:_initCell(cellBehaviour, index)
     return cellBehaviour
 end
 
+function PackageTest:onCellClicked(cellBehaviour)
+    Info.Debug("Item clicked,  index is " .. cellBehaviour.index)
+end
 
 return PackageTest

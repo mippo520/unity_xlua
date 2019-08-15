@@ -33,11 +33,13 @@ namespace Assets.Common.Resource
     public class ResourcesInfo<T> : ResourcesCount
     {
         private T m_Obj = default(T);
+        private AssetBundle m_AssetBundle = null;
 
-        public ResourcesInfo(int count, T obj)
+        public ResourcesInfo(int count, T obj, AssetBundle ab)
             : base(count)
         {
             this.m_Obj = obj;
+            this.m_AssetBundle = ab;
         }
 
         public T Object
@@ -50,6 +52,19 @@ namespace Assets.Common.Resource
             set
             {
                 m_Obj = value;
+            }
+        }
+
+        public AssetBundle assetbundle
+        {
+            get
+            {
+                return m_AssetBundle;
+            }
+
+            set
+            {
+                m_AssetBundle = value;
             }
         }
     }

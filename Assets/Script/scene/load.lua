@@ -6,7 +6,8 @@ function load:_awake()
 end
 
 function load:_start()
-    ResourcesManagerInst:LoadAssetBundleAsync({"pb", "ui/common", "ui/regist", "ui/login", "test_ui", "test_ui_png"}, function (percent)
+
+    ResourcesManagerInst:LoadAssetBundleAsync({"pb", "ui/common"}, function (percent)
         self.slider.value = percent
     end, function (arrRes)
         self.slider.value = 1

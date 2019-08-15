@@ -341,7 +341,10 @@ MonoBehaviour:
   - name: scrollLuaObj
     obj: {fileID: 5298766309024745195}
     type: LuaBehaviour
-  listStrings: []
+  listStrings:
+  - name: bClick
+    obj: True
+    type: Boolean
 --- !u!114 &6009968677959401020
 MonoBehaviour:
   m_ObjectHideFlags: 0

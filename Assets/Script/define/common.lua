@@ -1,6 +1,6 @@
 
 require("common.functions")
-require("common.ui.behaviour.behaviour_manager")
+require("common.behaviour.behaviour_manager")
 
 Event = require("define.event")
 DialogType = require("define.dialog_type")
@@ -42,8 +42,8 @@ LanguageManagerInst = require("common.language.language_manager").GetInstance()
 StorageInst = require("common.storage.storage").GetInstance()
 
 AutoObject = require("common.auto_object")
-Behaviour = require("common.ui.behaviour.behaviour")
-DialogBehaviour = require("common.ui.behaviour.dialog_behaviour")
+Behaviour = require("common.behaviour.behaviour")
+DialogBehaviour = require("common.ui.dialog_behaviour")
 BindProperty = require("common.bind.bind_property")
 XLuaUtil = require 'xlua.util'
 

@@ -1,4 +1,4 @@
-﻿// #define DEBUG_ASSETBUNDLE
+﻿#define DEBUG_ASSETBUNDLE
 
 using Assets.Common.Log;
 using Assets.Common.Singleton;
@@ -123,6 +123,7 @@ namespace Assets.Common.Resource
             path = path.ToLower();
             if (m_DicAsset.ContainsKey(path))
             {
+                var obj = m_DicAsset[path] as GameObject;
                 return m_DicAsset[path];
             }
             else
@@ -464,7 +465,6 @@ namespace Assets.Common.Resource
             float totalProgress = 0.0f;
             Dictionary<string, AssetBundleCreateRequest> abDicReq = new Dictionary<string, AssetBundleCreateRequest>();
             Dictionary<string, AssetBundleRequest> assetDicReq = new Dictionary<string, AssetBundleRequest>();
-            List<AssetBundle> listAssetBundle = new List<AssetBundle>();
             // 先计算依赖的ab
             List<string> setPath = new List<string>();
             this._getAllAssetBundles(arrPath, ref setPath);
@@ -510,8 +510,7 @@ namespace Assets.Common.Resource
                         totalProgress += oneResPercent / 2;
                         listRemKey.Add(pair.Key);
                         var arrAssetName = pair.Value.assetBundle.GetAllAssetNames();
-                        m_DicAssetBundlesCount.Add(pair.Key, new ResourcesInfo<string[]>(1 + dirInLoading[pair.Key], arrAssetName));
-                        listAssetBundle.Add(pair.Value.assetBundle);
+                        m_DicAssetBundlesCount.Add(pair.Key, new ResourcesInfo<string[]>(1 + dirInLoading[pair.Key], arrAssetName, pair.Value.assetBundle));
 
                         foreach (string assetName in arrAssetName)
                         {
@@ -572,12 +571,6 @@ namespace Assets.Common.Resource
             {
                 completeCallback(arrPath);
             }
-
-            // 释放assetbundle
-            foreach (var ab in listAssetBundle)
-            {
-                ab.Unload(false);
-            }
 #endif
 
         }
@@ -601,12 +594,12 @@ namespace Assets.Common.Resource
                         {
                             if (m_DicAsset.ContainsKey(assetName))
                             {
-                                Info.Log("unload asset name is " + assetName);
-                                // prefab文件不能unload
-                                if (!assetName.EndsWith(".prefab"))
-                                {
-                                    Resources.UnloadAsset(m_DicAsset[assetName]);
-                                }
+//                                 Info.Log("unload asset name is " + assetName);
+//                                 // prefab文件不能unload
+//                                 if (!assetName.EndsWith(".prefab"))
+//                                 {
+//                                     Resources.UnloadAsset(m_DicAsset[assetName]);
+//                                 }
                                 m_DicAsset.Remove(assetName);
                             }
                             else
@@ -615,6 +608,7 @@ namespace Assets.Common.Resource
                             }
                         }
                         m_DicAssetBundlesCount.Remove(pathTmp);
+                        resInfo.assetbundle.Unload(true);
                         Resources.UnloadUnusedAssets();
                     }
                 }

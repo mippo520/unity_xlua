@@ -19,17 +19,15 @@ function DialogManager:open(dialogType, ...)
     ResourcesManagerInst:LoadAssetBundleAsync(dialogType.AssetBundles, nil, function (arrRes)
         local dialog = Dialog.new()
         local res = ResourcesManagerInst:LoadAsset(dialogType.Path)
-        Tools.Assert(res, dialogType.Path .. " is null!")
+        Tools.Assert(res, dialogType.Path .. " is null!")  
         dialog.res = Unity.Object.Instantiate(res)
         local luaBehaviour = dialog.res:GetComponent(typeof(CSLuaBehaviour))
-        if luaBehaviour then
-            dialog.id = luaBehaviour.id
-            dialog.data = clone(dialogType)
-            self.mapDialog[dialog.id] = dialog
-            local behaviour = BehaviourManager.getBehaviour(luaBehaviour.id)
-            if behaviour.setValues then
-                behaviour:setValues(table.unpack(args))
-            end
+        dialog.id = luaBehaviour.id
+        dialog.data = clone(dialogType)
+        self.mapDialog[dialog.id] = dialog
+        local behaviour = BehaviourManager.getBehaviour(luaBehaviour.id)
+        if behaviour.setValues then
+            behaviour:setValues(table.unpack(args))
         end
     end)
 end
