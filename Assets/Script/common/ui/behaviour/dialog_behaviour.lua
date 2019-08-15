@@ -29,8 +29,7 @@ function DialogBehaviour:closeSelf()
 end
 
 function DialogBehaviour:close()
-    local luaWrapBehaviour = self.wrap:GetComponent(typeof(CSLuaBehaviour))
-    local luaWrap = BehaviourManager.getBehaviour(luaWrapBehaviour.id)
+    local luaWrap = Behaviour.getLuaBehaviour(self.wrap)
     luaWrap:close()
 end
 

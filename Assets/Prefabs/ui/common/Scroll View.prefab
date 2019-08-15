@@ -219,7 +219,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -247,7 +247,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12cb57cb843f8034d9bc192a02abdba5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  luaScript: common/ui/list_view/list_view.lua
+  luaScript: ui/list_view/list_view.lua
   listParams: []
   listStrings:
   - name: dragDistance
@@ -275,8 +275,9 @@ GameObject:
   m_Component:
   - component: {fileID: 3386846185762207752}
   - component: {fileID: 9202697574842212797}
-  - component: {fileID: 2024531312903111439}
   - component: {fileID: 8443310214496791061}
+  - component: {fileID: 9135811836462704659}
+  - component: {fileID: 6009968677959401020}
   m_Layer: 5
   m_Name: Cell
   m_TagString: Untagged
@@ -311,21 +312,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9164054360972160170}
   m_CullTransparentMesh: 0
---- !u!114 &2024531312903111439
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9164054360972160170}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 12cb57cb843f8034d9bc192a02abdba5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  luaScript: common/ui/behaviour/behaviour.lua
-  listParams: []
-  listStrings: []
 --- !u!225 &8443310214496791061
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -338,3 +324,50 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &9135811836462704659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9164054360972160170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1bbc39a28938c64394cd836bd970498, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  luaScript: ui/list_view/list_cell.lua
+  listParams:
+  - name: scrollLuaObj
+    obj: {fileID: 5298766309024745195}
+    type: LuaBehaviour
+  listStrings: []
+--- !u!114 &6009968677959401020
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9164054360972160170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0

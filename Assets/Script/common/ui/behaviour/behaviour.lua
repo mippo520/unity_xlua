@@ -1,11 +1,6 @@
 
 local Behaviour = class("Behaviour", AutoObject)
 
-function Behaviour.GetLuaBehaviour(gameOjbect)
-    local cellLuaCom = gameOjbect:GetComponent(typeof(CSLuaBehaviour))
-    return  BehaviourManager.getBehaviour(cellLuaCom.id)
-end
-
 function Behaviour:ctor()
     AutoObject.ctor(self)
     self.mapAnimate = {}
@@ -57,7 +52,7 @@ end
 -- 获取gameObject的lua对象
 function Behaviour.getLuaBehaviour(gameOjbect)
     local scriptBehaviour = gameOjbect:GetComponent(typeof(CSLuaBehaviour))
-    return BehaviourManager.getBehaviour(scriptBehaviour.id)
+    return scriptBehaviour.luaBehaviour
 end
 
 -- 异步加载AssetBundle,会在对象destroy的时候移除

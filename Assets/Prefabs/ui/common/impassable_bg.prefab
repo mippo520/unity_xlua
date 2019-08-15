@@ -89,4 +89,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   luaScript: ui/common/impassable_bg.lua
   listParams: []
-  listStrings: []
+  listStrings:
+  - name: clickClose
+    obj: True
+    type: Boolean

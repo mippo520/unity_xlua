@@ -1308,7 +1308,6 @@ GameObject:
   - component: {fileID: 6732117303606020986}
   - component: {fileID: 8917911577481585767}
   - component: {fileID: 1562885747063573721}
-  - component: {fileID: 867531091666202560}
   m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
@@ -1377,21 +1376,6 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: New <b>Text</b>
---- !u!114 &867531091666202560
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6222783348404734720}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a1bbc39a28938c64394cd836bd970498, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  luaScript: common/ui/behaviour/behaviour.lua
-  listParams: []
-  listStrings: []
 --- !u!1 &6471237972268005788
 GameObject:
   m_ObjectHideFlags: 0
@@ -2172,6 +2156,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1793742913394466120, guid: bf04202584ddbd440aba0f0b9a41d1f8,
+        type: 3}
+      propertyPath: listStrings.Array.data[0].obj
+      value: False
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bf04202584ddbd440aba0f0b9a41d1f8, type: 3}

@@ -55,6 +55,6 @@ AccountDataInst = require("module.account_data").GetInstance()
 
 Version = BindProperty.new("0.0.0")
 
-ListView = require("common.ui.list_view.list_view")
-GridView = require("common.ui.list_view.grid_view")
+ListView = require("ui.list_view.list_view")
+GridView = require("ui.list_view.grid_view")
 

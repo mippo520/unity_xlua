@@ -1,16 +1,17 @@
 local ImpassableBG = class("ImpassableBG", Behaviour)
 
-function ImpassableBG:onPointerUp(eventData)
-    Info.Debug("on up " .. tostring(eventData))
-end
-
-function ImpassableBG:onPointerDown(eventData)
-    Info.Debug("on down " .. tostring(eventData))
+function ImpassableBG:ctor()
+    Behaviour.ctor(self)
+    self.isInClose = false
 end
 
 function ImpassableBG:onPointerClick(eventData)
-    Info.Debug("on click " .. tostring(eventData))
-    return true
+    if self.clickClose and not self.isInClose then
+        Info.Debug("bg click!")
+        local parentLua = Behaviour.getLuaBehaviour(self.gameObject.transform.parent.gameObject)
+        parentLua:closeSelf()
+        self.isInClose = true
+    end
 end
 
 return ImpassableBG

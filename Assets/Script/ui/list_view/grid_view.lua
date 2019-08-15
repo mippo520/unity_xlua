@@ -59,8 +59,8 @@ function GridView:_insertCell(index, height)
         cg.alpha = 1
         cg.interactable = true
         cg.blocksRaycasts = true    
-        local cellLuaCom = cell:GetComponent(typeof(CSLuaBehaviour))
-        local cellLuaBehaviour = BehaviourManager.getBehaviour(cellLuaCom.id)
+        local cellLuaBehaviour = Behaviour.getLuaBehaviour(cell)
+        cellLuaBehaviour.index = cellIdx
         self:_initCell(cellLuaBehaviour, cellIdx)
         mapCells[i] = cell
         local pos = cell.anchoredPosition

@@ -5,9 +5,9 @@ function VScroll:_getCount()
     return 30
 end
 
-function VScroll:_initCell(cellBehaviour, index)
-    cellBehaviour.name.text = "index " .. tostring(index)
-    if 0 == index % 2 then
+function VScroll:_initCell(cellBehaviour)
+    cellBehaviour.name.text = "index " .. tostring(cellBehaviour.index)
+    if 0 == cellBehaviour.index % 2 then
         cellBehaviour.content.text = "sdbserbsebsgfbdsnbrsnrnsdbserbsebsgfbdsnbrsnrnsdbserbsebsgfbdsnbrsnrn"
     else
         cellBehaviour.content.text = "sdbserbsebsgfbdsnbrsnrnsdbserbsebs"

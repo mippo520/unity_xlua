@@ -325,8 +325,8 @@ function ListView:_insertCell(index, height)
     cg.interactable = true
     cg.blocksRaycasts = true
     -- 获取cell对应的lua对象
-    local cellLuaCom = cell:GetComponent(typeof(CSLuaBehaviour))
-    local cellLuaBehaviour = BehaviourManager.getBehaviour(cellLuaCom.id)
+    local cellLuaBehaviour = Behaviour.getLuaBehaviour(cell)
+    cellLuaBehaviour.index = index
     -- 初始化
     self:_initCell(cellLuaBehaviour, index)
     self.mapCells[index] = cell
@@ -377,6 +377,10 @@ function ListView:onDrag(eventData)
             self.content.anchoredPosition = Unity.Vector2(self.content.anchoredPosition.x - self.onDrageMovementDis, self.content.anchoredPosition.y)
         end
     end
+end
+
+function ListView:onCellClicked(cellBehaviour)
+    Info.Error("Please override onCellClicked function when cell clicked! cell index is " .. cellBehaviour.index)
 end
 
 return ListView

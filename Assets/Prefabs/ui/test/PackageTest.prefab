@@ -158,7 +158,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -172,7 +172,7 @@ MonoBehaviour:
     m_BestFit: 1
     m_MinSize: 20
     m_MaxSize: 40
-    m_Alignment: 0
+    m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
@@ -296,15 +296,10 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 5298766309024745195, guid: a8c73fa875acb9743ab4571a8a1312f0,
-        type: 3}
-      propertyPath: luaScript
-      value: ui/test/package_test.lua
-      objectReference: {fileID: 0}
     - target: {fileID: 3386846185762207752, guid: a8c73fa875acb9743ab4571a8a1312f0,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -75
       objectReference: {fileID: 0}
     - target: {fileID: 3386846185762207752, guid: a8c73fa875acb9743ab4571a8a1312f0,
         type: 3}
@@ -314,7 +309,7 @@ PrefabInstance:
     - target: {fileID: 3386846185762207752, guid: a8c73fa875acb9743ab4571a8a1312f0,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 3386846185762207752, guid: a8c73fa875acb9743ab4571a8a1312f0,
         type: 3}
@@ -341,6 +336,11 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5298766309024745195, guid: a8c73fa875acb9743ab4571a8a1312f0,
+        type: 3}
+      propertyPath: luaScript
+      value: ui/test/package_test.lua
+      objectReference: {fileID: 0}
     - target: {fileID: 2024531312903111439, guid: a8c73fa875acb9743ab4571a8a1312f0,
         type: 3}
       propertyPath: listParams.Array.size
@@ -360,6 +360,41 @@ PrefabInstance:
         type: 3}
       propertyPath: listParams.Array.data[0].name
       value: title
+      objectReference: {fileID: 0}
+    - target: {fileID: 9135811836462704659, guid: a8c73fa875acb9743ab4571a8a1312f0,
+        type: 3}
+      propertyPath: listParams.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 9135811836462704659, guid: a8c73fa875acb9743ab4571a8a1312f0,
+        type: 3}
+      propertyPath: listParams.Array.data[1].type
+      value: Text
+      objectReference: {fileID: 0}
+    - target: {fileID: 9135811836462704659, guid: a8c73fa875acb9743ab4571a8a1312f0,
+        type: 3}
+      propertyPath: listParams.Array.data[1].obj
+      value: 
+      objectReference: {fileID: 8145951489526473157}
+    - target: {fileID: 9135811836462704659, guid: a8c73fa875acb9743ab4571a8a1312f0,
+        type: 3}
+      propertyPath: listParams.Array.data[1].name
+      value: title
+      objectReference: {fileID: 0}
+    - target: {fileID: 6009968677959401020, guid: a8c73fa875acb9743ab4571a8a1312f0,
+        type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6009968677959401020, guid: a8c73fa875acb9743ab4571a8a1312f0,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+    - target: {fileID: 6009968677959401020, guid: a8c73fa875acb9743ab4571a8a1312f0,
+        type: 3}
+      propertyPath: m_Type
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a8c73fa875acb9743ab4571a8a1312f0, type: 3}

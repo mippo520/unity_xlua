@@ -47,6 +47,10 @@ public class LuaBehaviourEditor : UnityEditor.Editor
             {
                 po.obj = EditorGUILayout.ObjectField("", po.obj as UnityEngine.Object, typeof(GameObject), true);
             }
+            else if (typeof(LuaBehaviour).Name == po.type)
+            {
+                po.obj = EditorGUILayout.ObjectField("", po.obj as UnityEngine.Object, typeof(LuaBehaviour), true);
+            }
             else if (typeof(Text).Name == po.type)
             {
                 po.obj = EditorGUILayout.ObjectField("", po.obj as UnityEngine.Object, typeof(Text), true);
@@ -156,6 +160,7 @@ public class LuaBehaviourEditor : UnityEditor.Editor
             AddParam<Double>();
             AddParam<bool>();
             AddParam<GameObject>();
+            AddParam<LuaBehaviour>();
             AddParam<Text>();
             AddParam<Slider>();
             AddParam<Button>();
