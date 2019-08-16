@@ -29,7 +29,7 @@ local function _updateList(self)
             end
         else
             -- 已经是第一个了就直接返回
-            return
+            -- return
         end
     elseif self.bottomOffset < 0 then
         if self.bottomIndex < count - 1 then
@@ -64,7 +64,7 @@ local function _updateList(self)
             end
         else
             -- 已经是最后一个了就直接返回
-            return
+            -- return
         end
     end
 
@@ -77,7 +77,8 @@ local function _updateList(self)
             self.topOffset = self.topOffset + cellHeight
             topAddHeight = topAddHeight + cellHeight
         else
-            self.topOffset = 0
+            -- self.topOffset = 0
+            break
         end
     end
     -- 顶部如果有添加则后面的cell位置要变化
@@ -103,9 +104,12 @@ local function _updateList(self)
         end
     end
 
+    if self.bottomIndex >= count - 1 then
+        return
+    end
     -- 计算后面的cell,移动坐标或者增加
     local viewHeight = self.viewHeight + self.topOffset
-    while curHeight < viewHeight and self.bottomIndex < count - 1 do
+    while curHeight < viewHeight do
         self.bottomIndex = self.bottomIndex + 1
         local cellHeight = self:_insertCell(self.bottomIndex, curHeight)
         curHeight = curHeight + cellHeight
@@ -122,14 +126,13 @@ local function _updateList(self)
         self.content.sizeDelta = Unity.Vector2(contentHeight, self.content.sizeDelta.y)
         self.content.anchoredPosition = Unity.Vector2(self.content.anchoredPosition.x - movementDis, self.content.anchoredPosition.y)
     end
-
     self.lastContentPos = self.content.anchoredPosition
     if curHeight < viewHeight then
         return true
     end
 end
 
-local function _updateDragArea(self, moveVec2)
+local function _onScrollChanged(self, moveVec2)
     local offset = self.content.anchoredPosition - self.lastContentPos
     -- 竖的移动计算y的偏移量,横的移动计算x的偏移量
     if self.isVertical then
@@ -146,10 +149,10 @@ local function _updateDragArea(self, moveVec2)
 end
 
 local function _collectionCells(self)
-    for i = self.topIndex, self.bottomIndex do
-        self:_insertToPool(self.mapCells[i])
-        self.mapCells[i] = nil
+    for _, cell in pairs(self.mapCells) do
+        self:_insertToPool(cell)
     end
+    self.mapCells = {}
 end
 
 function ListView:ctor()
@@ -240,12 +243,50 @@ function ListView:toIndex(index)
         self.bottomIndex = index - 1
         self.topOffset = 0
         self.bottomOffset = 0
-        local notCover = _updateList(self)
-        if notCover and self.topIndex > 0 then
+        local notFull = _updateList(self)
+        if notFull and self.topIndex > 0 then
             self:toBottom()
         end
         self.scroll:StopMovement()
     end
+end
+
+function ListView:refresh()
+    _collectionCells(self)
+    self.bottomIndex = self.topIndex - 1
+    local notFull = _updateList(self)
+    if notFull and self.topIndex > 0 then
+        self:toBottom()
+    end
+end
+
+local function _stopAction(self)
+    -- self.cover.interactable = false
+    self.cover.blocksRaycasts = true
+end
+
+local function _startAction(self)
+    -- self.cover.interactable = true
+    self.cover.blocksRaycasts = false
+end
+
+function ListView:isAction()
+    return not self.cover.blocksRaycasts
+end
+
+function ListView:updateFinish()
+    self.scroll.movementType = UnityUI.ScrollRect.MovementType.Elastic
+    _startAction(self)
+end
+
+function ListView:setTopIndex(index)
+    if self.topIndex == index then
+        return
+    end
+
+    _collectionCells(self)
+    self.topIndex = index
+    self:refresh()
 end
 
 function ListView:getCount()
@@ -289,6 +330,7 @@ function ListView:_awake()
     self.orignCell = self.content:GetChild(0):GetComponent(typeof(Unity.RectTransform))
     self.isVertical = self.scroll.vertical
     self.cellParent = self.orignCell.transform.parent
+    self.cover = self.gameObject.transform:GetChild(1):GetComponent(typeof(Unity.CanvasGroup))
     local cg = self.orignCell:GetComponent(typeof(Unity.CanvasGroup))
     cg.alpha = 0
     cg.interactable = false
@@ -298,7 +340,7 @@ function ListView:_awake()
     else
         self.viewHeight = self.scrollRect.rect.width
     end
-    self:addListener(self.scroll.onValueChanged, _updateDragArea)
+    self:addListener(self.scroll.onValueChanged, _onScrollChanged)
     if self.reverse then
         local rect = self.gameObject:GetComponent(typeof(Unity.RectTransform))
         rect:Rotate(0, 0, 180)
@@ -358,29 +400,50 @@ function ListView:_setCellPos(index, posX, posY)
     return cell.rect
 end
 
-function ListView:onBeginDrag()
+function ListView:onScrollBeginDrag()
     self.onDrageMovementDis = 0
     self.isOnDrag = true
+    self.lastContentPos = self.content.anchoredPosition
 end
 
-function ListView:onEndDrag()
+function ListView:onScrollEndDrag()
     self.onDrageMovementDis = 0
     self.isOnDrag = false
+     -- 判断是否拖拽刷新
+    if self.topDragUpdate and self.topOffset < -self.dragDistance then
+        self.scroll.movementType = UnityUI.ScrollRect.MovementType.Unrestricted
+        self.scroll:StopMovement()
+        _stopAction(self)
+        self:onTopUpdate()
+    elseif self.bottomDragUpdate and self.bottomOffset < -self.dragDistance then
+        self.scroll.movementType = UnityUI.ScrollRect.MovementType.Unrestricted
+        self.scroll:StopMovement()
+        _stopAction(self)
+        self:onBottomUpdate()
+    end
 end
 
-function ListView:onDrag(eventData)
+function ListView:onScrollDrag(eventData)
     if not Tools.IsNumberEqual(self.onDrageMovementDis, 0) then
         -- 即使代码修改了content的位置但是通过的时候引擎计算的仍然是原来的位置,所以拖动的时候要减去代码移动的位置差
         if self.isVertical then
-            self.content.anchoredPosition = Unity.Vector2(self.content.anchoredPosition.x, self.content.anchoredPosition.y + self.onDrageMovementDis)
+            self.content.anchoredPosition = Unity.Vector2(self.content.anchoredPosition.x, self.lastContentPos.y + eventData.delta.y)
         else
-            self.content.anchoredPosition = Unity.Vector2(self.content.anchoredPosition.x - self.onDrageMovementDis, self.content.anchoredPosition.y)
+            self.content.anchoredPosition = Unity.Vector2(self.lastContentPos.x + eventData.delta.x, self.content.anchoredPosition.y)
         end
     end
 end
 
 function ListView:onCellClicked(cellBehaviour)
     Info.Error("Please override onCellClicked function when cell clicked! cell index is " .. cellBehaviour.index)
+end
+
+function ListView:onTopUpdate()
+    Info.Error("Please override onTopUpdate function when drag top update!")
+end
+
+function ListView:onBottomUpdate()
+    Info.Error("Please override onBottomUpdate function when drag bottom update!")
 end
 
 return ListView

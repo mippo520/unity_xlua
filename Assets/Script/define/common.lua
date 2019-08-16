@@ -11,6 +11,7 @@ SceneType = require("define.scene_type")
 StorageKey = require("define.storage_key")
 
 Tools = require("common.tools")
+Vector = require("common.vector")
 
 UnityUI = CS.UnityEngine.UI
 Unity = CS.UnityEngine

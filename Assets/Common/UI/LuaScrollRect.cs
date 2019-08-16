@@ -54,9 +54,9 @@ namespace Assets.Common.UI
                 luaComponent = this.gameObject.GetComponent<LuaBehaviour>();
                 if (null != luaComponent && null != luaComponent.luaBehaviour)
                 {
-                    beginDragFunction = luaComponent.luaBehaviour.Get<LuaFunction>("onBeginDrag");
-                    endDragFunction = luaComponent.luaBehaviour.Get<LuaFunction>("onEndDrag");
-                    dragFunction = luaComponent.luaBehaviour.Get<LuaFunction>("onDrag");
+                    beginDragFunction = luaComponent.luaBehaviour.Get<LuaFunction>("onScrollBeginDrag");
+                    endDragFunction = luaComponent.luaBehaviour.Get<LuaFunction>("onScrollEndDrag");
+                    dragFunction = luaComponent.luaBehaviour.Get<LuaFunction>("onScrollDrag");
                 }
                 else
                 {
