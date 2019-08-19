@@ -988,6 +988,7 @@ GameObject:
   - component: {fileID: 5208237315530545396}
   - component: {fileID: 6473789703115516351}
   - component: {fileID: 539853100864733163}
+  - component: {fileID: 9092310080077285971}
   m_Layer: 5
   m_Name: login
   m_TagString: Untagged
@@ -1097,6 +1098,25 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!95 &9092310080077285971
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5501245469180415415}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: bffb6e5d5af3433439182aef05d55aa9, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &5542751670797579629
 GameObject:
   m_ObjectHideFlags: 0
@@ -2017,17 +2037,17 @@ PrefabInstance:
       propertyPath: m_Interactable
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6372935980601618429, guid: 12aba4ffab5acfc419e3025f2d5f642d,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4170240427216915002, guid: 12aba4ffab5acfc419e3025f2d5f642d,
         type: 3}
       propertyPath: a
       value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 4170240427216915002, guid: 12aba4ffab5acfc419e3025f2d5f642d,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6372935980601618429, guid: 12aba4ffab5acfc419e3025f2d5f642d,
         type: 3}
       propertyPath: m_Enabled
       value: 1

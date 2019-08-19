@@ -27,9 +27,6 @@ local function _updateList(self)
                     break
                 end
             end
-        else
-            -- 已经是第一个了就直接返回
-            -- return
         end
     elseif self.bottomOffset < 0 then
         if self.bottomIndex < count - 1 then
@@ -62,9 +59,6 @@ local function _updateList(self)
                     posX = posX + rect.width
                 end
             end
-        else
-            -- 已经是最后一个了就直接返回
-            -- return
         end
     end
 
@@ -77,7 +71,6 @@ local function _updateList(self)
             self.topOffset = self.topOffset + cellHeight
             topAddHeight = topAddHeight + cellHeight
         else
-            -- self.topOffset = 0
             break
         end
     end
@@ -109,7 +102,7 @@ local function _updateList(self)
     end
     -- 计算后面的cell,移动坐标或者增加
     local viewHeight = self.viewHeight + self.topOffset
-    while curHeight < viewHeight do
+    while curHeight < viewHeight and self.bottomIndex < self:getCount() - 1 do
         self.bottomIndex = self.bottomIndex + 1
         local cellHeight = self:_insertCell(self.bottomIndex, curHeight)
         curHeight = curHeight + cellHeight
@@ -142,10 +135,38 @@ local function _onScrollChanged(self, moveVec2)
         self.topOffset = self.topOffset - offset.x
         self.bottomOffset = self.bottomOffset + offset.x
     end
+
     if self.topOffset < 0 or self.bottomOffset < 0 then
         _updateList(self)
     end
     self.lastContentPos = self.content.anchoredPosition
+
+    -- 控制等待动画
+    if self.waitAnimateCG.alpha > 0 then
+        if self.topDragUpdate and self.topOffset < 0 then
+            local pos = self.waitAnimate.transform.localPosition
+            if self.isVertical then
+                pos.y = -self.topOffset / 2
+            else
+                pos.x = self.topOffset / 2
+            end
+            self.waitAnimate.transform.localPosition = pos
+            if self.topOffset > -1 then
+                self.waitAnimateCG.alpha = 0
+            end
+        elseif self.bottomDragUpdate and self.bottomOffset < 0 then
+            local pos = self.waitAnimate.transform.localPosition
+            if self.isVertical then
+                pos.y = -self.content.rect.height + self.bottomOffset / 2
+            else
+                pos.x = self.content.rect.width - self.bottomOffset / 2
+            end
+            self.waitAnimate.transform.localPosition = pos
+            if self.bottomOffset > -1 then
+                self.waitAnimateCG.alpha = 0
+            end
+        end
+    end
 end
 
 local function _collectionCells(self)
@@ -153,6 +174,16 @@ local function _collectionCells(self)
         self:_insertToPool(cell)
     end
     self.mapCells = {}
+end
+
+local function _stopAction(self)
+    -- self.cover.interactable = false
+    self.cover.blocksRaycasts = true
+end
+
+local function _startAction(self)
+    -- self.cover.interactable = true
+    self.cover.blocksRaycasts = false
 end
 
 function ListView:ctor()
@@ -164,13 +195,15 @@ function ListView:ctor()
     self.mapCells = {}
     self.cellPool = {}
     self.cellParent = nil
-    self.lastContentPos = nil
+    self.lastContentPos = Unity.Vector2(0, 0)
     self.onDrageMovementDis = 0   -- 拖动时content重新计算的位置差
     self.viewHeight = 0           -- 可是范围的距离,纵向为y方向,横向为x方向
     self.isOnDrag = false
     self.reverse = false
+    self.isVertical = true          -- 是否纵向拖动,true为纵向拖动,false为横向拖动
 end
 
+-- 拉到最顶
 function ListView:toTop()
     -- 正在拖拉的时候不通过代码修改位置
     if self.isOnDrag then
@@ -192,6 +225,7 @@ function ListView:toTop()
     self.scroll:StopMovement()
 end
 
+-- 拉到最底
 function ListView:toBottom()
     -- 正在拖拉的时候不通过代码修改位置
     if self.isOnDrag then
@@ -215,6 +249,7 @@ function ListView:toBottom()
     self.scroll:StopMovement()
 end
 
+-- 将指定的索引设置为第一个
 function ListView:toIndex(index)
     -- 正在拖拉的时候不通过代码修改位置
     if self.isOnDrag then
@@ -251,6 +286,7 @@ function ListView:toIndex(index)
     end
 end
 
+-- 刷新cell
 function ListView:refresh()
     _collectionCells(self)
     self.bottomIndex = self.topIndex - 1
@@ -260,25 +296,20 @@ function ListView:refresh()
     end
 end
 
-local function _stopAction(self)
-    -- self.cover.interactable = false
-    self.cover.blocksRaycasts = true
-end
-
-local function _startAction(self)
-    -- self.cover.interactable = true
-    self.cover.blocksRaycasts = false
-end
-
+-- 是否处于激活状态
 function ListView:isAction()
     return not self.cover.blocksRaycasts
 end
 
+-- 拖拽刷新结束
 function ListView:updateFinish()
     self.scroll.movementType = UnityUI.ScrollRect.MovementType.Elastic
     _startAction(self)
+    self.waitAnimate:SetBool("bRotate", false)
+    self.waitAnimateCG.alpha = 0
 end
 
+-- 设置当前第一个cell的索引
 function ListView:setTopIndex(index)
     if self.topIndex == index then
         return
@@ -287,6 +318,16 @@ function ListView:setTopIndex(index)
     _collectionCells(self)
     self.topIndex = index
     self:refresh()
+end
+
+-- 是否在最上面
+function ListView:isTop()
+    return 0 == self.topIndex
+end
+
+-- 是否在最下面
+function ListView:isBottom()
+    return self:getCount() - 1 == self.bottomIndex
 end
 
 function ListView:getCount()
@@ -324,14 +365,27 @@ end
 
 function ListView:_awake()
     self.scroll = self.gameObject:GetComponent(typeof(CSLuaScrollRect))
+    self.isVertical = self.scroll.vertical
     self.scrollRect = self.gameObject:GetComponent(typeof(Unity.RectTransform))
     self.scrollCanvasGroup = self.gameObject:GetComponent(typeof(Unity.CanvasGroup))
     self.content = self.gameObject.transform:GetChild(0):GetChild(0):GetComponent(typeof(Unity.RectTransform))
-    self.orignCell = self.content:GetChild(0):GetComponent(typeof(Unity.RectTransform))
-    self.isVertical = self.scroll.vertical
+    self.content.sizeDelta = Unity.Vector2(self.scrollRect.rect.width, self.scrollRect.rect.height)
+    self.orignCell = self.content:GetChild(1):GetComponent(typeof(Unity.RectTransform))
+    self.waitAnimate = self.content:GetChild(0):GetComponent(typeof(Unity.Animator))
+    local pos = self.waitAnimate.transform.localPosition
+    if self.isVertical then
+        pos.x = self.content.rect.width / 2
+    else
+        pos.y = -self.content.rect.height / 2
+    end
+    self.waitAnimate.transform.localPosition = pos
+
+    self.waitAnimateCG = self.waitAnimate:GetComponent(typeof(Unity.CanvasGroup))
+    self.waitAnimateCG.alpha = 0
+
     self.cellParent = self.orignCell.transform.parent
     self.cover = self.gameObject.transform:GetChild(1):GetComponent(typeof(Unity.CanvasGroup))
-    local cg = self.orignCell:GetComponent(typeof(Unity.CanvasGroup))
+    cg = self.orignCell:GetComponent(typeof(Unity.CanvasGroup))
     cg.alpha = 0
     cg.interactable = false
     cg.blocksRaycasts = false
@@ -415,22 +469,40 @@ function ListView:onScrollEndDrag()
         self.scroll:StopMovement()
         _stopAction(self)
         self:onTopUpdate()
+        self.waitAnimate:SetBool("bRotate", true)
     elseif self.bottomDragUpdate and self.bottomOffset < -self.dragDistance then
         self.scroll.movementType = UnityUI.ScrollRect.MovementType.Unrestricted
         self.scroll:StopMovement()
         _stopAction(self)
         self:onBottomUpdate()
+        self.waitAnimate:SetBool("bRotate", true)
     end
 end
 
 function ListView:onScrollDrag(eventData)
     if not Tools.IsNumberEqual(self.onDrageMovementDis, 0) then
-        -- 即使代码修改了content的位置但是通过的时候引擎计算的仍然是原来的位置,所以拖动的时候要减去代码移动的位置差
+        -- 即使代码修改了content的位置但是通过的时候引擎计算的仍然是原来的位置,所以自己手动计算位置,把移动的距离加上上一次的位置
         if self.isVertical then
-            self.content.anchoredPosition = Unity.Vector2(self.content.anchoredPosition.x, self.lastContentPos.y + eventData.delta.y)
+            if self.reverse then
+                self.content.anchoredPosition = Unity.Vector2(self.content.anchoredPosition.x, self.lastContentPos.y - eventData.delta.y)
+            else
+                self.content.anchoredPosition = Unity.Vector2(self.content.anchoredPosition.x, self.lastContentPos.y + eventData.delta.y)
+            end
         else
-            self.content.anchoredPosition = Unity.Vector2(self.lastContentPos.x + eventData.delta.x, self.content.anchoredPosition.y)
+            if self.reverse then
+                self.content.anchoredPosition = Unity.Vector2(self.lastContentPos.x - eventData.delta.x, self.content.anchoredPosition.y)
+            else
+                self.content.anchoredPosition = Unity.Vector2(self.lastContentPos.x + eventData.delta.x, self.content.anchoredPosition.y)
+            end
         end
+    end
+
+    if self.topDragUpdate and self.topOffset < -1 and self.waitAnimateCG.alpha <= 0 then
+        self.waitAnimateCG.alpha = 1
+    elseif self.bottomDragUpdate and self.bottomOffset < -1 and self.waitAnimateCG.alpha <= 0 then
+        self.waitAnimateCG.alpha = 1
+    elseif self.topOffset > -1 and self.bottomOffset > -1 and self.waitAnimateCG.alpha > 0 then
+        self.waitAnimateCG.alpha = 0
     end
 end
 

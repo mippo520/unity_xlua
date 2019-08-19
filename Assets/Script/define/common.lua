@@ -10,6 +10,8 @@ LanguageType = require("define.language_type")
 SceneType = require("define.scene_type")
 StorageKey = require("define.storage_key")
 
+AutoObject = require("common.auto_object")
+BindProperty = require("common.bind.bind_property")
 Tools = require("common.tools")
 Vector = require("common.vector")
 
@@ -42,10 +44,9 @@ HttpManagerInst = require("common.net.http_manager").GetInstance()
 LanguageManagerInst = require("common.language.language_manager").GetInstance()
 StorageInst = require("common.storage.storage").GetInstance()
 
-AutoObject = require("common.auto_object")
 Behaviour = require("common.behaviour.behaviour")
 DialogBehaviour = require("common.ui.dialog_behaviour")
-BindProperty = require("common.bind.bind_property")
+
 XLuaUtil = require 'xlua.util'
 
 Now = handler(TimeManagerInst, TimeManagerInst.now)

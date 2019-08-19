@@ -2,7 +2,7 @@ local VScroll = class("VScroll", ListView)
 
 
 function VScroll:_getCount()
-    return 30
+    return 18
 end
 
 function VScroll:_initCell(cellBehaviour)
@@ -17,6 +17,18 @@ function VScroll:_initCell(cellBehaviour)
     -- 高度会变化的cell马上刷新高度
     UnityUI.LayoutRebuilder.ForceRebuildLayoutImmediate(cellBehaviour.gameObject:GetComponent(typeof(Unity.RectTransform)));
     return cellBehaviour
+end
+
+function VScroll:onTopUpdate()
+    self:onceTimer(2000, function ()
+        self:updateFinish()
+    end)
+end
+
+function VScroll:onBottomUpdate()
+    self:onceTimer(2000, function ()
+        self:updateFinish()
+    end)
 end
 
 return VScroll
