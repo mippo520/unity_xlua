@@ -141,6 +141,12 @@ public static class XLuaConfig
         }
     }
 
+    [GCOptimize]
+    public static List<Type> NoGCList = new List<Type>()
+    {
+        typeof(RVO.Vector2),
+    };
+
     [BlackList]
     public static List<List<string>> BlackList = new List<List<string>>()  {
                 new List<string>(){"System.Xml.XmlNodeList", "ItemOf"},
@@ -192,6 +198,6 @@ public static class XLuaConfig
                 new List<string>(){"UnityEngine.Texture", "imageContentsHash"},
                 new List<string>(){"UnityEngine.UI.Graphic", "OnRebuildRequested"},
                 new List<string>(){"UnityEngine.UI.Text", "OnRebuildRequested"},
-};
+    };
     
 }

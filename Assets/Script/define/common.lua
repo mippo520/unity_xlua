@@ -23,6 +23,8 @@ UnitySceneMode = CS.UnityEngine.SceneManagement.LoadSceneMode
 CSCommon = CS.Assets.Common
 CSLuaBehaviour = CSCommon.Lua.LuaBehaviour
 CSLuaScrollRect = CSCommon.UI.LuaScrollRect
+CSRvo = CS.RVO
+CSRvoInst = CSRvo.Simulator.Instance
 
 Info = CSCommon.Log.Info
 FileManager = CSCommon.Tools.FileManager

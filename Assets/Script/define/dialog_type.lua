@@ -29,6 +29,11 @@ local dialog_type = {
         AssetBundles = {"ui/test/scroll"},
         Path = "Assets/Prefabs/ui/test/ScrollTest.prefab"
     },
+    RvoTest = {
+        Type = "RvoTest",
+        AssetBundles = {"ui/test/rvo_test"},
+        Path = "Assets/Prefabs/ui/test/RvoTest.prefab"
+    },
 }
 
 return dialog_type
