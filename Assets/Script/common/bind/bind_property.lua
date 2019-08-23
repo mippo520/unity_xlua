@@ -10,7 +10,13 @@ function BindProperty:set(value)
     if type(nil) ~= self.type then
         Tools.Assert(self.type == type(value), "BindProperty set value type error! Object type is " .. self.type .. ", value type is " .. type(value))
     end
-    local bChanged = self.value ~= value
+    local bChanged = false
+    if "number" == self.type then
+        bChanged = not Tools.IsNumberEqual(self.value, value)
+    else
+        bChanged = self.value ~= value
+    end
+    
     if bChanged then
         local old = self.value
         self.value = value
