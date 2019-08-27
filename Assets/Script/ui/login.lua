@@ -44,7 +44,7 @@ function login:_start()
         -- end)
         -- self:closeSelf()
 
-        DialogManagerInst:open(DialogType.ScrollTest)
+        DialogManagerInst:open(DialogType.ShaderTest)
     end)
 
     self:addListener(self.registBtn.onClick, function ()

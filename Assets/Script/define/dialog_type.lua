@@ -34,6 +34,11 @@ local dialog_type = {
         AssetBundles = {"ui/test/rvo_test"},
         Path = "Assets/Prefabs/ui/test/RvoTest.prefab"
     },
+    ShaderTest = {
+        Type = "ShaderTest",
+        AssetBundles = {"ui/test/shader_test"},
+        Path = "Assets/Prefabs/ui/test/ShaderTest.prefab"
+    },
 }
 
 return dialog_type
