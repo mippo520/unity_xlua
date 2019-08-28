@@ -113,8 +113,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12cb57cb843f8034d9bc192a02abdba5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  luaScript: common/ui/dialog_behaviour.lua
-  listParams: []
+  luaScript: ui/test/shader_test.lua
+  listParams:
+  - name: panel
+    obj: {fileID: 1439487173578506405}
+    type: GameObject
   listStrings: []
 --- !u!1 &1439487173578506405
 GameObject:
@@ -127,6 +130,8 @@ GameObject:
   - component: {fileID: 1795987993855555370}
   - component: {fileID: 6464508482861308493}
   - component: {fileID: 427636296273324610}
+  - component: {fileID: 2060088662411957554}
+  - component: {fileID: 1726146806946208309}
   m_Layer: 5
   m_Name: Panel
   m_TagString: Untagged
@@ -190,6 +195,36 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
+--- !u!114 &2060088662411957554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1439487173578506405}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1bbc39a28938c64394cd836bd970498, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  luaScript: ui/test/select_panel.lua
+  listParams:
+  - name: image
+    obj: {fileID: 427636296273324610}
+    type: Image
+  listStrings: []
+--- !u!225 &1726146806946208309
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1439487173578506405}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &8845557974058579317
 GameObject:
   m_ObjectHideFlags: 0
@@ -225,7 +260,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 783}
   m_SizeDelta: {x: 600, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &9105405994679381281

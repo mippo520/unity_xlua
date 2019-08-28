@@ -6,6 +6,7 @@ function AutoObject:ctor()
     self.registedEvent = {}
     self.arrBindpropertys = {}
     self.mapTimers = {}
+    self.simpleEvent = {}
 end
 
 function AutoObject:destroy()
@@ -15,6 +16,12 @@ function AutoObject:destroy()
         v:Invoke()
     end
     self.registedEvent = {}
+
+    -- 移除注册simple事件
+    for i, v in ipairs(self.simpleEvent) do
+        v:removeListener(self)
+    end
+    self.simpleEvent = {}
 
     -- 移除绑定属性
     for i, v in ipairs(self.arrBindpropertys) do
@@ -41,9 +48,15 @@ function AutoObject:addListener(unityEvent, callback)
     table.insert(self.registedEvent, unityEvent)
 end
 
--- 注册事件,会在对象destroy的时候移除
+-- 注册全局事件,会在对象destroy的时候移除
 function AutoObject:registEvent(event, callback)
     EventManagerInst:registEvent(event, self, callback)
+end
+
+-- 注册SimpleEvent事件,会在对象destroy的时候移除
+function AutoObject:registSimpleEvent(event, callback)
+    event:addListener(self, callback)
+    table.insert(self.simpleEvent, event)
 end
 
 -- 注册网络消息,会在对象destroy的时候移除

@@ -385,7 +385,7 @@ function ListView:_awake()
 
     self.cellParent = self.orignCell.transform.parent
     self.cover = self.gameObject.transform:GetChild(1):GetComponent(typeof(Unity.CanvasGroup))
-    cg = self.orignCell:GetComponent(typeof(Unity.CanvasGroup))
+    local cg = self.orignCell:GetComponent(typeof(Unity.CanvasGroup))
     cg.alpha = 0
     cg.interactable = false
     cg.blocksRaycasts = false

@@ -15,10 +15,10 @@ BindProperty = require("common.bind.bind_property")
 Tools = require("common.tools")
 Vector = require("common.vector")
 
-UnityUI = CS.UnityEngine.UI
 Unity = CS.UnityEngine
-UnitySceneManager = CS.UnityEngine.SceneManagement.SceneManager
-UnitySceneMode = CS.UnityEngine.SceneManagement.LoadSceneMode
+UnityUI = Unity.UI
+UnitySceneManager = Unity.SceneManagement.SceneManager
+UnitySceneMode = Unity.SceneManagement.LoadSceneMode
 
 CSCommon = CS.Assets.Common
 CSLuaBehaviour = CSCommon.Lua.LuaBehaviour
@@ -45,6 +45,8 @@ DialogManagerInst = require("common.ui.dialog_manager").GetInstance()
 HttpManagerInst = require("common.net.http_manager").GetInstance()
 LanguageManagerInst = require("common.language.language_manager").GetInstance()
 StorageInst = require("common.storage.storage").GetInstance()
+
+SimpleEvent = require("common.event.simple_event")
 
 Behaviour = require("common.behaviour.behaviour")
 DialogBehaviour = require("common.ui.dialog_behaviour")
