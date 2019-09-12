@@ -66,7 +66,7 @@ function login:_start()
         -- self.value:set(self.value:get() + 100)
         -- self.sliderValue:set(self.sliderValue:get() - 0.1)
         -- spineState:AddAnimation(0, "main", true, 0);
-        DialogManagerInst:open(DialogType.Regist)
+        DialogManagerInst:open(DialogType.ScrollTest)
     end)
 
 end

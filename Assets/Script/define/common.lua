@@ -63,4 +63,5 @@ Version = BindProperty.new("0.0.0")
 
 ListView = require("ui.list_view.list_view")
 GridView = require("ui.list_view.grid_view")
+StepListView = require("ui.list_view.step_list_view")
 

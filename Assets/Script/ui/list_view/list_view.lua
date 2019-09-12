@@ -1,7 +1,7 @@
 local ListView = class("ListView", Behaviour)
 local MovementType = UnityUI.ScrollRect.MovementType
 
-local function _updateList(self)
+function ListView:_updateList()
     local count = self:getCount()
     local topRemoveHeight = 0   -- 顶部移除的cell的高度
     -- 如果是顶部有多出并且索引号不是第一个,才把底部多出的cell回收
@@ -102,7 +102,7 @@ local function _updateList(self)
     end
     -- 计算后面的cell,移动坐标或者增加
     local viewHeight = self.viewHeight + self.topOffset
-    while curHeight < viewHeight and self.bottomIndex < self:getCount() - 1 do
+    while curHeight < viewHeight and self.bottomIndex < count - 1 do
         self.bottomIndex = self.bottomIndex + 1
         local cellHeight = self:_insertCell(self.bottomIndex, curHeight)
         curHeight = curHeight + cellHeight
@@ -111,7 +111,7 @@ local function _updateList(self)
     local contentHeight = math.max(curHeight, viewHeight)
     self.bottomOffset = contentHeight - viewHeight
     local movementDis = topAddHeight - topRemoveHeight
-    self.onDrageMovementDis = self.onDrageMovementDis + movementDis  --[[ 计算content因为拖动而造成的位置差 ]]
+    self.onDragMovementDis = self.onDragMovementDis + movementDis  --[[ 计算content因为拖动而造成的位置差 ]]
     if self.isVertical then
         self.content.sizeDelta = Unity.Vector2(self.content.sizeDelta.x, contentHeight)
         self.content.anchoredPosition = Unity.Vector2(self.content.anchoredPosition.x, self.content.anchoredPosition.y + movementDis)
@@ -136,8 +136,8 @@ local function _onScrollChanged(self, moveVec2)
         self.bottomOffset = self.bottomOffset + offset.x
     end
 
-    if self.topOffset < 0 or self.bottomOffset < 0 then
-        _updateList(self)
+    if self.forceFlush or self.topOffset < 0 or self.bottomOffset < 0 then
+        self:_updateList()
     end
     self.lastContentPos = self.content.anchoredPosition
 
@@ -196,11 +196,12 @@ function ListView:ctor()
     self.cellPool = {}
     self.cellParent = nil
     self.lastContentPos = Unity.Vector2(0, 0)
-    self.onDrageMovementDis = 0   -- 拖动时content重新计算的位置差
+    self.onDragMovementDis = 0   -- 拖动时content重新计算的位置差
     self.viewHeight = 0           -- 可是范围的距离,纵向为y方向,横向为x方向
     self.isOnDrag = false
     self.reverse = false
     self.isVertical = true          -- 是否纵向拖动,true为纵向拖动,false为横向拖动
+    self.forceFlush = false         -- 拖拉的时候是否每次都调用_updateList
 end
 
 -- 拉到最顶
@@ -221,7 +222,7 @@ function ListView:toTop()
     self.bottomIndex = -1
     self.topOffset = 0
     self.bottomOffset = 0
-    _updateList(self)
+    self:_updateList()
     self.scroll:StopMovement()
 end
 
@@ -245,7 +246,7 @@ function ListView:toBottom()
     self.bottomIndex = count - 1
     self.topOffset = -self.viewHeight
     self.bottomOffset = 0
-    _updateList(self)
+    self:_updateList()
     self.scroll:StopMovement()
 end
 
@@ -278,7 +279,7 @@ function ListView:toIndex(index)
         self.bottomIndex = index - 1
         self.topOffset = 0
         self.bottomOffset = 0
-        local notFull = _updateList(self)
+        local notFull = self:_updateList()
         if notFull and self.topIndex > 0 then
             self:toBottom()
         end
@@ -290,7 +291,7 @@ end
 function ListView:refresh()
     _collectionCells(self)
     self.bottomIndex = self.topIndex - 1
-    local notFull = _updateList(self)
+    local notFull = self:_updateList()
     if notFull and self.topIndex > 0 then
         self:toBottom()
     end
@@ -346,6 +347,8 @@ function ListView:_getCell()
         table.remove(self.cellPool, 1)
     else
         cell = Unity.Object.Instantiate(self.orignCell, self.cellParent)
+        local cellLuaBehaviour = Behaviour.getLuaBehaviour(cell)
+        self:registSimpleEvent(cellLuaBehaviour.onClick, self.onCellClicked)
     end
     return cell
 end
@@ -406,7 +409,7 @@ end
 function ListView:_start()
     Tools.Assert((self.scroll.vertical or self.scroll.horizontal), "Please set a scroll direction!")
     Tools.Assert((not (self.scroll.vertical and self.scroll.horizontal)), "Can not set both vertical and horizontal are both true!")
-    _updateList(self)
+    self:_updateList()
 end
 
 function ListView:_getCellRect(index)
@@ -454,14 +457,36 @@ function ListView:_setCellPos(index, posX, posY)
     return cell.rect
 end
 
+function ListView:_getCellPos(index)
+    local cell = self.mapCells[index]
+    local pos = cell.anchoredPosition
+    if self.isVertical then
+        pos.y = -pos.y - cell.pivot.y * cell.rect.height
+    else
+        pos.x = pos.x - cell.pivot.x * cell.rect.width
+    end
+    return pos
+end
+
+function ListView:_getCellCenterPos(index)
+    local cell = self.mapCells[index]
+    local pos = cell.anchoredPosition
+    if self.isVertical then
+        pos.y = -pos.y - cell.pivot.y * cell.rect.height - 0.5 * cell.rect.height
+    else
+        pos.x = pos.x - cell.pivot.x * cell.rect.width + 0.5 * cell.rect.width
+    end
+    return pos
+end
+
 function ListView:onScrollBeginDrag()
-    self.onDrageMovementDis = 0
+    self.onDragMovementDis = 0
     self.isOnDrag = true
     self.lastContentPos = self.content.anchoredPosition
 end
 
 function ListView:onScrollEndDrag()
-    self.onDrageMovementDis = 0
+    self.onDragMovementDis = 0
     self.isOnDrag = false
      -- 判断是否拖拽刷新
     if self.topDragUpdate and self.topOffset < -self.dragDistance then
@@ -480,8 +505,8 @@ function ListView:onScrollEndDrag()
 end
 
 function ListView:onScrollDrag(eventData)
-    if not Tools.IsNumberEqual(self.onDrageMovementDis, 0) then
-        -- 即使代码修改了content的位置但是通过的时候引擎计算的仍然是原来的位置,所以自己手动计算位置,把移动的距离加上上一次的位置
+    if not Tools.IsNumberEqual(self.onDragMovementDis, 0) then
+        -- 即使代码修改了content的位置但是拖拉的时候引擎计算的仍然是原来的位置,所以自己手动计算位置,把移动的距离加上上一次的位置
         if self.isVertical then
             if self.reverse then
                 self.content.anchoredPosition = Unity.Vector2(self.content.anchoredPosition.x, self.lastContentPos.y - eventData.delta.y)
@@ -516,6 +541,10 @@ end
 
 function ListView:onBottomUpdate()
     Info.Error("Please override onBottomUpdate function when drag bottom update!")
+end
+
+function ListView:onCellClicked(cellLuaBehaviour)
+    Info.Error("Please override onCellClicked function to do sth. when cell clicked!")
 end
 
 return ListView

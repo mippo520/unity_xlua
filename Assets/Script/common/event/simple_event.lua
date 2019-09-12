@@ -14,13 +14,13 @@ end
 
 function SimpleEvent:removeListener(obj)
     if not self.mapListeners[obj] then
-        Info.Error("SimpleEvent:removeListener error! obj " .. tostring(obj) .. " is not added!")
+        Info.Error("SimpleEvent:removeListener error! obj " .. tostring(obj) .. " is not removed!")
     else
         self.mapListeners[obj] = nil
     end
 end
 
-function SimpleEvent:Invoke(...)
+function SimpleEvent:invoke(...)
     for _, v in pairs(self.mapListeners) do
         v(...)
     end

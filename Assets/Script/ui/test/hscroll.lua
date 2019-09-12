@@ -1,7 +1,7 @@
 local HScroll = class("HScroll", ListView)
 
 function HScroll:ctor()
-    ListView.ctor(self)
+    StepListView.ctor(self)
 
     self.arrItem = Vector.new()
     for i = 1, 10 do

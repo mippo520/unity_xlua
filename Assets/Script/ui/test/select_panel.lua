@@ -17,7 +17,7 @@ function SelectPanel:onPointerClick()
         img.material:SetFloat("_IsShow", 1)
     end
 
-    self.onClick:Invoke(self.index, img.material:GetFloat("_IsShow") > 0)
+    self.onClick:invoke(self.index, img.material:GetFloat("_IsShow") > 0)
     return false
 end
 
