@@ -30,9 +30,15 @@ function Tools.Assert(obj, message)
     end
 end
 
-function Tools.IsNumberEqual(n1, n2)
+function Tools.IsNumberEqual(n1, n2, decimals)
+    local num = 0
+    if "number" == decimals then
+        num = math.pow(10, -math.floor(decimals))
+    else
+        num = 0.000001
+    end
     local n = n1 - n2
-    if n < 0.00001 and n > -0.00001 then
+    if n < num and n > -num then
         return true
     else
         return false

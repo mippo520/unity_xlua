@@ -18,13 +18,9 @@ function BindProperty:set(value)
     end
     
     if bChanged then
-        local old = self.value
+        local old = clone(self)
         self.value = value
-        for _, listener in pairs(self.mapListeners) do
-            for _, handler in pairs(listener) do
-                handler(old, self.value)
-            end
-        end
+        self:fire(old, self)
     end
 end
 
@@ -43,7 +39,7 @@ function BindProperty:bind(obj, func)
     if not self.mapListeners[obj][func] then
         local handler = handler(obj, func)
         self.mapListeners[obj][func] = handler
-        handler(self.value, self.value)
+        handler(self, self)
     else
         Info.Error(obj.class.__cname .. " is already bind!")
     end
@@ -52,6 +48,14 @@ end
 function BindProperty:unbind(obj)
     if self.mapListeners[obj] then
         self.mapListeners[obj] = nil
+    end
+end
+
+function BindProperty:fire(old, cur)
+    for _, listener in pairs(self.mapListeners) do
+        for _, handler in pairs(listener) do
+            handler(old, cur)
+        end
     end
 end
 

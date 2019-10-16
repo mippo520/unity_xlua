@@ -72,6 +72,7 @@ function AutoObject:onceTimer(interval, func, ...)
         func(self, ...)
     end, ...)
     self.mapTimers[id] = 1
+    return id
 end
 
 -- 注册循环定时器,会在对象destroy的时候移除
@@ -84,6 +85,12 @@ function AutoObject:loopTimer(firstInterval, interval, func, count, ...)
         func(self, timer, ...)
     end, count, ...)
     self.mapTimers[id] = 1
+    return id
+end
+
+function AutoObject:stopTimer(id)
+    TimeManagerInst:stopTimer(id)
+    self.mapTimers[id] = nil
 end
 
 -- 参数绑定,会在对象destroy的时候解绑

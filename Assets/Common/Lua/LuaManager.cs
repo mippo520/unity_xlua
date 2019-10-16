@@ -35,9 +35,9 @@ namespace Assets.Common.Lua
             return ++s_Id;
         }
 
-        public object[] CreateBehaviour(Int64 id, string script)
+        public LuaTable CreateBehaviour(Int64 id, string script)
         {
-            return s_CreateBehaviour.Call(id, script);
+            return s_CreateBehaviour.Call(id, script)[0] as LuaTable;
         }
 
         public LuaTable GetBehaviour(Int64 id)

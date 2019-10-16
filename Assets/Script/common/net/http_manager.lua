@@ -1,16 +1,7 @@
-local Http = CS.Assets.Common.Net.HttpManager
+local Http = CSCommon.Net.HttpManager
 local HttpWaitData = require("common.net.http_wait_data")
 
 local HttpManager = class("HttpManager")
-
-local sInstance = nil
-
-function HttpManager.GetInstance()
-    if nil == sInstance then
-        sInstance = HttpManager.new()
-    end
-    return sInstance
-end
 
 local function _messageTimeout(self, msg)
     local waitReq = self.mapWaitRequest[msg]
@@ -49,4 +40,7 @@ function HttpManager:Get(url, args, callback)
     self.mapWaitRequest[newId] = data
 end
 
-return HttpManager
+if not _HttpManagerInst then
+    _HttpManagerInst = HttpManager.new()
+end
+return _HttpManagerInst

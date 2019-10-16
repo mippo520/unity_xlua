@@ -1,20 +1,11 @@
 local DialogManager = class("DialogManager")
 local Dialog = require("common.ui.dialog")
 
-local sInstance = nil
-
-function DialogManager.GetInstance()
-    if nil == sInstance then
-        sInstance = DialogManager.new()
-    end
-    return sInstance
-end
-
 function DialogManager:ctor()
     self.mapDialog = {}
 end
 
-function DialogManager:open(dialogType, ...)
+function DialogManager:open(dialogType, openCallback, ...)
     local args = {...}
     ResourcesManagerInst:LoadAssetBundleAsync(dialogType.AssetBundles, nil, function (arrRes)
         local dialog = Dialog.new()
@@ -28,6 +19,9 @@ function DialogManager:open(dialogType, ...)
         local behaviour = BehaviourManager.getBehaviour(luaBehaviour.id)
         if behaviour.setValues then
             behaviour:setValues(table.unpack(args))
+        end
+        if openCallback then
+            openCallback(luaBehaviour.id)
         end
     end)
 end
@@ -58,5 +52,8 @@ function DialogManager:destroy(id)
     self.mapDialog[id] = nil
 end
 
+if not _DialogManagerInst then
+    _DialogManagerInst = DialogManager.new()
+end
+return _DialogManagerInst
 
-return DialogManager

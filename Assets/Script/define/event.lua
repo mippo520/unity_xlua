@@ -23,6 +23,17 @@ local event = {
 
     -- hot update
     HotUpdateBeginDownload = "HotUpdateBeginDownload",
+
+    -- login
+    LoginSuccess = "LoginSuccess",
+
+    -- data
+    PlayerDataUpdate = "PlayerDataUpdate",
+    PlayerLevUpdate = "PlayerLevUpdate",
+    PossessionUpdate = "PossessionUpdate", 
+    BigPossessionUpdate = "BigPossessionUpdate", 
+    PackageUpdate = "PackageUpdate", 
+    VipUpdate = "VipUpdate",
 }
 
 return event

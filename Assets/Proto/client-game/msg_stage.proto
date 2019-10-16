@@ -1,0 +1,51 @@
+syntax = "proto3";
+package c_gs;
+
+import "proto/common/common.proto";
+
+message StageSlot {
+    int32 id = 1;
+    int32 hero_id = 2;
+    common.BigIntSimilar income = 3;
+    int64 work_start_ts = 4;
+}
+
+message S2C_StageSlotList {
+    repeated StageSlot slots = 1;
+}
+
+message S2C_StageOfflineIncome {
+    common.BigIntSimilar income = 1;
+}
+
+message C2S_StageUnlockSlotReq {
+    int32 slot_id = 1;
+    int32 hero_id = 2;
+}
+
+message S2C_StageUnlockSlotRsp {
+    int32 code = 1;
+    int32 slot_id = 2;
+    int32 hero_id = 3;
+}
+
+message C2S_StageCollectMoneyReq {
+    int32 slot_id = 1;
+}
+
+message S2C_StageCollectMoneyRsp {
+    int32 code = 1;
+    int32 slot_id = 2;
+    common.BigIntSimilar income = 3;
+}
+
+message C2S_StageChangeHeroReq {
+    int32 slot_id = 1;
+    int32 hero_id = 2;
+}
+
+message S2C_StageChangeHeroRsp {
+    int32 code = 1;
+    int32 slot_id = 2;
+    int32 hero_id = 3;
+}

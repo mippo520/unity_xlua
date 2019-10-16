@@ -21,6 +21,19 @@ namespace Assets.Common.Tools
             StartCoroutine(this._readAllBytesAsync(packageName, fileName, callback));
         }
 
+        public byte[] readAllBytes(string fileName)
+        {
+#if UNITY_EDITOR
+            return File.ReadAllBytes(fileName);
+#else
+
+            int lastDot = fileName.LastIndexOf(".");
+            fileName = fileName.Substring(0, lastDot) + ".txt";
+            var text = ResourcesManager.GetInstance().LoadAsset<TextAsset>(fileName.ToLower());
+            return Encoding.Default.GetBytes(text.text);
+#endif
+        }
+
         static public string md5(ref byte[] content)
         {
             string ret = "";

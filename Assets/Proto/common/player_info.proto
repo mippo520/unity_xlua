@@ -1,0 +1,12 @@
+syntax = "proto3";
+package common;
+
+message PlayerBrief {
+    int64 player_id = 1;
+    string name = 2;
+    int32 head = 3;
+}
+
+message PlayerDetail {
+    
+}

@@ -1,7 +1,7 @@
 local lanType = {
-    zh = "zh",
-    en = "en",
-    ar = "ar"
+    zh = 0,
+    en = 1,
+    ar = 2
 }
 
 return lanType

@@ -22,6 +22,7 @@ Progress = class("Progress")
 function Progress:start()
     NetManagerInst:init()
     TimeManagerInst:init()
+
     UnitySceneManager.LoadSceneAsync(SceneType.Update)
 end
 
@@ -36,5 +37,9 @@ end
 
 function Progress:restart()
     UnitySceneManager.LoadSceneAsync(SceneType.Launcher)
+end
+
+function Progress:enterGame()
+    UnitySceneManager.LoadSceneAsync(SceneType.Game)
 end
 

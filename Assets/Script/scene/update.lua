@@ -1,5 +1,5 @@
 local update = class("update", Behaviour)
-local HotUpdateRes = CS.Assets.Common.Resource.HotUpdateRes
+local HotUpdateRes = CSCommon.Resource.HotUpdateRes
 
 local function _updateComplete(self)
     UnitySceneManager.LoadSceneAsync(SceneType.Load)
@@ -18,7 +18,7 @@ local function _beginDownload(self)
             self.percent.text = "100%"
             self.speed.text = ""
             TimeManagerInst:onceTimer(800, self, function ()
-                Progress.restart()
+                Progress:restart()
             end)
         else
             Info.Error("hot update download error! " .. msg);
@@ -57,6 +57,11 @@ function update:_awake()
 end
 
 function update:_start()
+    if not NeedHotUpdate then
+        Version:set("0.0.0")
+        _updateComplete(self)
+        return
+    end
     ResourcesManagerInst:CompareUpdateFile(function (res, totalSize, msg)
         if HotUpdateRes.Complete == res then
             Version:set(msg)
@@ -69,12 +74,14 @@ function update:_start()
             else
                 size = size / 1024
             end
-            DialogManagerInst:open(DialogType.Tips, function ()
+            DialogManagerInst:open(DialogType.Tips, nil, function ()
                 EventManagerInst:fireEvent(Event.HotUpdateBeginDownload)   
             end, "check_download", size, unit)
             self.totalSize = totalSize
         else
-            Info.Error("CompareUpdateFile error! " .. msg);
+            DialogManagerInst:open(DialogType.Tips, nil, function ()
+                Progress:restart()
+            end, "update_error")
         end
     end)
 end

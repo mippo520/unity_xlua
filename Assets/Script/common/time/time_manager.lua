@@ -1,15 +1,6 @@
 local Timer = require("common.time.timer")
 local TimeManager = class("TimeManager")
 
-local sInstance = nil
-
-function TimeManager.GetInstance()
-    if nil == sInstance then
-        sInstance = TimeManager.new()
-    end
-    return sInstance
-end
-
 function _addTimer(self, timer)
     if not timer then
         Info.Error("_addTimer error! timer is null")
@@ -56,11 +47,18 @@ function TimeManager:ctor()
     self.arrTimer = {}
     self.id = 0
     self.arrInsertTimer = {}
+    self.offset = 0 -- 时区
 end
 
 
 function TimeManager:init()
-    self.currentTime = Time.now()
+    self.currentTime = Time.now()       -- 本地时间
+    self.serverTime = self.currentTime  -- 服务器时间
+end
+
+function TimeManager:setServerTime(time, offset)
+    self.serverTime = time
+    self.offset = offset
 end
 
 function TimeManager:update()
@@ -68,6 +66,7 @@ function TimeManager:update()
     local dt = curTime - self.currentTime
     EventManagerInst:fireEvent(Event.FrameUpdate, dt)
     self.currentTime = curTime
+    self.serverTime = self.serverTime + dt
     while #self.arrTimer > 0 do
         local timer = self.arrTimer[1]
         if timer._time <= self.currentTime then
@@ -90,7 +89,7 @@ function TimeManager:update()
 end
 
 function TimeManager:now()
-    return self.currentTime
+    return self.serverTime
 end
 
 function TimeManager:onceTimer(interval, obj, func, ...)
@@ -128,4 +127,7 @@ function TimeManager:stopTimer(id)
     return bRet
 end
 
-return TimeManager
+if not _TimeManagerInst then
+    _TimeManagerInst = TimeManager.new()
+end
+return _TimeManagerInst

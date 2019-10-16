@@ -17,20 +17,30 @@ namespace Assets.Common.Net
             var data = new byte[packageLenth];
             try
             {
-                socket.BeginReceive(data, 0, packageLenth, SocketFlags.None, _onReceive, data);
+                socket.BeginReceive(data, 0, packageLenth, SocketFlags.None, new System.AsyncCallback(_onReceive), data);
             }
             catch
             {
+                Info.Error("FirstPackageCreator Receive error!");
                 manager.Close();
             }
         }
 
         private void _onReceive(IAsyncResult ar)
         {
+            int rEnd = 0;
             try
             { 
-                int rEnd = socket.EndReceive(ar);
-                if (rEnd <= 0) manager.Close();
+                rEnd = socket.EndReceive(ar);
+            }
+            catch
+            {
+                Info.Error(string.Format("FirstPackageCreator _onReceive error! rEnd = {0}", rEnd));
+                manager.Close();
+            }
+
+            if (rEnd > 0)
+            {
                 var lenthData = ar.AsyncState as byte[];
                 var arrKey = new List<byte>[2];
                 arrKey[0] = lenthData.Skip(0).Take(13).ToList<byte>();
@@ -45,12 +55,8 @@ namespace Assets.Common.Net
                 KeyIdx = ret;
                 manager.SetPackageCreator(new NormalPackageCreator());
                 manager.StartReceive();
+                manager.ConsultFinish();
             }
-            catch
-            {
-                manager.Close();
-            }
-
         }
     }
 }

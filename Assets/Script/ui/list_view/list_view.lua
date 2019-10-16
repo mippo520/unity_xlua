@@ -126,6 +126,10 @@ function ListView:_updateList()
 end
 
 local function _onScrollChanged(self, moveVec2)
+    if not self.lastContentPos then
+        return
+    end
+    
     local offset = self.content.anchoredPosition - self.lastContentPos
     -- 竖的移动计算y的偏移量,横的移动计算x的偏移量
     if self.isVertical then
@@ -195,7 +199,7 @@ function ListView:ctor()
     self.mapCells = {}
     self.cellPool = {}
     self.cellParent = nil
-    self.lastContentPos = Unity.Vector2(0, 0)
+    self.lastContentPos = nil
     self.onDragMovementDis = 0   -- 拖动时content重新计算的位置差
     self.viewHeight = 0           -- 可是范围的距离,纵向为y方向,横向为x方向
     self.isOnDrag = false

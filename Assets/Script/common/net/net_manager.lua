@@ -1,18 +1,9 @@
-local Net = CS.Assets.Common.Net.NetManager
-local EndianType = CS.Assets.Common.Net.EndianType
-local NetState = CS.Assets.Common.Net.NetState
+local Net = CSCommon.Net.NetManager
+local EndianType = CSCommon.Net.EndianType
+local NetState = CSCommon.Net.NetState
 local MsgWaitData = require("common.net.msg_wait_data")
 
 local NetManager = class("NetManager")
-
-local sInstance = nil
-
-function NetManager.GetInstance()
-    if nil == sInstance then
-        sInstance = NetManager.new()
-    end
-    return sInstance
-end
 
 function NetManager:ctor()
     self.mapIdMsg = {}
@@ -56,7 +47,7 @@ local function _reconnect(self)
 end
 
 function NetManager:init()
-    Net.GetInstance():Init(EndianType.Big, 4, CS.Assets.Common.Net.FirstPackageCreator())
+    Net.GetInstance():Init(EndianType.Big, 4, CSCommon.Net.FirstPackageCreator())
     EventManagerInst:registEvent(Event.MessageTimeout, self, _messageTimeout)
 end
 
@@ -96,9 +87,10 @@ end
 
 local function connectCallback(self, state)
     if NetState.Connected == state then
-        EventManagerInst:fireEvent(Event.NetConnectSuccess)
         Net.GetInstance():Receive(handler(self, receiveCallback))
         _resetConnectData(self)
+    elseif NetState.Finished == state then
+        EventManagerInst:fireEvent(Event.NetConnectSuccess)
     else
         EventManagerInst:fireEvent(Event.NetConnectFailed)
         -- _reconnect(self)
@@ -184,4 +176,7 @@ function NetManager:close()
     Net.GetInstance():Close(false)
 end
 
-return NetManager
+if not _NetManagerInst then
+    _NetManagerInst = NetManager.new()
+end
+return _NetManagerInst

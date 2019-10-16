@@ -46,4 +46,10 @@ function DialogBehaviour:setFormatText(text, key, ...)
     }
 end
 
+function DialogBehaviour:destroy()
+    Behaviour.destroy(self)
+
+    DialogManagerInst:destroy(self.id)
+end
+
 return DialogBehaviour

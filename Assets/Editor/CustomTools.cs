@@ -14,12 +14,16 @@ namespace Assets.Editor
         {
             DirectoryInfo dirInfo = new DirectoryInfo(Application.dataPath + "/Script");
             _changeFileExtension(dirInfo, ".lua", ".txt");
+            dirInfo = new DirectoryInfo(Application.dataPath + "/Config/Design");
+            _changeFileExtension(dirInfo, ".json", ".txt");
         }
 
         public static void textFileRecover()
         {
             DirectoryInfo dirInfo = new DirectoryInfo(Application.dataPath + "/Script");
             _changeFileExtension(dirInfo, ".txt", ".lua");
+            dirInfo = new DirectoryInfo(Application.dataPath + "/Config/Design");
+            _changeFileExtension(dirInfo, ".txt", ".json");
         }
 
         [MenuItem("Custom/mergeProto")]
@@ -55,6 +59,24 @@ namespace Assets.Editor
             }
 
             File.WriteAllText(Application.dataPath + "/Script/pb/pb.lua", lua);
+
+            // error code
+            string errorCode = "local error_code = {\n";
+            System.IO.StreamReader sr = new System.IO.StreamReader(Application.dataPath + "/Proto/err_code.go");
+            string line = "";
+            // 从文件读取并显示行，直到文件的末尾 
+            while ((line = sr.ReadLine()) != null)
+            {
+                if (line.Contains("="))
+                {
+                    line += ",\n";
+                    errorCode += line;
+                }
+            }
+            errorCode += "} \nreturn error_code";
+            sr.Close();
+            File.WriteAllText(Application.dataPath + "/Script/define/err_code.lua", errorCode);
+            Info.Debug("Create proto finish!");
         }
 
         static void _changeFileExtension(DirectoryInfo dirInfo, string oldExt, string newExt)

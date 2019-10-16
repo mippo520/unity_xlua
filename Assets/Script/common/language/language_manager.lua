@@ -1,27 +1,23 @@
 
 local LanguageManager = class("LanguageManager")
 
-
-local sInstance = nil
-
-function LanguageManager.GetInstance()
-    if nil == sInstance then
-        sInstance = LanguageManager.new()
-    end
-    return sInstance
-end
-
 function LanguageManager:ctor()
     self.language = LanguageType.zh
-    self.en = require("cfg.language.en")
-    self.zh = require("cfg.language.zh")
+    self.lan_script = {
+        [LanguageType.zh] = require("cfg.language.zh"), 
+        [LanguageType.en] = require("cfg.language.en"), 
+    }
 end
 
 function LanguageManager:getContent(key)
-    return self[self.language][key]
+    return self.lan_script[self.language][key]
 end
 
 function LanguageManager:setLanguage(lan)
+    if self.language == lan then
+        return
+    end
+    
     if not LanguageType[lan] then
         Info.Debug("set language error! " .. lan .. " not exist!")
         return 
@@ -35,4 +31,7 @@ function LanguageManager:getLanguage()
     return  self.language
 end
 
-return LanguageManager
+if not _LanguageManagerInst then
+    _LanguageManagerInst = LanguageManager.new()
+end
+return _LanguageManagerInst

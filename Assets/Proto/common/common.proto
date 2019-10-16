@@ -1,0 +1,7 @@
+syntax = "proto3";
+package common;
+
+message BigIntSimilar {
+    double val = 1;
+    int32 tail = 2;
+}

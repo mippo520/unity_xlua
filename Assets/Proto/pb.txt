@@ -1,9 +1,42 @@
 syntax = "proto3";
 package c_gs;
 
+message Hero {
+    int32 id = 1;
+    int32 star = 2;
+    int64 lev = 3;
+}
+
+message S2C_HeroList {
+    repeated Hero heroes = 1;
+}
+
+message C2S_UpgradeHeroLevReq {
+    int32 id = 1;
+    int64 up_lev = 2;
+}
+
+message S2C_UpgradeHeroLevRsp {
+    int32 code = 1;
+    int32 id = 2;
+    int64 up_lev = 3;
+}
+
+message C2S_UpgradeHeroStarReq {
+    int32 id = 1;
+    int32 up_star = 2;
+}
+
+message S2C_UpgradeHeroStarRsp {
+    int32 code = 1;
+    int32 id = 2;
+    int32 up_star = 3;
+}
+
 message C2S_Login {
     int64 account_id = 1;
     string token = 2;
+    int32 server_id = 3;
 }
 
 message S2C_Login {
@@ -28,12 +61,64 @@ message S2C_Disconnect {
     int32 code = 1;
 }
 
-message S2C_PlayerData {
-    PlayerBaseData base_data = 1;
+message S2C_LoginFinish {
+    
 }
 
-message PlayerBaseData {
+message S2C_PlayerData {
     int64 player_id = 1;
     string name = 2;
     int32 head = 3;
+    int64 create_ts = 4;
+}
+
+
+message S2C_PropertyList {
+    repeated Property props = 1;
+}
+
+message S2C_BigPropertyList {
+    repeated BigProperty props = 1;
+}
+
+message S2C_PlayerSettings {
+    int32 lan = 1;
+}
+
+message S2C_VipData {
+    int32 vip_lev = 1;
+    int64 vip_exp = 2;
+}
+
+message S2C_SyncVipLevExp {
+    int32 vip_lev = 1;
+    int64 vip_exp = 2;
+}
+
+message BigIntSimilar {
+    double val = 1;
+    int32 tail = 2;
+}
+
+message PlayerBrief {
+    int64 player_id = 1;
+    string name = 2;
+    int32 head = 3;
+}
+
+message PlayerDetail {
+    
+}
+
+
+message Property {
+    int32 id = 1;
+    int64 val = 2;
+    int64 last_update_ts = 3;
+}
+
+message BigProperty {
+    int32 id = 1;
+    BigIntSimilar val = 2;
+    int64 last_update_ts = 3;
 }

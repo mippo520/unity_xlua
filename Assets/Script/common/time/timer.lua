@@ -7,7 +7,7 @@ function Timer:ctor(id, time, obj, func, interval, count, ...)
     self._func = func
     self._interval = interval
     if "number" ~= count then
-        count = tonumber(count)
+        count = -1
     end
     self._count = math.floor(count)
     self._handler = handler(obj, func)
@@ -19,7 +19,7 @@ function Timer:call()
 end
 
 function Timer:updateTime()
-    if not self._interval or self._interval <= 0 or not self._count or self._count <= 0 then
+    if not self._interval or self._interval <= 0 or not self._count or 0 == self._count then
         return false
     else
         self._time = self._time + self._interval

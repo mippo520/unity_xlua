@@ -16,7 +16,8 @@ namespace Assets.Common.Net
     {
         Connected = 0,
         Disconnected,
-        Closed
+        Closed,
+        Finished,
     }
 
     public enum EndianType
@@ -67,7 +68,7 @@ namespace Assets.Common.Net
             SetPackageCreator(m_OrignCreator);
             try
             {
-                m_Socket.BeginConnect(ip, port, _onConnectCallback, this);
+                m_Socket.BeginConnect(ip, port, new System.AsyncCallback(_onConnectCallback), this);
                 m_ConnectCallback = callback;
                 m_IP = ip;
                 m_Port = port;
@@ -84,7 +85,7 @@ namespace Assets.Common.Net
             if (null == m_OrignCreator) return;
             _initSocket();
             SetPackageCreator(m_OrignCreator);
-            m_Socket.BeginConnect(m_IP, m_Port, _onConnectCallback, this);
+            m_Socket.BeginConnect(m_IP, m_Port, new System.AsyncCallback(_onConnectCallback), this);
         }
 
         public void Receive(Action<byte[], NetState> callback)
@@ -109,32 +110,22 @@ namespace Assets.Common.Net
                     m_Socket.Shutdown(SocketShutdown.Both);
                     m_Socket.Close();
                     m_Socket = null;
-                    if (null != m_ReceiveCallback)
-                    {
-                        if (isPassive)
-                        {
-                            m_ReceiveCallback(null, NetState.Disconnected);
-                        }
-                        else
-                        {
-                            m_ReceiveCallback(null, NetState.Closed);
-                        }
-                    }
                 }
             }
             catch
             {
                 m_Socket = null;
-                if (null != m_ReceiveCallback)
+            }
+
+            if (null != m_ReceiveCallback)
+            {
+                if (isPassive)
                 {
-                    if (isPassive)
-                    {
-                        m_ReceiveCallback(null, NetState.Disconnected);
-                    }
-                    else
-                    {
-                        m_ReceiveCallback(null, NetState.Closed);
-                    }
+                    m_ReceiveCallback(null, NetState.Disconnected);
+                }
+                else
+                {
+                    m_ReceiveCallback(null, NetState.Closed);
                 }
             }
         }
@@ -158,18 +149,30 @@ namespace Assets.Common.Net
             m_ReceiveCallback(data, NetState.Connected);
         }
 
+        public void ConsultFinish()
+        {
+            m_ConnectCallback(NetState.Finished);
+        }
+
         private void _onConnectCallback(IAsyncResult ar)
         {
             if (null == m_ConnectCallback) return;
             try
             {
                 m_Socket.EndConnect(ar);
-                m_ConnectCallback(NetState.Connected);
             }
             catch
             {
-                m_ConnectCallback(NetState.Disconnected);
                 m_Socket = null;
+            }
+
+            if (null != m_Socket)
+            {
+                m_ConnectCallback(NetState.Connected);
+            }
+            else
+            {
+                m_ConnectCallback(NetState.Disconnected);
             }
         }
 

@@ -623,12 +623,10 @@ namespace Assets.Common.Resource
 
         private void _unloadAllAssetBundle()
         {
-            foreach (KeyValuePair<string, UnityEngine.Object> pair in m_DicAsset)
+            foreach (var pair in m_DicAssetBundlesCount)
             {
-                if (!pair.Key.EndsWith(".prefab"))
-                {
-                    Resources.UnloadAsset(pair.Value);
-                }
+                var resInfo = pair.Value as ResourcesInfo<string[]>;
+                resInfo.assetbundle.Unload(true);
             }
             m_DicAsset.Clear();
             m_DicAssetBundlesCount.Clear();

@@ -73,14 +73,14 @@ function Behaviour:DoBindText(property, text, animate, ...)
     local arg = {...}
     self:DoBindProperty(property, function (self, oldValue, curValue)
         if not animate then
-            if "string" == type(curValue) then
-                text.text = curValue
+            if "string" == type(curValue.value) then
+                text.text = curValue.value
             else
-                text.text = tostring(curValue)
+                text.text = tostring(curValue.value)
             end
         else
             local ani = animate.new()
-            ani:init(text, curValue, function ()
+            ani:init(text, curValue.value, function ()
                 self.mapAnimate[ani] = nil
             end, table.unpack(arg))
             self.mapAnimate[ani] = true
@@ -91,10 +91,10 @@ end
 -- 双向绑定InputField控件,会在对象destroy的时候解绑
 function Behaviour:DoBindInputField(property, input)
     self:DoBindProperty(property, function (self, oldValue, curValue)
-        if "string" == type(curValue) then
-            input.text = curValue
+        if "string" == type(curValue.value) then
+            input.text = curValue.value
         else
-            input.text = tostring(curValue)
+            input.text = tostring(curValue.value)
         end
     end)
 
@@ -106,10 +106,10 @@ end
 -- 双向绑定Slider控件,会在对象destroy的时候解绑
 function Behaviour:DoBindSlider(property, slider)
     self:DoBindProperty(property, function (self, oldValue, curValue)
-        if "number" == type(curValue) then
-            slider.value = curValue
+        if "number" == type(curValue.value) then
+            slider.value = curValue.value
         else
-            slider.value = tonumber(curValue)
+            slider.value = tonumber(curValue.value)
         end
     end)
 

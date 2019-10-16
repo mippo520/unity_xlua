@@ -1,0 +1,9 @@
+syntax = "proto3";
+package c_gs;
+
+message S2C_PlayerData {
+    int64 player_id = 1;
+    string name = 2;
+    int32 head = 3;
+    int64 create_ts = 4;
+}

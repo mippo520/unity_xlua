@@ -1,9 +1,12 @@
 local dialog_type = {
-    NetworkUI = {
-        Type = "NetworkUI",
-        AssetBundles = {"test_ui"},
-        Path = "Assets/Prefabs/NetworkUI.prefab"
+
+    SpecialUITest = {
+        Type = "SpecialUITest",
+        AssetBundles = {"ui/test/special_ui"},
+        Path = "Assets/Prefabs/ui/test/SpecialUITest.prefab"
     },
+
+
     Regist = {
         Type = "Regist",
         AssetBundles = {"ui/regist"},
@@ -14,36 +17,36 @@ local dialog_type = {
         AssetBundles = {"ui/login"},
         Path = "Assets/Prefabs/ui/Login.prefab"
     },
+    CreatePlayer = {
+        Type = "CreatePlayer",
+        AssetBundles = {"ui/create_player"},
+        Path = "Assets/Prefabs/ui/CreatePlayer.prefab"
+    },
     Tips = {
         Type = "Tips",
         AssetBundles = {"ui/common"},
         Path = "Assets/Prefabs/ui/common/Tips.prefab"
     },
-    PackageTest = {
-        Type = "PackageTest",
-        AssetBundles = {"ui/test/package_test"},
-        Path = "Assets/Prefabs/ui/test/PackageTest.prefab"
+    Preload = {
+        Type = "Preload",
+        AssetBundles = {"ui/common"},
+        Path = "Assets/Prefabs/ui/common/Preload.prefab"
     },
-    ScrollTest = {
-        Type = "ScrollTest",
-        AssetBundles = {"ui/test/scroll"},
-        Path = "Assets/Prefabs/ui/test/ScrollTest.prefab"
+    GoaheadNotice = {
+        Type = "GoaheadNotice",
+        AssetBundles = {"ui/common"},
+        Path = "Assets/Prefabs/ui/common/notice/Goahead.prefab"
     },
-    RvoTest = {
-        Type = "RvoTest",
-        AssetBundles = {"ui/test/rvo_test"},
-        Path = "Assets/Prefabs/ui/test/RvoTest.prefab"
+    BlinkNotice = {
+        Type = "BlinkNotice",
+        AssetBundles = {"ui/common"},
+        Path = "Assets/Prefabs/ui/common/notice/Blink.prefab"
     },
-    ShaderTest = {
-        Type = "ShaderTest",
-        AssetBundles = {"ui/test/shader_test"},
-        Path = "Assets/Prefabs/ui/test/ShaderTest.prefab"
+    Hero = {
+        Type = "Hero",
+        AssetBundles = {"ui/hero"},
+        Path = "Assets/Prefabs/ui/Hero.prefab"
     },
-    TestMenu = {
-        Type = "TestMenu", 
-        AssetBundles = {"ui/test/test_menu"},
-        Path = "Assets/Prefabs/ui/test/TestMenu.prefab"
-    }
 }
 
 return dialog_type

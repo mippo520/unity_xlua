@@ -14,13 +14,14 @@ namespace Assets.Common.Net
     {
         public override void Receive()
         {
+            var data = new byte[packageLenSize];
             try
             {
-                var data = new byte[packageLenSize];
-                socket.BeginReceive(data, 0, packageLenSize, SocketFlags.None, _onReceiveSizeCallback, data);
+                socket.BeginReceive(data, 0, packageLenSize, SocketFlags.None, new System.AsyncCallback(_onReceiveSizeCallback), data);
             }
             catch ( Exception )
             {
+                Info.Error("NormalPackageCreator Receive error!");
                 manager.Close();
             }
 
@@ -42,7 +43,7 @@ namespace Assets.Common.Net
 
             try
             {
-                socket.BeginSend(sendData, 0, sendData.Length, SocketFlags.None, _sendCallback, null);
+                socket.BeginSend(sendData, 0, sendData.Length, SocketFlags.None, new System.AsyncCallback(_sendCallback), null);
             }
             catch
             {
@@ -55,8 +56,7 @@ namespace Assets.Common.Net
         {
             try
             {
-                var ret = socket.EndSend(ar);
-                if (ret <= 0) manager.Close();
+                socket.EndSend(ar);
             }
             catch
             {
@@ -66,21 +66,10 @@ namespace Assets.Common.Net
 
         private void _onReceiveSizeCallback(IAsyncResult ar)
         {
+            int rEnd = 0;
             try
             {
-                int rEnd = socket.EndReceive(ar);
-                if (rEnd <= 0) manager.Close();
-                var lenthData = ar.AsyncState as byte[];
-                var length = _getPackageLenth(lenthData);
-                if (length <= 0) manager.Close();
-                if (length > 100000)
-                {
-                    Info.Error("package too large! size is " + length);
-                    manager.Close();
-                }
-
-                var data = new byte[length];
-                socket.BeginReceive(data, 0, length, SocketFlags.None, _onReceivePackageCallback, data);
+                rEnd = socket.EndReceive(ar);
 
             }
             catch
@@ -88,24 +77,46 @@ namespace Assets.Common.Net
                 manager.Close();
             }
 
+            if (rEnd > 0)
+            {
+                var lenthData = ar.AsyncState as byte[];
+                var length = _getPackageLenth(lenthData);
+                if (length <= 0)
+                {
+                    manager.Close();
+                }
+                else if (length > 100000)
+                {
+                    Info.Error("package too large! size is " + length);
+                    manager.Close();
+                }
+                else
+                {
+                    var data = new byte[length];
+                    socket.BeginReceive(data, 0, length, SocketFlags.None, new System.AsyncCallback(_onReceivePackageCallback), data);
+                }
+            }
         }
 
         private void _onReceivePackageCallback(IAsyncResult ar)
         {
+            int rEnd = 0;
             try
             {
-                int rEnd = socket.EndReceive(ar);
-                if (rEnd <= 0) manager.Close();
+                rEnd = socket.EndReceive(ar);
+            }
+            catch
+            {
+                manager.Close();
+            }
+
+            if (rEnd > 0)
+            {
                 var data = ar.AsyncState as byte[];
                 _decode(ref data);
                 manager.ReceiveCallback(data);
                 Receive();
             }
-            catch
-            {
-                manager.Close();
-            }
-
         }
 
 

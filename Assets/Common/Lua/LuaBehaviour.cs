@@ -82,8 +82,7 @@ namespace Assets.Common.Lua
                 scriptName = scriptName.Substring(beginIndex);
             }
 
-            LuaManager.GetInstance().CreateBehaviour(m_Id, luaScriptTmp);
-            this.luaBehaviour = LuaManager.GetInstance().GetBehaviour(m_Id);
+            this.luaBehaviour = LuaManager.GetInstance().CreateBehaviour(m_Id, luaScriptTmp);
             AwakeFunction = luaBehaviour.Get<LuaFunction>("awake");
             StartFunction = luaBehaviour.Get<LuaFunction>("start");
             UpdateFunction = luaBehaviour.Get<LuaFunction>("update");

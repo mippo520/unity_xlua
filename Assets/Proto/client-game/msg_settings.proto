@@ -1,0 +1,6 @@
+syntax = "proto3";
+package c_gs;
+
+message S2C_PlayerSettings {
+    int32 lan = 1;
+}

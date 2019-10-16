@@ -1,0 +1,12 @@
+syntax = "proto3";
+package c_gs;
+
+message S2C_VipData {
+    int32 vip_lev = 1;
+    int64 vip_exp = 2;
+}
+
+message S2C_SyncVipLevExp {
+    int32 vip_lev = 1;
+    int64 vip_exp = 2;
+}

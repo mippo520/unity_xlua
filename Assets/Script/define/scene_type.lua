@@ -3,6 +3,7 @@ local SceneType = {
     Load = "Load",
     Main = "Main",
     Update = "Update",
+    Game = "Game",
 }
 
 return SceneType

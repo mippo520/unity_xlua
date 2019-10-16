@@ -45,14 +45,6 @@ namespace Assets.Common
                         {
                             StartFunction.Call(Launcher);
                         }
-
-//                         ResourcesManager.GetInstance().LoadAssetBundleAsync(new string[] { "ui/login" }, null,
-//                                                 (string[] arr) =>
-// 
-//                         {
-//                             ResourcesManager.GetInstance().LoadAsset("Assets/Prefabs/ui/Login.prefab");
-//                             Info.Debug("c# progress ");
-//                         });
                     });
             });
         }

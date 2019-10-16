@@ -1,14 +1,5 @@
 local Storage = class("Storage")
 
-local sInstance = nil
-
-function Storage.GetInstance()
-    if nil == sInstance then
-        sInstance = Storage.new()
-    end
-    return sInstance
-end
-
 local savePath = Unity.Application.persistentDataPath .. "/donotopenit.txt"
 local File = CS.System.IO.File
 
@@ -38,4 +29,7 @@ function Storage:get(key)
     return self.data[key]
 end
 
-return Storage
+if not _StorageInst then
+    _StorageInst = Storage.new()
+end
+return _StorageInst

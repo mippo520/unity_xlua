@@ -18,7 +18,6 @@ function Dialog:closeComplete()
     if self.data.AssetBundles then
         ResourcesManagerInst:UnloadAssetBundle(self.data.AssetBundles)
     end
-    DialogManagerInst:destroy(self.id)
 end
 
 

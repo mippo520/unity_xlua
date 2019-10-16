@@ -1,13 +1,5 @@
 local EventManager = class("EventManager")
 
-local sInstance = nil
-
-function EventManager.GetInstance()
-    if nil == sInstance then
-        sInstance = EventManager.new()
-    end
-    return sInstance
-end
 
 function EventManager:ctor()
     self.mapOjbEvent = {}
@@ -104,4 +96,7 @@ function EventManager:update()
     self.mapDelObj = {}
 end
 
-return EventManager
+if not _EventManagerInst then
+    _EventManagerInst = EventManager.new()
+end
+return _EventManagerInst
