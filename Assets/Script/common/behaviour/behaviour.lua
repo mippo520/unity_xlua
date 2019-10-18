@@ -55,19 +55,6 @@ function Behaviour.getLuaBehaviour(gameOjbect)
     return scriptBehaviour.luaBehaviour
 end
 
--- 异步加载AssetBundle,会在对象destroy的时候移除
-function Behaviour:LoadAssetBundleAsync(arrRes, processCallback, completeCallback)
-    local dialog = DialogManagerInst:get(self.id)
-    if not dialog then
-        Info.Error("Behaviour:LoadAssetBundleAsync error! " .. self.id .. " is not exist!")
-        return
-    end
-    ResourcesManagerInst:LoadAssetBundleAsync(arrRes, processCallback, completeCallback)
-    for k, v in pairs(arrRes) do
-        table.insert(dialog.data.AssetBundles, v)
-    end
-end
-
 -- 绑定Text控件,会在对象destroy的时候解绑
 function Behaviour:DoBindText(property, text, animate, ...)
     local arg = {...}
@@ -119,10 +106,6 @@ function Behaviour:DoBindSlider(property, slider)
 end
 
 -- 加载Asset
-function Behaviour:LoadAssetAs(path, type)
-    return ResourcesManagerInst:LoadAsset(path, type)
-end
-
 function Behaviour:LoadAsset(path)
     return ResourcesManagerInst:LoadAsset(path)
 end

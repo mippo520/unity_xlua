@@ -14,7 +14,7 @@ namespace Assets.Editor
         {
             DirectoryInfo dirInfo = new DirectoryInfo(Application.dataPath + "/Script");
             _changeFileExtension(dirInfo, ".lua", ".txt");
-            dirInfo = new DirectoryInfo(Application.dataPath + "/Config/Design");
+            dirInfo = new DirectoryInfo(Application.dataPath + "/Config");
             _changeFileExtension(dirInfo, ".json", ".txt");
         }
 
@@ -22,8 +22,14 @@ namespace Assets.Editor
         {
             DirectoryInfo dirInfo = new DirectoryInfo(Application.dataPath + "/Script");
             _changeFileExtension(dirInfo, ".txt", ".lua");
-            dirInfo = new DirectoryInfo(Application.dataPath + "/Config/Design");
+            dirInfo = new DirectoryInfo(Application.dataPath + "/Config");
             _changeFileExtension(dirInfo, ".txt", ".json");
+        }
+
+        [MenuItem("Custom/TextFileRevert")]
+        static void textFileRevert()
+        {
+            textFileRecover();
         }
 
         [MenuItem("Custom/mergeProto")]
@@ -76,18 +82,15 @@ namespace Assets.Editor
             errorCode += "} \nreturn error_code";
             sr.Close();
             File.WriteAllText(Application.dataPath + "/Script/define/err_code.lua", errorCode);
-            Info.Debug("Create proto finish!");
         }
 
         static void _changeFileExtension(DirectoryInfo dirInfo, string oldExt, string newExt)
         {
             foreach (FileInfo file in dirInfo.GetFiles())
             {
-                Info.Debug(file.FullName);
                 if (file.FullName.EndsWith(oldExt))
                 {
                     string newName = file.FullName.Replace(oldExt, newExt);
-                    Info.Debug(newName);
                     file.MoveTo(newName);
                 }
             }
@@ -131,7 +134,6 @@ namespace Assets.Editor
                                 var end = line.LastIndexOf("{");
                                 var msg = line.Substring(begin + 8, end - begin - 9).Trim();
                                 listMsg.Add(msg);
-                                Info.Debug("msg = " + msg);
                             }
                         }
                     }

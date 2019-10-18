@@ -5,6 +5,11 @@ local dialog_type = {
         AssetBundles = {"ui/test/special_ui"},
         Path = "Assets/Prefabs/ui/test/SpecialUITest.prefab"
     },
+    ShaderTest = {
+        Type = "ShaderTest",
+        AssetBundles = {"ui/test/shader_test"},
+        Path = "Assets/Prefabs/ui/test/ShaderTest.prefab"
+    },
 
 
     Regist = {

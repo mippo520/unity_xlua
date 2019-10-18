@@ -9,6 +9,8 @@ Equip = require("game.package.equip")
 
 -- config
 ConfigManager = require("common.cfg.config_manager")
+-- language
+LanguageManagerInst = require("game.language.language_manager")
 -- account
 AccountDataInst = require("game.account.account_data")
 -- player

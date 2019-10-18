@@ -29,7 +29,6 @@ end
 local function _reconnectTimer(self)
     self.reconnectTimerId = 0
     self.connectCount = self.connectCount + 1
-    Info.Debug("net reconnect ! count is " .. self.connectCount)
     Net.GetInstance():Reconnect()
 end
 

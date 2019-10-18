@@ -1,4 +1,4 @@
-﻿// #define DEBUG_ASSETBUNDLE
+﻿#define DEBUG_ASSETBUNDLE
 
 using Assets.Common.Log;
 using Assets.Common.Singleton;
@@ -27,11 +27,13 @@ namespace Assets.Common.Resource
         Begin,
     }
 
+#if !UNITY_EDITOR || DEBUG_ASSETBUNDLE
     struct stWebRequestData
     {
         public UnityWebRequest req;
         public FileData fileData;
     }
+#endif
 
     public class ResourcesManager : GameObjSingleton<ResourcesManager>
     {
@@ -44,12 +46,14 @@ namespace Assets.Common.Resource
         private bool m_bInWaiting = false;
         private Dictionary<string, FileData> m_DicFileData = new Dictionary<string, FileData>();
         // hot update
+#if !UNITY_EDITOR || DEBUG_ASSETBUNDLE
         private Int64 m_UpdateTotalSize = 0;
-        private Dictionary<string, FileData> m_DicUpdateFile = new Dictionary<string, FileData>();
-        private VersionFileData m_CurData = null;
-        private VersionFileData m_CurFileData = null;
         private string m_NetText = "";
+        private VersionFileData m_CurData = null;
         private string m_NetFileDataText = "";
+        private VersionFileData m_CurFileData = null;
+        private Dictionary<string, FileData> m_DicUpdateFile = new Dictionary<string, FileData>();
+#endif
 
         public const string s_VersionFile = "version";
         public const string s_VersionFileName = "version.txt";
@@ -118,7 +122,14 @@ namespace Assets.Common.Resource
         public UnityEngine.Object LoadAsset(string path)
         {
 #if UNITY_EDITOR && !DEBUG_ASSETBUNDLE
-            return AssetDatabase.LoadAssetAtPath(path, typeof(UnityEngine.Object));
+            if (path.EndsWith(".png") || path.EndsWith(".jpg"))
+            {
+                return AssetDatabase.LoadAssetAtPath<Sprite>(path);
+            }
+            else
+            {
+                return AssetDatabase.LoadAssetAtPath(path, typeof(UnityEngine.Object));
+            }
 #else
             path = path.ToLower();
             if (m_DicAsset.ContainsKey(path))
@@ -164,6 +175,31 @@ namespace Assets.Common.Resource
 #endif
         }
 
+        public void checkVersion()
+        {
+            var localText = Resources.Load<TextAsset>(s_VersionFile);
+            var localData = JsonConvert.DeserializeObject<VersionFileData>(localText.text);
+            if (!File.Exists(Application.persistentDataPath + "/" + s_VersionFileName))
+            {
+                // 写version文件
+                File.WriteAllText(Application.persistentDataPath + "/" + s_VersionFileName, localText.text);
+                // 写data文件
+                var localFileDataText = Resources.Load<TextAsset>(s_FileData);
+                File.WriteAllText(Application.persistentDataPath + "/" + s_FileDataFileName, localFileDataText.text);
+            }
+            else
+            {
+                var downloadText = File.ReadAllText(Application.persistentDataPath + "/" + s_VersionFileName);
+                var downloadData = JsonConvert.DeserializeObject<VersionFileData>(downloadText);
+                if (compareVersion(localData.version, downloadData.version) > 0)
+                {
+                    File.WriteAllText(Application.persistentDataPath + "/" + s_VersionFileName, localText.text);
+                    // 写data文件
+                    var localFileDataText = Resources.Load<TextAsset>(s_FileData);
+                    File.WriteAllText(Application.persistentDataPath + "/" + s_FileDataFileName, localFileDataText.text);
+                }
+            }
+        }
 
         private IEnumerator _compareUpdateFile(Action<HotUpdateRes, Int64, string> resCallback)
         {
@@ -209,7 +245,7 @@ namespace Assets.Common.Resource
             var netVersion = JsonConvert.DeserializeObject<VersionFileData>(getData.downloadHandler.text);
             if (compareVersion(curData.version, netVersion.version) >= 0)
             {
-                Info.Debug("lastest version! " + curData.version);
+                Info.Log("lastest version! " + curData.version);
 
                 if (!File.Exists(Application.persistentDataPath + "/" + s_FileDataFileName))
                 {
@@ -494,7 +530,6 @@ namespace Assets.Common.Resource
             }
 
             // 等待assetbundle加载完成
-            int nAssetCount = 0;
             while (abDicReq.Count > 0)
             {
                 List<string> listRemKey = new List<string>();
@@ -503,7 +538,10 @@ namespace Assets.Common.Resource
                 {
                     if (!pair.Value.isDone)
                     {
-                        progressTmp += pair.Value.progress / nCount / 2;
+                        if (pair.Value.progress > 0 && pair.Value.progress < 1)
+                        {
+                            progressTmp += pair.Value.progress * oneResPercent / 2;
+                        }
                     }
                     else
                     {
@@ -514,9 +552,16 @@ namespace Assets.Common.Resource
 
                         foreach (string assetName in arrAssetName)
                         {
-                            var request = pair.Value.assetBundle.LoadAssetAsync(assetName);
+                            AssetBundleRequest request = null;
+                            if (assetName.EndsWith(".png") || assetName.EndsWith(".jpg"))
+                            {
+                                request = pair.Value.assetBundle.LoadAssetAsync<Sprite>(assetName);
+                            }
+                            else
+                            {
+                                request = pair.Value.assetBundle.LoadAssetAsync(assetName);
+                            }
                             assetDicReq.Add(assetName, request);
-                            ++nAssetCount;
                         }
                     }
                 }
@@ -534,6 +579,7 @@ namespace Assets.Common.Resource
                 yield return 0;
             }
 
+            var nAssetCount = assetDicReq.Count;
             float onePercentAsset = 1.0f / nAssetCount;
             // 等待assetbundle中的资源加载完成
             while (assetDicReq.Count > 0)
@@ -544,7 +590,10 @@ namespace Assets.Common.Resource
                 {
                     if (!pair.Value.isDone)
                     {
-                        progressTmp += pair.Value.progress / nAssetCount / 2;
+                        if (pair.Value.progress > 0 && pair.Value.progress < 1)
+                        {
+                            progressTmp += pair.Value.progress * onePercentAsset / 2;
+                        }
                     }
                     else
                     {

@@ -7,7 +7,7 @@ local function _beginWait(self)
 end
 
 local function _timeout(self)
-    Info.Debug("message timeout! message is " .. self.msg)
+    Info.Log("message timeout! message is " .. self.msg)
     EventManagerInst:fireEvent(self.timeoutEvent, self.msg)
 end
 

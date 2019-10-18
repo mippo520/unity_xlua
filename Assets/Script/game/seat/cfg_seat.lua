@@ -1,4 +1,3 @@
-local CfgLoader = require("common.cfg.cfg_loader")
 local CfgSeat = class("CfgSeat", CfgLoader)
 
 function CfgSeat:ctor()

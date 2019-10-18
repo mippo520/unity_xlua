@@ -22,6 +22,7 @@ namespace Assets.Common
 
         public void begin()
         {
+            ResourcesManager.GetInstance().checkVersion();
             ResourcesManager.GetInstance().Init(() =>
             {
                 ResourcesManager.GetInstance().LoadAssetBundleAsync(new string[] { "lua_script" },

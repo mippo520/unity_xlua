@@ -7,7 +7,6 @@ end
 
 function ImpassableBG:onPointerClick(eventData)
     if self.clickClose and not self.isInClose then
-        Info.Debug("bg click!")
         local parentLua = Behaviour.getLuaBehaviour(self.gameObject.transform.parent.gameObject)
         parentLua:closeSelf()
         self.isInClose = true

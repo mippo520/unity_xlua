@@ -25,7 +25,6 @@ function HttpManager:Get(url, args, callback)
         urlExt = urlExt .. string.format( "%s=%s&", k, tostring(v) )
     end
 
-    Info.Debug(urlExt)
     local newId = Http.GetInstance():Get(urlExt, function (id, state, content)
         local waitReq = self.mapWaitRequest[id]
         if waitReq then

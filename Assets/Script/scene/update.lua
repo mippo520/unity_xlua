@@ -13,8 +13,8 @@ local function _beginDownload(self)
 
     ResourcesManagerInst:Hotupdate(function (res, totalSize, msg)
         if HotUpdateRes.Complete == res then
-            Version.set(msg)
-            self.sliderCon.value = 1
+            Version:set(msg)
+            self.slider.value = 1
             self.percent.text = "100%"
             self.speed.text = ""
             TimeManagerInst:onceTimer(800, self, function ()
@@ -25,7 +25,7 @@ local function _beginDownload(self)
         end
     end, function (percent)
         Info.Debug("download complete percent is " .. tostring(percent))
-        self.sliderCon.value = percent
+        self.slider.value = percent
         self.percent.text = string.format("%.02f", percent * 100) .. "%"
         local timeOffset = Now() - self.beginTime
         if 0 == percent or 0 == timeOffset then
@@ -48,7 +48,6 @@ local function _beginDownload(self)
 end
 
 function update:_awake()
-    self:registEvent(Event.HotUpdateBeginDownload, handler(self, _beginDownload))
     self.canvasGroup.alpha = 0
     self.canvasGroup.interactable = false
     self.canvasGroup.blocksRaycasts = false
@@ -57,32 +56,34 @@ function update:_awake()
 end
 
 function update:_start()
-    if not NeedHotUpdate then
-        Version:set("0.0.0")
-        _updateComplete(self)
-        return
-    end
-    ResourcesManagerInst:CompareUpdateFile(function (res, totalSize, msg)
-        if HotUpdateRes.Complete == res then
-            Version:set(msg)
+    ResourcesManagerInst:LoadAssetBundleAsync({"config/language"}, nil, function (arrRes)
+        LanguageManagerInst:init()
+
+        if not NeedHotUpdate then
+            Version:set("0.0.0")
             _updateComplete(self)
-        elseif HotUpdateRes.Begin == res then
-            local size = totalSize / 1024
-            local unit = "M"
-            if size < 1000 then
-                unit = "K"
-            else
-                size = size / 1024
-            end
-            DialogManagerInst:open(DialogType.Tips, nil, function ()
-                EventManagerInst:fireEvent(Event.HotUpdateBeginDownload)   
-            end, "check_download", size, unit)
-            self.totalSize = totalSize
-        else
-            DialogManagerInst:open(DialogType.Tips, nil, function ()
-                Progress:restart()
-            end, "update_error")
+            return
         end
+        ResourcesManagerInst:CompareUpdateFile(function (res, totalSize, msg)
+            if HotUpdateRes.Complete == res then
+                Version:set(msg)
+                _updateComplete(self)
+            elseif HotUpdateRes.Begin == res then
+                local size = totalSize / 1024
+                local unit = "M"
+                if size < 1000 then
+                    unit = "K"
+                else
+                    size = size / 1024
+                end
+                DialogManagerInst:open(DialogType.Tips, nil, handler(self, _beginDownload), "check_download", size, unit)
+                self.totalSize = totalSize
+            else
+                DialogManagerInst:open(DialogType.Tips, nil, function ()
+                    Progress:restart()
+                end, "update_error")
+            end
+        end)
     end)
 end
 

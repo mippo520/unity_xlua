@@ -39,7 +39,11 @@ function DialogBehaviour:closeComplete()
 end
 
 function DialogBehaviour:setFormatText(text, key, ...)
-    text.text = string.format( LanguageManagerInst:getContent(key), ... ) 
+    local strFormat = LanguageManagerInst:getContent(key)
+    if not strFormat then
+        strFormat = key
+    end
+    text.text = string.format( strFormat, ... ) 
     self.mapFormatText[text] = {
         key = key,
         args = {...}
@@ -48,7 +52,7 @@ end
 
 function DialogBehaviour:destroy()
     Behaviour.destroy(self)
-
+    self.mapFormatText = nil
     DialogManagerInst:destroy(self.id)
 end
 

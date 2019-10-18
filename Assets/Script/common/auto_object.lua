@@ -7,6 +7,8 @@ function AutoObject:ctor()
     self.arrBindpropertys = {}
     self.mapTimers = {}
     self.simpleEvent = {}
+    self.AssetBundles = {}      
+    self.arrInstantiateObj = {} 
 end
 
 function AutoObject:destroy()
@@ -34,6 +36,19 @@ function AutoObject:destroy()
         TimeManagerInst:stopTimer(k)
     end
     self.mapTimers = {}
+
+    -- 移除实例化对象
+    if self.arrInstantiateObj and #self.arrInstantiateObj > 0 then
+        for _, v in ipairs(self.arrInstantiateObj) do
+            Unity.Object.Destroy(v)
+        end
+    end
+
+    -- 卸载资源
+    if self.AssetBundles and #self.AssetBundles > 0 then
+        ResourcesManagerInst:UnloadAssetBundle(self.AssetBundles)
+    end
+    self.AssetBundles = {}
 
     -- 移除注册的事件
     EventManagerInst:delObject(self)
@@ -97,6 +112,43 @@ end
 function AutoObject:DoBindProperty(property, func)
     property:bind(self, func)
     table.insert(self.arrBindpropertys, property)
+end
+
+-- 异步加载AssetBundle,会在对象destroy的时候移除
+function AutoObject:LoadAssetBundleAsync(arrRes, processCallback, completeCallback)
+    ResourcesManagerInst:LoadAssetBundleAsync(arrRes, processCallback, completeCallback)
+    for _, v in pairs(arrRes) do
+        table.insert(self.AssetBundles, v)
+    end
+end
+
+function AutoObject:UnloadAssetBundles(arrRes)
+    ResourcesManagerInst:UnloadAssetBundle(arrRes)
+    for _, resDel in pairs(arrRes) do
+        for i, res in ipairs(self.AssetBundles) do
+            if resDel == res then
+                table.remove(self.AssetBundles, i)
+                break
+            end
+        end
+    end
+end
+
+-- 实例化prefabs,会在对象destroy时删除
+function AutoObject:Instantiate(prefab)
+    local res = Unity.Object.Instantiate(prefab)
+    table.insert(self.arrInstantiateObj, res)
+    return res
+end
+
+function AutoObject:Destroy(prefab)
+    Unity.Object.Destroy(prefab)
+    for i, v in ipairs(self.arrInstantiateObj) do
+        if v == prefab then
+            table.remove(self.AssetBundles, i)
+            break
+        end
+    end
 end
 
 return AutoObject

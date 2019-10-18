@@ -40,7 +40,6 @@ _login = function (self)
     }, 
     function (id, state, content)
         if HttpState.Complete ~= state then
-            Info.Debug(content)
             _reconnect(self)
             return
         end

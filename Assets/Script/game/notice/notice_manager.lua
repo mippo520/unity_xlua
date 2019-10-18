@@ -10,13 +10,15 @@ function NoticeManager:ctor()
 end
 
 function NoticeManager:init()
-    DialogManagerInst:open(DialogType.GoaheadNotice, handler(self, _add))
-    DialogManagerInst:open(DialogType.BlinkNotice, handler(self, _add))
+    -- DialogManagerInst:open(DialogType.GoaheadNotice, handler(self, _add))
+    -- DialogManagerInst:open(DialogType.BlinkNotice, handler(self, _add))
 end
 
 function NoticeManager:fire(type, content)
     local notice = self.notices[type]
-    notice:setValues(content)
+    if notice then
+        notice:setValues(content)
+    end
 end
 
 function NoticeManager:clearAll()
