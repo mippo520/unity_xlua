@@ -1,4 +1,4 @@
-﻿#define DEBUG_ASSETBUNDLE
+﻿// #define DEBUG_ASSETBUNDLE
 
 using Assets.Common.Log;
 using Assets.Common.Singleton;
@@ -177,6 +177,7 @@ namespace Assets.Common.Resource
 
         public void checkVersion()
         {
+#if !UNITY_EDITOR || DEBUG_ASSETBUNDLE
             var localText = Resources.Load<TextAsset>(s_VersionFile);
             var localData = JsonConvert.DeserializeObject<VersionFileData>(localText.text);
             if (!File.Exists(Application.persistentDataPath + "/" + s_VersionFileName))
@@ -199,6 +200,7 @@ namespace Assets.Common.Resource
                     File.WriteAllText(Application.persistentDataPath + "/" + s_FileDataFileName, localFileDataText.text);
                 }
             }
+#endif
         }
 
         private IEnumerator _compareUpdateFile(Action<HotUpdateRes, Int64, string> resCallback)
