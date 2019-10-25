@@ -18,11 +18,11 @@ namespace Assets.Common.Log
 
     public class Info
     {
-        public static eLogLevel m_Level = eLogLevel.Debug;
+        public static eLogLevel s_Level = eLogLevel.Debug;
 
         public static void Debug(string content)
         {
-            if (m_Level <= eLogLevel.Debug)
+            if (s_Level <= eLogLevel.Debug)
             {
                 UnityEngine.Debug.Log("Debug: " + content);
             }
@@ -30,7 +30,7 @@ namespace Assets.Common.Log
 
         public static void Log(string content)
         {
-            if (m_Level <= eLogLevel.Log)
+            if (s_Level <= eLogLevel.Log)
             {
                 UnityEngine.Debug.Log("Log: " + content);
             }
@@ -38,7 +38,7 @@ namespace Assets.Common.Log
 
         public static void Warn(string content)
         {
-            if (m_Level <= eLogLevel.Warn)
+            if (s_Level <= eLogLevel.Warn)
             {
                 UnityEngine.Debug.LogWarning("Warn: " + content);
             }
@@ -46,7 +46,7 @@ namespace Assets.Common.Log
 
         public static void Error(string content)
         {
-            if (m_Level <= eLogLevel.Error)
+            if (s_Level <= eLogLevel.Error)
             {
                 UnityEngine.Debug.LogError("Error: " + content);
             }

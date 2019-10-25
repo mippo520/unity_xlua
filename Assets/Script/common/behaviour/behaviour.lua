@@ -105,11 +105,6 @@ function Behaviour:DoBindSlider(property, slider)
     end)
 end
 
--- 加载Asset
-function Behaviour:LoadAsset(path)
-    return ResourcesManagerInst:LoadAsset(path)
-end
-
 -- 启动协程
 function Behaviour:StartCoroutine(...)
     return self.behaviourObject:StartCoroutine(XLuaUtil.cs_generator(...))

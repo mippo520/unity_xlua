@@ -6,10 +6,17 @@ function Timer:ctor(id, time, obj, func, interval, count, ...)
     self._obj = obj
     self._func = func
     self._interval = interval
-    if "number" ~= count then
+    if "number" ~= type(count) then
         count = -1
+    else
+        count = math.floor(count)
+        if count <= 0 then
+            count = -1
+        else
+            count = count - 1
+        end
     end
-    self._count = math.floor(count)
+    self._count = count
     self._handler = handler(obj, func)
     self._args = {...}
 end

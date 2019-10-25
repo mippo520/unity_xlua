@@ -134,6 +134,11 @@ function AutoObject:UnloadAssetBundles(arrRes)
     end
 end
 
+-- 加载Asset
+function AutoObject:LoadAsset(path)
+    return ResourcesManagerInst:LoadAsset(path)
+end
+
 -- 实例化prefabs,会在对象destroy时删除
 function AutoObject:Instantiate(prefab)
     local res = Unity.Object.Instantiate(prefab)

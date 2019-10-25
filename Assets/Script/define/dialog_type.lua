@@ -1,16 +1,21 @@
 local dialog_type = {
 
-    SpecialUITest = {
-        Type = "SpecialUITest",
-        AssetBundles = {"ui/test/special_ui"},
-        Path = "Assets/Prefabs/ui/test/SpecialUITest.prefab"
-    },
-    ShaderTest = {
-        Type = "ShaderTest",
-        AssetBundles = {"ui/test/shader_test"},
-        Path = "Assets/Prefabs/ui/test/ShaderTest.prefab"
-    },
+    -- SpecialUITest = {
+    --     Type = "SpecialUITest",
+    --     AssetBundles = {"ui/test/special_ui"},
+    --     Path = "Assets/Prefabs/ui/test/SpecialUITest.prefab"
+    -- },
+    -- ShaderTest = {
+    --     Type = "ShaderTest",
+    --     AssetBundles = {"ui/test/shader_test"},
+    --     Path = "Assets/Prefabs/ui/test/ShaderTest.prefab"
+    -- },
 
+    FPS = {
+        Type = "FPS",
+        AssetBundles = {"ui/fps"},
+        Path = "Assets/Prefabs/ui/fps.prefab"
+    },
 
     Regist = {
         Type = "Regist",
@@ -30,22 +35,26 @@ local dialog_type = {
     Tips = {
         Type = "Tips",
         AssetBundles = {"ui/common"},
-        Path = "Assets/Prefabs/ui/common/Tips.prefab"
+        Path = "Assets/Prefabs/ui/common/Tips.prefab", 
+        SortOrder = 9999
     },
     Preload = {
         Type = "Preload",
         AssetBundles = {"ui/common"},
-        Path = "Assets/Prefabs/ui/common/Preload.prefab"
+        Path = "Assets/Prefabs/ui/common/Preload.prefab",
+        SortOrder = 9998
     },
     GoaheadNotice = {
         Type = "GoaheadNotice",
         AssetBundles = {"ui/common"},
-        Path = "Assets/Prefabs/ui/common/notice/Goahead.prefab"
+        Path = "Assets/Prefabs/ui/common/notice/Goahead.prefab",
+        SortOrder = 9990    
     },
     BlinkNotice = {
         Type = "BlinkNotice",
         AssetBundles = {"ui/common"},
-        Path = "Assets/Prefabs/ui/common/notice/Blink.prefab"
+        Path = "Assets/Prefabs/ui/common/notice/Blink.prefab",
+        SortOrder = 9990    
     },
     Hero = {
         Type = "Hero",

@@ -32,7 +32,7 @@ end
 
 function Tools.IsNumberEqual(n1, n2, decimals)
     local num = 0
-    if "number" == decimals then
+    if "number" == type(decimals) then
         num = math.pow(10, -math.floor(decimals))
     else
         num = 0.000001

@@ -1,4 +1,4 @@
-﻿// #define DEBUG_ASSETBUNDLE
+﻿#define DEBUG_ASSETBUNDLE
 
 using Assets.Common.Log;
 using Assets.Common.Singleton;
@@ -298,8 +298,17 @@ namespace Assets.Common.Resource
                     m_DicUpdateFile.Add(pair.Key, pair.Value);
                 }
             }
-            m_CurData = curData;
-            resCallback(HotUpdateRes.Begin, m_UpdateTotalSize, "");
+
+            if (m_UpdateTotalSize > 0)
+            {
+                m_CurData = curData;
+                resCallback(HotUpdateRes.Begin, m_UpdateTotalSize, "");
+            }
+            else
+            {
+                File.WriteAllText(Application.persistentDataPath + "/" + s_VersionFileName, m_NetFileDataText);
+                resCallback(HotUpdateRes.Complete, 0, curData.version);
+            }
 #endif
         }
 

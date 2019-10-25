@@ -32,3 +32,6 @@ NoticeType = require("game.notice.notice_type")
 -- hero
 HeroManagerInst = require("game.hero.hero_manager")
 HeroControllerInst = require("game.hero.hero_controller")
+-- stage
+DancerManagerInst = require("game.stage.dancer_manager")
+StageDefine = require("game.stage.define")

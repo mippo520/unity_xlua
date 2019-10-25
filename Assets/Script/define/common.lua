@@ -29,6 +29,7 @@ CSTools = CSCommon.Tools
 CSEngineExt = CSTools.EngineExt
 
 Info = CSCommon.Log.Info
+Info.s_Level = CSCommon.Log.eLogLevel.Debug
 FileManager = CSTools.FileManager
 FileManagerInst = FileManager.GetInstance()
 ResourcesManagerInst = CSCommon.Resource.ResourcesManager.GetInstance()

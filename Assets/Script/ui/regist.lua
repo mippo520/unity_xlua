@@ -2,11 +2,7 @@ local regist = class("regist", DialogBehaviour)
 
 
 function regist:_start()
-    -- self:StartCoroutine(function ()
-    --     coroutine.yield(Unity.WaitForSeconds(1))
 
-    --     Info.Debug("coroutine!")
-    -- end)
 
     self:addListener(self.registBtn.onClick, function ()
         -- local account_name = input.text

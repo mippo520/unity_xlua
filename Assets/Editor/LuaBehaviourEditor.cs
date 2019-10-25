@@ -95,6 +95,10 @@ public class LuaBehaviourEditor : UnityEditor.Editor
             {
                 po.obj = EditorGUILayout.ObjectField("", po.obj as UnityEngine.Object, typeof(SkeletonGraphic), true);
             }
+            else if (typeof(Light).Name == po.type)
+            {
+                po.obj = EditorGUILayout.ObjectField("", po.obj as UnityEngine.Object, typeof(Light), true);
+            }
             else
             {
                 EditorGUILayout.LabelField("Type Error! error type is " + po.type);
@@ -172,6 +176,7 @@ public class LuaBehaviourEditor : UnityEditor.Editor
             AddParam<ScrollRect>();
             AddParam<SkeletonAnimation>();
             AddParam<SkeletonGraphic>();
+            AddParam<Light>();
 
             GUILayout.EndScrollView();
         }

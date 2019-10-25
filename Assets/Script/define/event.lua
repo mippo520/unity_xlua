@@ -31,6 +31,9 @@ local event = {
     BigPossessionUpdate = "BigPossessionUpdate", 
     PackageUpdate = "PackageUpdate", 
     VipUpdate = "VipUpdate",
+
+    -- stage
+    TouchDancer = "TouchDancer",
 }
 
 return event

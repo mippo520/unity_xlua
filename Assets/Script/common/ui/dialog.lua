@@ -4,11 +4,15 @@ function Dialog:ctor()
     self.res = nil
     self.id = 0
     self.data = {}
+    self.inClose = false
 end
 
 function Dialog:close()
-    local behaviour = BehaviourManager.getBehaviour(self.id)
-    behaviour:close()
+    if not self.inClose then
+        local behaviour = BehaviourManager.getBehaviour(self.id)
+        behaviour:close()
+        self.inClose = true
+    end
 end
 
 function Dialog:closeComplete()
