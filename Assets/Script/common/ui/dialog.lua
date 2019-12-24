@@ -9,9 +9,9 @@ end
 
 function Dialog:close()
     if not self.inClose then
+		self.inClose = true
         local behaviour = BehaviourManager.getBehaviour(self.id)
         behaviour:close()
-        self.inClose = true
     end
 end
 

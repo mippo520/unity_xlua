@@ -1,16 +1,17 @@
 
-if CS.UnityEngine.RuntimePlatform.WindowsEditor == CS.UnityEngine.Application.platform or CS.UnityEngine.RuntimePlatform.OSXEditor == CS.UnityEngine.Application.platform then
-    local util = require 'xlua.util'
-    local yield_return = (require 'xlua.cs_coroutine').yield_return
-    local BREAKINFOFUNC, XPCALLFUNC = require("luadebug")("localhost", 7003)
-    local co = coroutine.create(
-    function()
-        while true do
-            yield_return(CS.UnityEngine.WaitForSeconds(0.1))
-            BREAKINFOFUNC()
-        end
-    end)
-    coroutine.resume(co)
+if CS.UnityEngine.RuntimePlatform.WindowsEditor == CS.UnityEngine.Application.platform or CS.UnityEngine.RuntimePlatform.OSXEditor == CS.UnityEngine.Application.platform then	
+	require('LuaDebuggee').StartDebug('127.0.0.1', 9826)
+	
+	local _, LuaDebuggee = pcall(require, 'LuaDebuggee')
+	if LuaDebuggee and LuaDebuggee.StartDebug then
+		if LuaDebuggee.StartDebug('127.0.0.1', 9826) then
+			print('LuaPerfect: Successfully connected to debugger!')
+		else
+			print('LuaPerfect: Failed to connect debugger!')
+		end
+	else
+		print('LuaPerfect: Check documents at: https://luaperfect.net')
+	end
 end
 
 require("setting")
@@ -20,6 +21,8 @@ require("define.engine_extend")
 Progress = class("Progress")
 
 function Progress:start()
+	Unity.Application.targetFrameRate = FrameRate
+	ApplicationInst:deviceZoom()
     NetManagerInst:init()
     TimeManagerInst:init()
 

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 using UnityEngine.UIElements;
 using XLua;
 
@@ -149,7 +150,15 @@ namespace Assets.Common.Lua
                     else
                     {
                         var eventObject = ExecuteEvents.GetEventHandler<T>(results[i].gameObject);
-                        if (null != eventObject && gameObject != eventObject)
+                        if (null == eventObject)
+                        {
+                            var g = results[i].gameObject.GetComponent<Graphic>();
+                            if (null != g && g.raycastTarget)
+                            {
+                                break;
+                            }
+                        }
+                        else if (gameObject != eventObject)
                         {
                             passObj = eventObject;
                             ExecuteEvents.Execute(eventObject, data, function);

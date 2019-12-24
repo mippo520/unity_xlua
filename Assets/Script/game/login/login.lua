@@ -12,6 +12,7 @@ function login:_awake()
     self:DoBindText(Version, self.version)
     self:DoBindInputField(AccountDataInst.username, self.username)
     self:DoBindInputField(AccountDataInst.password, self.password)
+    self:DoBindInputField(self.ctrl.gateHttpAddr, self.httpAddr)
     
     self:registEvent(Event.LoginSuccess, function ()
         self:closeSelf()
@@ -26,28 +27,14 @@ function login:_start()
     end)
 
     self:addListener(self.registBtn.onClick, function ()
-        -- self:closeSelf()
-        -- DialogManagerInst:open(DialogType.Regist)
-        -- if not self.diaId then
-        --     self.diaId = DialogManagerInst:open(DialogType.Regist)
-        -- else
-        --     DialogManagerInst:close(self.diaId)
-        --     self.diaId = nil
-        -- end
 
-        -- if LanguageType.en == LanguageManagerInst:getLanguage() then
-        --     LanguageManagerInst:setLanguage(LanguageType.zh)
-        -- else
-        --     LanguageManagerInst:setLanguage(LanguageType.en)
-        -- end
-        -- AccountDataInst.username:set(AccountDataInst.username:get() .. "abc")
-        -- self.value:set(self.value:get() + 100)
-        -- self.sliderValue:set(self.sliderValue:get() - 0.1)
-        -- spineState:AddAnimation(0, "main", true, 0);
         DialogManagerInst:open(DialogType.SpecialUITest)
     end)
 
     self:addListener(self.simBtn.onClick, function ()
+        PossessionManagerInst:setBigNumber(Enum.ItemID.gold, 100000, 0)
+        PossessionManagerInst:set(Enum.ItemID.diamond, 1001)
+        PossessionManagerInst:set(Enum.ItemID.cash, 1000)
         Progress:enterGame()
     end)
 

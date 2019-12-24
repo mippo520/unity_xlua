@@ -28,8 +28,8 @@ function TestMenu:_getCount()
 end
 
 
-function TestMenu:_initCell(cellBehaviour)
-    cellBehaviour.title.text = self.items[cellBehaviour.index + 1].title
+function TestMenu:_initCell(cellBehaviour, index)
+    cellBehaviour.title.text = self.items[index + 1].title
 end
 
 

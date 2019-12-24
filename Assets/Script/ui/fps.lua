@@ -4,9 +4,10 @@ local function _update(self, dt)
     self.frame = self.frame + 1
     self.dt = self.dt + dt
     if self.dt >= 1000 then
-        self.dt = self.dt - 1000
-        self.fpsText.text = "fps:" .. self.frame
+        local fps = self.frame * 1000 / self.dt
+        self.fpsText.text = "fps:" .. fps
         self.frame = 0
+        self.dt = 0
     end
 end
 

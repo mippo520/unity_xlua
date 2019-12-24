@@ -104,6 +104,15 @@
 ["regist","regist"],
 ["ok","ok"],
 ["check_download","You need to download %.2f%s files!"],
-["update_error","Update error!"]
+["update_error","Update error!"],
+["hero_1","Date"],
+["hero_2","LevelUp"],
+["hero_3",""],
+["stage_1",""],
+["common_1","err code #"],
+["stage_2","Change"],
+["hero_type_1","Singer"],
+["hero_type_2","Dancer"],
+["hero_type_3","Player"]
 ]
 }

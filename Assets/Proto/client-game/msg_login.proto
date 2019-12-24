@@ -4,7 +4,6 @@ package c_gs;
 message C2S_Login {
     int64 account_id = 1;
     string token = 2;
-    int32 server_id = 3;
 }
 
 message S2C_Login {

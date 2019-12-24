@@ -17,10 +17,17 @@ function LanguageManager:init()
         end
         self.lan_script[v] = lan_content
     end
+	
+	EventManagerInst:fireEvent(Event.LanguageInit)
 end
 
 function LanguageManager:getContent(key)
-    local content = self.lan_script[self.language][key]
+	local lan = self.lan_script[self.language]
+	if not lan then
+		return key
+	end
+		
+    local content = lan[key]
     if not content or "" == content then
         content = key
     end

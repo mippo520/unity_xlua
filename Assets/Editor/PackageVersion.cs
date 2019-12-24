@@ -17,9 +17,12 @@ namespace Assets.Editor
 {
     class PackageVersion : EditorWindow
     {
+        static public string[] options = new string[] { "android", "ios", "windows" };
+        static private BuildTarget[] target = new BuildTarget[] { BuildTarget.Android, BuildTarget.iOS, BuildTarget.StandaloneWindows64 };
         private string m_Version = "0.0.0";
         private string m_Url = "http://";
         private string m_conetent = "";
+        private Int32 m_Index = 0;
 
         PackageVersion()
         {
@@ -43,6 +46,16 @@ namespace Assets.Editor
                     m_Version = localData.version;
                     m_Url = localData.url;
                 }
+
+                if (RuntimePlatform.WindowsEditor == Application.platform)
+                {
+                    m_Index = 0;
+                }
+                else if (RuntimePlatform.OSXEditor == Application.platform)
+                {
+                    m_Index = 1;
+                }
+
             }
             catch
             {
@@ -60,6 +73,8 @@ namespace Assets.Editor
             GUILayout.Space(10);
             m_Url = EditorGUILayout.TextField("url:", m_Url);
 
+            GUILayout.Space(10);
+            m_Index = EditorGUILayout.Popup(m_Index, options);
 
             GUILayout.Space(10);
             if (GUILayout.Button("Begin"))
@@ -108,15 +123,8 @@ namespace Assets.Editor
                 }
             }
 
-            if (RuntimePlatform.WindowsEditor == Application.platform)
-            {
-                //打包资源路径(参数1：资源保存路径   参数2：压缩格式    参数3：选择平台，各个平台间不能混用)
-                BuildPipeline.BuildAssetBundles(str, BuildAssetBundleOptions.ChunkBasedCompression, BuildTarget.Android);
-            }
-            else if (RuntimePlatform.OSXEditor == Application.platform)
-            {
-                BuildPipeline.BuildAssetBundles(str, BuildAssetBundleOptions.ChunkBasedCompression, BuildTarget.iOS);
-            }
+            //打包资源路径(参数1：资源保存路径   参数2：压缩格式    参数3：选择平台，各个平台间不能混用)
+            BuildPipeline.BuildAssetBundles(str, BuildAssetBundleOptions.ChunkBasedCompression, target[m_Index]);
 
             VersionFileData vfd = new VersionFileData();
             vfd.version = m_Version;

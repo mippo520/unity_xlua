@@ -12,6 +12,16 @@ namespace Assets.Common.Net
 {
     using HTTP_CALLBACK = Action<Int64, HttpState, string>;
 
+
+    public class SkipCertificateHandler : CertificateHandler
+    {
+        protected override bool ValidateCertificate(byte[] certificateData)
+        {
+            return true;
+        }
+    }
+
+
     public enum HttpState
     {
         Failed = 0,
@@ -32,6 +42,7 @@ namespace Assets.Common.Net
         private IEnumerator _get(Int64 id, string url, HTTP_CALLBACK callback)
         {
             UnityWebRequest getData = UnityWebRequest.Get(url);
+            getData.certificateHandler = new SkipCertificateHandler(); ;
             yield return getData.SendWebRequest();
             if (getData.isHttpError || getData.isNetworkError)
             {

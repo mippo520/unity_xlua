@@ -33,7 +33,7 @@ end
 function Tools.IsNumberEqual(n1, n2, decimals)
     local num = 0
     if "number" == type(decimals) then
-        num = math.pow(10, -math.floor(decimals))
+        num = 10 ^ -math.floor(decimals)
     else
         num = 0.000001
     end
@@ -43,6 +43,12 @@ function Tools.IsNumberEqual(n1, n2, decimals)
     else
         return false
     end
+end
+
+function Tools.SetVisible(canvasGrp,value)
+	canvasGrp.alpha = value and 1 or 0
+	canvasGrp.interactable = value
+	canvasGrp.blocksRaycasts = value
 end
 
 return Tools

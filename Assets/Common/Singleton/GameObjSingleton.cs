@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Common.Tools;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,13 +21,12 @@ namespace Assets.Common.Singleton
                 {
                     GameObject obj = new GameObject(typeof(T).Name);
                     gInstance = obj.AddComponent<T>();
-                    GameObject parent = GameObject.Find("GlobalRoot");
-                    if (null == parent)
+                    if (null == EngineExt.s_DontDestroyParent)
                     {
-                        parent = new GameObject("GlobalRoot");
-                        GameObject.DontDestroyOnLoad(parent);
+                        EngineExt.s_DontDestroyParent = new GameObject("GlobalRoot");
+                        GameObject.DontDestroyOnLoad(EngineExt.s_DontDestroyParent);
                     }
-                    obj.transform.parent = parent.transform;
+                    obj.transform.parent = EngineExt.s_DontDestroyParent.transform;
                 }
             }
             return gInstance;

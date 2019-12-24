@@ -1,6 +1,9 @@
 local StorageKey = {
     username = "username",
-    password = "password"
+    password = "password",
+    gateHttpAddr = "gateHttpAddr",
+    musicOpen = "musicOpen",
+    soundOpen = "soundOpen",
 }
 
 return StorageKey

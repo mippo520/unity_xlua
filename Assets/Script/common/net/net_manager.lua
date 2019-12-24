@@ -55,7 +55,6 @@ local function receiveCallback(self, data, state)
         local id = string.unpack(">I4", data)
         local msg = self.mapIdMsg[id]
         if msg then
-            Info.Debug("receive msg : " .. msg)
             local pb = assert(PB.decode(msg, string.sub( data, 5)))
             EventManagerInst:fireEvent(msg, pb)
 
@@ -70,7 +69,8 @@ local function receiveCallback(self, data, state)
                 end
             end
         else
-            Info.Error("receive message error! id = " .. id)
+            -- Info.Error("receive message error! id = " .. id)
+            Info.Warn("receive message error! id = " .. id)
         end
     elseif NetState.Closed == state then
         EventManagerInst:fireEvent(Event.NetClosed)

@@ -19,6 +19,8 @@ Unity = CS.UnityEngine
 UnityUI = Unity.UI
 UnitySceneManager = Unity.SceneManagement.SceneManager
 UnitySceneMode = Unity.SceneManagement.LoadSceneMode
+TMPro = CS.TMPro
+Input = Unity.Input
 
 CSCommon = CS.Assets.Common
 CSLuaBehaviour = CSCommon.Lua.LuaBehaviour
@@ -36,17 +38,18 @@ ResourcesManagerInst = CSCommon.Resource.ResourcesManager.GetInstance()
 Time = CSTools.Time
 HttpState = CSCommon.Net.HttpState
 
+CSCoroutine = require("xlua.cs_coroutine")
 RapidJson = require 'rapidjson'
 PB = require 'pb'
 Protoc = require 'common.pb.protoc'
 c_gs = require("pb.pb")
 
-NetManagerInst = require("common.net.net_manager")
 EventManagerInst = require("common.event.event_manager")
+StorageInst = require("common.storage.storage")
+NetManagerInst = require("common.net.net_manager")
 TimeManagerInst = require("common.time.time_manager")
 DialogManagerInst = require("common.ui.dialog_manager")
 HttpManagerInst = require("common.net.http_manager")
-StorageInst = require("common.storage.storage")
 
 SimpleEvent = require("common.event.simple_event")
 
@@ -65,5 +68,7 @@ StepListView = require("ui.list_view.step_list_view")
 
 CfgLoader = require("common.cfg.cfg_loader")
 
+ApplicationInst = require("application")
+CameraManagerInst = require("common.camera.camera_manager")
 
 require("define.game")

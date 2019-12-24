@@ -10,7 +10,7 @@ function regist:_start()
         -- local time = Now()
         -- local sign = account_name .. password .. tostring(time) .. "vgcli"
         
-        -- HttpManagerInst:Get("http://192.168.3.192:8000/register", 
+        -- HttpManagerInst:Get("http://192.168.1.31:8000/register", 
         -- {
         --     account_name = account_name,
         --     password = password,

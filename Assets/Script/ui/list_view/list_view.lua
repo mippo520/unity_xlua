@@ -139,7 +139,6 @@ local function _onScrollChanged(self, moveVec2)
         self.topOffset = self.topOffset - offset.x
         self.bottomOffset = self.bottomOffset + offset.x
     end
-
     if self.forceFlush or self.topOffset < 0 or self.bottomOffset < 0 then
         self:_updateList()
     end
@@ -206,6 +205,9 @@ function ListView:ctor()
     self.reverse = false
     self.isVertical = true          -- 是否纵向拖动,true为纵向拖动,false为横向拖动
     self.forceFlush = false         -- 拖拉的时候是否每次都调用_updateList
+	self.countPerLine = 1   		-- 每行数量
+	self.topRetain = 0				-- 上面空出的高度
+	self.bottomRetain = 0			-- 下面空出的高度
 end
 
 -- 拉到最顶
@@ -339,7 +341,7 @@ function ListView:getCount()
     if not self._getCount then
         Info.Error("Please implement the _getCount function to set cell count!")
     else
-        return self:_getCount()
+        return self:_getCount() + 2 * self.countPerLine
     end
     return 0
 end
@@ -401,6 +403,9 @@ function ListView:_awake()
     else
         self.viewHeight = self.scrollRect.rect.width
     end
+
+    self.content.anchoredPosition = Unity.Vector2(-self.scrollRect.rect.width / 2, self.scrollRect.rect.height / 2)
+
     self:addListener(self.scroll.onValueChanged, _onScrollChanged)
     if self.reverse then
         local rect = self.gameObject:GetComponent(typeof(Unity.RectTransform))
@@ -417,34 +422,55 @@ function ListView:_start()
 end
 
 function ListView:_getCellRect(index)
-    return self.mapCells[index].rect
+   	return self.mapCells[index].rect
 end
 
 function ListView:_insertCell(index, height)
-    local cell = self:_getCell()
-    -- 设置可见和可操作
-    local cg = cell:GetComponent(typeof(Unity.CanvasGroup))
-    cg.alpha = 1
-    cg.interactable = true
-    cg.blocksRaycasts = true
-    -- 获取cell对应的lua对象
-    local cellLuaBehaviour = Behaviour.getLuaBehaviour(cell)
-    cellLuaBehaviour.index = index
-    -- 初始化
-    self:_initCell(cellLuaBehaviour, index)
-    self.mapCells[index] = cell
-    -- 设置坐标
-    local pos = cell.anchoredPosition
-    local cellHeight = 0
-    if self.isVertical then
-        cellHeight = cell.rect.height
-        pos.y = -height - (1 - cell.pivot.y) * cellHeight
-    else
-        cellHeight = cell.rect.width
-        pos.x = height + cell.pivot.x * cellHeight
-    end
-    cell.anchoredPosition = pos
-    return cellHeight
+	local cell = self:_getCell()
+	self.mapCells[index] = cell
+	-- 设置可见和可操作
+	local cg = cell:GetComponent(typeof(Unity.CanvasGroup))
+	cg.alpha = 1
+	cg.interactable = true
+	cg.blocksRaycasts = true
+	-- 获取cell对应的lua对象
+	local cellLuaBehaviour = Behaviour.getLuaBehaviour(cell)
+	cellLuaBehaviour.index = index - 1
+	-- 初始化
+	
+	local cellHeight = 0
+	local cg = cell:GetComponent(typeof(Unity.CanvasGroup))
+	if 0 == index then
+		cg.alpha = 0
+		cg.interactable = false
+		cg.blocksRaycasts = false
+
+		cell.sizeDelta = Unity.Vector2(cell.sizeDelta.x, self.topRetain)
+	elseif self:getCount() - 1 == index then
+		cg.alpha = 0
+		cg.interactable = false
+		cg.blocksRaycasts = false
+		
+		cell.sizeDelta = Unity.Vector2(cell.sizeDelta.x, self.bottomRetain)
+	else
+		cg.alpha = 1
+		cg.interactable = true
+		cg.blocksRaycasts = true
+		
+		cell.sizeDelta = Unity.Vector2(cell.sizeDelta.x, self.orignCell.rect.height)
+		self:_initCell(cellLuaBehaviour, index - 1)
+	end
+	-- 设置坐标
+	local pos = cell.anchoredPosition
+	if self.isVertical then
+		cellHeight = cell.rect.height
+		pos.y = -height - (1 - cell.pivot.y) * cellHeight
+	else
+		cellHeight = cell.rect.width
+		pos.x = height + cell.pivot.x * cellHeight
+	end
+	cell.anchoredPosition = pos
+	return cellHeight
 end
 
 function ListView:_setCellPos(index, posX, posY)
@@ -510,6 +536,7 @@ end
 
 function ListView:onScrollDrag(eventData)
     if not Tools.IsNumberEqual(self.onDragMovementDis, 0) then
+		eventData.delta = eventData.delta / ApplicationInst.deviceScale
         -- 即使代码修改了content的位置但是拖拉的时候引擎计算的仍然是原来的位置,所以自己手动计算位置,把移动的距离加上上一次的位置
         if self.isVertical then
             if self.reverse then
@@ -545,10 +572,6 @@ end
 
 function ListView:onBottomUpdate()
     Info.Error("Please override onBottomUpdate function when drag bottom update!")
-end
-
-function ListView:onCellClicked(cellLuaBehaviour)
-    Info.Error("Please override onCellClicked function to do sth. when cell clicked!")
 end
 
 return ListView

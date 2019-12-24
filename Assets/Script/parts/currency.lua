@@ -1,10 +1,9 @@
 local Currency = class("Currency", BindProperty)
-
 local extra_limit = 3
 
 local function _arrange(self)
     if self.value > 1 then
-        while self.value > 1000 do
+        while self.value > 1000 or Tools.IsNumberEqual(self.value, 1000) do
             self.value = self.value / 1000
             self.extra = self.extra + 1
         end
@@ -14,6 +13,19 @@ local function _arrange(self)
             self.extra = self.extra - 1
         end
     end
+end
+
+local function _formatter(data)
+	local temp = data
+	local d_type = type(data)
+	if d_type == "number" then
+		temp = Currency.new(data,0)
+	elseif d_type == "table" then
+		temp = Currency.new(data.value,data.extra)
+	else
+		Info.Error(string.format("Currency.__pow local index b a %s value",d_type))
+	end
+	return temp
 end
 
 function Currency:ctor(value, extra)
@@ -27,16 +39,14 @@ function Currency:set(value, extra)
     if "number" == type(extra) then
         self.extra = extra
     elseif "string" == type(extra) then
-        local l = #extra
-        for i = 1, l do
-            self.extra = math.floor(self.extra + (string.byte( extra, i ) - 96) * (26 ^ (l - i)))
-        end
+		self.extra = CfgCharInst:getNum(extra)
     elseif not extra then
         self.extra = 0
     else
         Info.Error("Currency:ctor Error! extra type error, type is " .. type(extra) .. ", value is " .. tostring(extra))
     end
     _arrange(self)
+	self:fire(old, self)
 end
 
 function Currency:add(currency)
@@ -87,7 +97,7 @@ end
 
 function Currency:sub(currency)
     local old = nil
-    if not self.greater(currency) then
+    if not self:greater(currency) then
         old = clone(self)
         self.value = 0
         self.extra = 0
@@ -112,6 +122,9 @@ function Currency:mul(currency)
     local old = clone(self)
     self.value = self.value * currency.value
     self.extra = self.extra + currency.extra
+	if Tools.IsNumberEqual(self.value,0,extra_limit * 3) then
+		self.extra = 0
+	end
     _arrange(self)
     self:fire(old, self)
 end
@@ -120,11 +133,15 @@ function Currency:div(currency)
     local old = clone(self)
     self.value = self.value / currency.value
     self.extra = self.extra - currency.extra
+	if Tools.IsNumberEqual(self.value,0,extra_limit * 3) then
+		self.extra = 0	
+	end
     _arrange(self)
     self:fire(old, self)
 end
 
 function Currency:pow(num)
+	local old = clone(self)
     while num > 10 do
         num = num / 10
         self.value = self.value ^ 10
@@ -139,7 +156,7 @@ function Currency:pow(num)
     extra = extra - self.extra
     self.value = self.value * (1000 ^ extra)
     _arrange(self)
-
+	self:fire(old, self)
 end
 
 function Currency:toString()
@@ -150,28 +167,91 @@ function Currency:toString()
         sign = "-"
         extra = -extra
     end
-    while extra > 0 do
-        strExtra = string.char( 97 + (extra - 1) % 26 ) .. strExtra
-        extra = math.floor(extra / 26)
-    end
-    strExtra = sign .. strExtra
+    strExtra = sign .. CfgCharInst:getChar(extra)
     local strValue = string.format("%.2f", self.value)
-    local l = #strValue
-    while l > 0 do
-        local s = string.sub(strValue, l, l)
-        if "0" == s then
-            strValue = string.sub(strValue, 1, l - 1)
-        elseif "." == s then
-            strValue = string.sub(strValue, 1, l - 1)
-            break
-        else
-            break
-        end
-        l = #strValue
-    end
+	local l = #strValue
+	local value = math.floor(self.value)
+	if value > 99 then
+		strValue = string.sub(strValue, 1, l - 3)
+	elseif value > 9 then
+		strValue = string.sub(strValue, 1, l - 1)
+	end
+
     local strRes = strValue .. strExtra
 
     return strRes, strValue, strExtra
+end
+
+function Currency:appr_greater(currency)
+	if self:equal(currency) then
+		return false
+	end
+	return self:greater(currency)
+end
+
+function Currency:appr_lesser(currency)
+	if self:equal(currency) then
+		return false
+	end
+	return self:lesser(currency)
+end
+
+--元表运算符重载
+Currency.__add = function(a, b)
+	a = _formatter(a)
+	b = _formatter(b)
+	a:add(b)
+	return Currency.new(a.value,a.extra)
+end
+
+Currency.__sub = function(a, b)
+	a = _formatter(a)
+	b = _formatter(b)
+	a:sub(b)
+	return Currency.new(a.value,a.extra)
+end
+
+Currency.__mul = function(a, b)
+	a = _formatter(a)
+	b = _formatter(b)
+	a:mul(b)
+	return Currency.new(a.value,a.extra)
+end
+
+Currency.__div = function(a, b)
+	a = _formatter(a)
+	b = _formatter(b)
+	a:div(b)
+	return Currency.new(a.value,a.extra)
+end
+
+Currency.__pow = function(a, b)
+	a = _formatter(a)
+	b = _formatter(b)
+	a:pow(b.value)
+	return Currency.new(a.value,a.extra)
+end
+
+Currency.__eq = function(a, b)
+	a = _formatter(a)
+	b = _formatter(b)
+	return a:equal(b)
+end
+
+Currency.__lt = function(a, b)
+	a = _formatter(a)
+	b = _formatter(b)
+	return a:appr_lesser(b)
+end
+
+Currency.__le = function(a, b)
+	a = _formatter(a)
+	b = _formatter(b)
+	return a:appr_greater(b)
+end
+
+Currency.__tostring = function(a)
+	return a:toString()
 end
 
 return Currency

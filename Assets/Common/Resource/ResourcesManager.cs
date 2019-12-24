@@ -1,4 +1,4 @@
-﻿#define DEBUG_ASSETBUNDLE
+﻿// #define DEBUG_ASSETBUNDLE
 
 using Assets.Common.Log;
 using Assets.Common.Singleton;
@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.U2D;
 
 namespace Assets.Common.Resource
 {
@@ -99,14 +100,14 @@ namespace Assets.Common.Resource
             return n;
         }
 
-        public void CompareUpdateFile(Action<HotUpdateRes, Int64, string> resCallback)
+        public void CompareUpdateFile(Action<HotUpdateRes, Int64, string> resCallback, int timeout)
         {
-            StartCoroutine(this._startAsyncMethod(this._compareUpdateFile(resCallback)));
+            StartCoroutine(this._startAsyncMethod(this._compareUpdateFile(resCallback, timeout)));
         }
 
-        public void Hotupdate(Action<HotUpdateRes, Int64, string> resCallback, Action<double> processCallback)
+        public void Hotupdate(Action<HotUpdateRes, Int64, string> resCallback, Action<double> processCallback, int timeout)
         {
-            StartCoroutine(this._startAsyncMethod(this._hotUpdate(resCallback, processCallback)));
+            StartCoroutine(this._startAsyncMethod(this._hotUpdate(resCallback, processCallback, timeout)));
         }
 
         public void Init(Action callback = null)
@@ -203,7 +204,7 @@ namespace Assets.Common.Resource
 #endif
         }
 
-        private IEnumerator _compareUpdateFile(Action<HotUpdateRes, Int64, string> resCallback)
+        private IEnumerator _compareUpdateFile(Action<HotUpdateRes, Int64, string> resCallback, int timeout)
         {
 #if UNITY_EDITOR && !DEBUG_ASSETBUNDLE
             yield return 0;
@@ -236,6 +237,10 @@ namespace Assets.Common.Resource
 
 
             UnityWebRequest getData = UnityWebRequest.Get(curData.url + "/" + s_VersionFileName);
+            if (timeout > 0)
+            {
+                getData.timeout = timeout;
+            }
             yield return getData.SendWebRequest();
             if (getData.isHttpError || getData.isNetworkError)
             {
@@ -268,6 +273,10 @@ namespace Assets.Common.Resource
             m_NetText = getData.downloadHandler.text;
             curData = netVersion;
             getData = UnityWebRequest.Get(curData.url + "/" + s_FileDataFileName);
+            if (timeout > 0)
+            {
+                getData.timeout = timeout;
+            }
             yield return getData.SendWebRequest();
             if (getData.isHttpError || getData.isNetworkError)
             {
@@ -312,7 +321,7 @@ namespace Assets.Common.Resource
 #endif
         }
 
-        private IEnumerator _hotUpdate(Action<HotUpdateRes, Int64, string> resCallback, Action<double> processCallback)
+        private IEnumerator _hotUpdate(Action<HotUpdateRes, Int64, string> resCallback, Action<double> processCallback, int timeout)
         {
 #if UNITY_EDITOR && !DEBUG_ASSETBUNDLE
             yield return 0;
@@ -337,6 +346,10 @@ namespace Assets.Common.Resource
 
                         var getData = UnityWebRequest.Get(m_CurData.url + "/" + firstPair.Key);
                         var value = new stWebRequestData();
+                        if (timeout > 0)
+                        {
+                            getData.timeout = timeout;
+                        }
                         getData.SendWebRequest();
                         value.req = getData;
                         value.fileData = firstPair.Value;
@@ -508,7 +521,6 @@ namespace Assets.Common.Resource
                 completeCallback(arrPath);
             }
 #else
-
             float totalProgress = 0.0f;
             Dictionary<string, AssetBundleCreateRequest> abDicReq = new Dictionary<string, AssetBundleCreateRequest>();
             Dictionary<string, AssetBundleRequest> assetDicReq = new Dictionary<string, AssetBundleRequest>();
@@ -517,29 +529,30 @@ namespace Assets.Common.Resource
             this._getAllAssetBundles(arrPath, ref setPath);
 
             int nCount = setPath.Count;
-            float oneResPercent = 1.0f / nCount;
+            float oneResPercent = 0.5f / nCount;
             var dirInLoading = new Dictionary<string, Int32>();
 
             foreach (string path in setPath)
             {
                 string pathTmp = this._getFullPath(path);
-                if (m_DicAssetBundlesCount.ContainsKey(pathTmp))
+                if (m_DicAssetBundlesCount.ContainsKey(path))
                 {
-                    ++m_DicAssetBundlesCount[pathTmp].Count;
+                    ++m_DicAssetBundlesCount[path].Count;
                     totalProgress += oneResPercent;
                 }
-                else if (!dirInLoading.ContainsKey(pathTmp))
+                else if (!dirInLoading.ContainsKey(path))
                 {  
                     var request = AssetBundle.LoadFromFileAsync(pathTmp);
-                    abDicReq.Add(pathTmp, request);
-                    dirInLoading[pathTmp] = 0;
+                    abDicReq.Add(path, request);
+                    dirInLoading[path] = 0;
                 }
                 else
                 {
-                    ++dirInLoading[pathTmp];
+                    ++dirInLoading[path];
                 }
             }
 
+            Dictionary<string, string[]> dicAssetName = new Dictionary<string, string[]>();
             // 等待assetbundle加载完成
             while (abDicReq.Count > 0)
             {
@@ -551,29 +564,17 @@ namespace Assets.Common.Resource
                     {
                         if (pair.Value.progress > 0 && pair.Value.progress < 1)
                         {
-                            progressTmp += pair.Value.progress * oneResPercent / 2;
+                            progressTmp += pair.Value.progress * oneResPercent;
                         }
                     }
                     else
                     {
-                        totalProgress += oneResPercent / 2;
+                        totalProgress += oneResPercent * (1 + dirInLoading[pair.Key]);
                         listRemKey.Add(pair.Key);
                         var arrAssetName = pair.Value.assetBundle.GetAllAssetNames();
                         m_DicAssetBundlesCount.Add(pair.Key, new ResourcesInfo<string[]>(1 + dirInLoading[pair.Key], arrAssetName, pair.Value.assetBundle));
 
-                        foreach (string assetName in arrAssetName)
-                        {
-                            AssetBundleRequest request = null;
-                            if (assetName.EndsWith(".png") || assetName.EndsWith(".jpg"))
-                            {
-                                request = pair.Value.assetBundle.LoadAssetAsync<Sprite>(assetName);
-                            }
-                            else
-                            {
-                                request = pair.Value.assetBundle.LoadAssetAsync(assetName);
-                            }
-                            assetDicReq.Add(assetName, request);
-                        }
+                        dicAssetName.Add(pair.Key, arrAssetName);
                     }
                 }
                 // 移除加载完成的迭代器
@@ -589,7 +590,48 @@ namespace Assets.Common.Resource
                 }
                 yield return 0;
             }
+            foreach (var pair in dicAssetName)
+            {
+                var assetBundle = (m_DicAssetBundlesCount[pair.Key] as ResourcesInfo<string[]>).assetbundle;
 
+                List<string> imgAssetName = new List<string>();
+                bool loadAtlas = false;
+                foreach (string assetName in pair.Value)
+                {
+                    AssetBundleRequest request = null;
+                    if (assetName.EndsWith(".png") || assetName.EndsWith(".jpg"))
+                    {
+                        imgAssetName.Add(assetName);
+                    }
+                    else if (assetName.EndsWith(".spriteatlas"))
+                    {
+                        loadAtlas = true;
+                        request = assetBundle.LoadAssetAsync<SpriteAtlas>(assetName);
+                    }
+                    else/* if (assetName.EndsWith(".prefab") || assetName.EndsWith(".txt") ||  assetName.EndsWith(".mp3"))*/
+                    {
+                        request = assetBundle.LoadAssetAsync(assetName);
+                    }
+
+                    if (null != request)
+                    {
+                        assetDicReq.Add(assetName, request);
+                    }
+                }
+
+                if (imgAssetName.Count > 0)
+                {
+                    if (!loadAtlas)
+                    {
+                        foreach (string assetName in imgAssetName)
+                        {
+                            AssetBundleRequest request = assetBundle.LoadAssetAsync<Sprite>(assetName);
+                            assetDicReq.Add(assetName, request);
+                        }
+                    }
+                }
+
+            }
             var nAssetCount = assetDicReq.Count;
             float onePercentAsset = 1.0f / nAssetCount;
             // 等待assetbundle中的资源加载完成
@@ -643,10 +685,9 @@ namespace Assets.Common.Resource
 
             foreach (string path in setPath)
             {
-                string pathTmp = this._getFullPath(path);
-                if (m_DicAssetBundlesCount.ContainsKey(pathTmp))
+                if (m_DicAssetBundlesCount.ContainsKey(path))
                 {
-                    var resInfo = m_DicAssetBundlesCount[pathTmp] as ResourcesInfo<string[]>;
+                    var resInfo = m_DicAssetBundlesCount[path] as ResourcesInfo<string[]>;
                     --resInfo.Count;
                     if (0 == resInfo.Count)
                     {
@@ -662,12 +703,12 @@ namespace Assets.Common.Resource
 //                                 }
                                 m_DicAsset.Remove(assetName);
                             }
-                            else
-                            {
-                                Info.Error(string.Format("unload asset {0} without loaded! ", assetName));
-                            }
+//                             else
+//                             {
+//                                 Info.Error(string.Format("unload asset {0} without loaded! ", assetName));
+//                             }
                         }
-                        m_DicAssetBundlesCount.Remove(pathTmp);
+                        m_DicAssetBundlesCount.Remove(path);
                         resInfo.assetbundle.Unload(true);
                         Resources.UnloadUnusedAssets();
                     }
@@ -697,7 +738,7 @@ namespace Assets.Common.Resource
         {
             foreach (string path in arrPath)
             {
-                outSetPath.Add(path);
+                outSetPath.Insert(0, path);
                 this._getAllAssetBundles(m_Manifest.GetAllDependencies(path), ref outSetPath);
             }
         }

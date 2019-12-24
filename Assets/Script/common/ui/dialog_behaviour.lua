@@ -10,11 +10,15 @@ function DialogBehaviour:ctor()
     Behaviour.ctor(self)
     self.wrap = nil
     self.mapFormatText = {}
+	self.bg = nil
 end
 
 function DialogBehaviour:awakeLogic()
     Behaviour.awakeLogic(self)
-    local wrap = self.behaviourObject.gameObject.transform:Find("wrap")
+	if self.gameObject.transform.childCount > 1 then
+		self.bg = self.gameObject.transform:GetChild(0)
+	end
+    local wrap = self.gameObject.transform:Find("wrap")
     if not wrap then
         Info.Error("Please set a wrap level!")
     else
@@ -31,6 +35,13 @@ end
 function DialogBehaviour:close()
     local luaWrap = Behaviour.getLuaBehaviour(self.wrap)
     luaWrap:close()
+	
+	if self.bg then
+		local luaBG = Behaviour.getLuaBehaviour(self.bg)
+		if luaBG.close then
+			luaBG:close()
+		end
+	end
 end
 
 function DialogBehaviour:closeComplete()

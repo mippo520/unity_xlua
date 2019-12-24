@@ -116,10 +116,10 @@ end
 
 -- 异步加载AssetBundle,会在对象destroy的时候移除
 function AutoObject:LoadAssetBundleAsync(arrRes, processCallback, completeCallback)
+	for _, v in pairs(arrRes) do
+		table.insert(self.AssetBundles, v)
+	end
     ResourcesManagerInst:LoadAssetBundleAsync(arrRes, processCallback, completeCallback)
-    for _, v in pairs(arrRes) do
-        table.insert(self.AssetBundles, v)
-    end
 end
 
 function AutoObject:UnloadAssetBundles(arrRes)
@@ -140,8 +140,8 @@ function AutoObject:LoadAsset(path)
 end
 
 -- 实例化prefabs,会在对象destroy时删除
-function AutoObject:Instantiate(prefab)
-    local res = Unity.Object.Instantiate(prefab)
+function AutoObject:Instantiate(...)
+    local res = Unity.Object.Instantiate(...)
     table.insert(self.arrInstantiateObj, res)
     return res
 end
@@ -150,7 +150,7 @@ function AutoObject:Destroy(prefab)
     Unity.Object.Destroy(prefab)
     for i, v in ipairs(self.arrInstantiateObj) do
         if v == prefab then
-            table.remove(self.AssetBundles, i)
+            table.remove(self.arrInstantiateObj, i)
             break
         end
     end

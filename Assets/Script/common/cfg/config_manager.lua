@@ -1,11 +1,10 @@
 local ConfigManager = class("ConfigManager")
 
-CfgSeat = require("game.seat.cfg_seat")
+--CfgModuleConfigInst = require("game.module_config")
 
 function ConfigManager:init()
-    CfgSeat:init()
+	--CfgModuleConfigInst:init()
 end
-
 
 if not _ConfigManagerInst then
     _ConfigManagerInst = ConfigManager.new()

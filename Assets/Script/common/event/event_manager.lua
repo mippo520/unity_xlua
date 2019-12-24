@@ -73,19 +73,17 @@ function EventManager:delObject(obj)
 end
 
 function EventManager:fireEvent(event, ...)
-    if not self.mapFireEvent[event] then
-        self.mapFireEvent[event] = {...}
-    end
+    self.mapFireEvent[event] = {...}
 end
 
 function EventManager:update()
     local mapFireEvent = self.mapFireEvent
     self.mapFireEvent = {}
     for event, args in pairs(mapFireEvent) do
-        local mapHandler = self.mapEventFunc[event]
+        local mapHandler = clone(self.mapEventFunc[event])
         if mapHandler then
             for obj, handler in pairs(mapHandler) do
-                if not self.mapDelObj[obj] and (not self.mapDelObjEvent[obj] or not self.mapDelObjEvent[obj][event]) then
+                if not self.mapDelObj[obj] and not self.mapDelObjEvent[obj] then
                     handler(table.unpack(args))
                 end
             end

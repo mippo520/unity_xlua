@@ -1,6 +1,42 @@
 syntax = "proto3";
 package c_gs;
 
+
+message S2C_FansGiftData {
+    int32 get_gift_num = 1;
+    int64 get_gift_ts = 2;
+}
+
+message FansGiftPackage {
+    int32 id = 1;
+    int32 num = 2;
+}
+
+message C2S_FansGiftGenerateReq {
+
+}
+
+message S2C_FansGiftGenerateRsp {
+    int32 code = 1;
+    repeated FansGiftPackage packs = 2;
+}
+
+message C2S_FansGiftCollectReq {
+    int32 package_id = 1;
+}
+
+message S2C_FansGiftCollectRsp {
+    int32 code = 1;
+    int32 package_id = 2;
+    int32 item_id = 3;
+    int64 item_num = 4;
+    BigIntSimilar income = 5;
+}
+
+message C2S_GmCommand {
+    string cmd = 1;
+}
+
 message Hero {
     int32 id = 1;
     int32 star = 2;
@@ -36,7 +72,6 @@ message S2C_UpgradeHeroStarRsp {
 message C2S_Login {
     int64 account_id = 1;
     string token = 2;
-    int32 server_id = 3;
 }
 
 message S2C_Login {
@@ -81,8 +116,97 @@ message S2C_BigPropertyList {
     repeated BigProperty props = 1;
 }
 
+
+message S2C_RebornData {
+    int32 task_id = 1;
+    int64 lev = 2;
+    BigIntSimilar income = 3;
+    int64 last_reborn_ts = 4;
+    int64 highest_lev = 5;
+}
+
+message S2C_RebornProgress {
+    int64 lev = 1;
+    BigIntSimilar income = 2;
+}
+
+message C2S_RebornReq {
+
+}
+
+message S2C_RebornRsp {
+    int32 code = 1;
+    int32 task_id = 2;
+}
+
 message S2C_PlayerSettings {
     int32 lan = 1;
+}
+
+
+message StageSlot {
+    int32 id = 1;
+    int32 hero_id = 2;
+    BigIntSimilar income = 3;
+    int64 work_start_ts = 4;
+}
+
+message S2C_StageSlotList {
+    repeated StageSlot slots = 1;
+}
+
+message S2C_StageOfflineIncome {
+    BigIntSimilar income = 1;
+}
+
+message C2S_StageUnlockSlotReq {
+    int32 slot_id = 1;
+    int32 hero_id = 2;
+}
+
+message S2C_StageUnlockSlotRsp {
+    int32 code = 1;
+    int32 slot_id = 2;
+    int32 hero_id = 3;
+}
+
+message C2S_StageCollectMoneyReq {
+    int32 slot_id = 1;
+}
+
+message S2C_StageCollectMoneyRsp {
+    int32 code = 1;
+    int32 slot_id = 2;
+    BigIntSimilar income = 3;
+}
+
+message C2S_StageChangeHeroReq {
+    int32 slot_id = 1;
+    int32 hero_id = 2;
+}
+
+message S2C_StageChangeHeroRsp {
+    int32 code = 1;
+    int32 slot_id = 2;
+    int32 hero_id = 3;
+}
+
+message Tech {
+    int32 id = 1;
+    int64 lev = 2;
+}
+
+message S2C_TechList {
+    repeated Tech list = 1;
+}
+
+message C2S_UpgradeTechLevReq {
+    int32 id = 1;
+}
+
+message S2C_UpgradeTechLevRsp {
+    int32 code = 1;
+    int32 id = 2;
 }
 
 message S2C_VipData {

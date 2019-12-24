@@ -1,10 +1,12 @@
 local Preload = class("Preload", DialogBehaviour)
 
-local valuePerFrame = 1 / 1000
+local valuePerFrame = 1 / 2000
 
 function Preload:ctor()
     DialogBehaviour.ctor(self)
     self.value = 0
+    self.isFinish = false
+	self.finishEvent = SimpleEvent.new()
 end
 
 function Preload:_awake()
@@ -14,12 +16,12 @@ end
 
 
 function Preload:frameUpdate(dt)
-    if self.progress.value < self.value then
+    if not self.isFinish and self.progress.value < self.value then
         self.progress.value = self.progress.value + dt * valuePerFrame
-
         if self.progress.value >= 1 then
-            self:finish()
-            EventManagerInst:unregistEvent(Event.FrameUpdate, self)
+			self.progress.value = 1
+            self.isFinish = true
+            self:onceTimer(500, self.finish)
         elseif self.progress.value > self.value then
             self.progress.value = self.value
         end
@@ -27,7 +29,7 @@ function Preload:frameUpdate(dt)
 end
 
 function Preload:finish()
-    Info.Debug("Preload:finish !")
+	self.finishEvent:invoke()
     self:closeSelf()
 end
 

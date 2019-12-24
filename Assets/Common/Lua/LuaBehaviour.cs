@@ -41,6 +41,7 @@ namespace Assets.Common.Lua
         public string type;
     }
 
+    [ExecuteInEditMode]
     public class LuaBehaviour : MonoBehaviour
     {
         [FilePath("Script", ".lua")]
@@ -65,8 +66,11 @@ namespace Assets.Common.Lua
 
         protected void Awake()
         {
-            m_Id = LuaManager.GetInstance().GetId();
-            var luaEnv = LuaManager.GetInstance().Env;
+            if (null == luaScript)
+            {
+                Info.Warn("Please set a lua script!");
+                return;
+            }
 
             var luaExtBegin = luaScript.LastIndexOf(".lua");
             var luaScriptTmp = luaScript;
@@ -82,7 +86,42 @@ namespace Assets.Common.Lua
                 scriptName = scriptName.Substring(beginIndex);
             }
 
+#if UNITY_EDITOR
+            if (Application.isPlaying)
+            {
+                m_Id = LuaManager.GetInstance().GetId();
+                this.luaBehaviour = LuaManager.GetInstance().CreateBehaviour(m_Id, luaScriptTmp);
+            }
+            else
+            {
+                m_Id = 10086;
+                var m_LuaEnv = new LuaEnv();
+                m_LuaEnv.AddLoader(new LuaEnv.CustomLoader((ref string f) =>
+                {
+                    f = f.Replace(".", "/");
+                    if ("LuaDebuggee" == f)
+                    {
+                        return null;
+                    }
+                    f = "Assets/Script/" + f + ".lua";
+                    return File.ReadAllBytes(f);
+                }));
+
+                m_LuaEnv.DoString(@"
+                    require('define.common_editor')
+                ", "");
+                var luaBehaviourManager = m_LuaEnv.Global.Get<LuaTable>("BehaviourManager");
+                var s_CreateBehaviour = luaBehaviourManager.Get<LuaFunction>("create");
+                this.luaBehaviour = s_CreateBehaviour.Call(m_Id, luaScriptTmp)[0] as LuaTable;
+            }
+
+            if (Application.isPlaying || this.luaBehaviour.Get<bool>("executeInEditMode"))
+            {
+#else
+            m_Id = LuaManager.GetInstance().GetId();
             this.luaBehaviour = LuaManager.GetInstance().CreateBehaviour(m_Id, luaScriptTmp);
+#endif
+
             AwakeFunction = luaBehaviour.Get<LuaFunction>("awake");
             StartFunction = luaBehaviour.Get<LuaFunction>("start");
             UpdateFunction = luaBehaviour.Get<LuaFunction>("update");
@@ -122,6 +161,10 @@ namespace Assets.Common.Lua
             {
                 AwakeFunction.Call(this.luaBehaviour);
             }
+#if UNITY_EDITOR
+            }
+#endif
+
         }
 
         // Use this for initialization
@@ -133,8 +176,14 @@ namespace Assets.Common.Lua
         // Update is called once per frame
         protected void Update()
         {
+#if UNITY_EDITOR
+            if (Application.isPlaying)
+            {
+                if (null != UpdateFunction) { UpdateFunction.Call(luaBehaviour); }
+            }
+#else
             if (null != UpdateFunction) { UpdateFunction.Call(luaBehaviour); }
-
+#endif
         }
 
         protected void OnDestroy()

@@ -5,6 +5,7 @@ function Behaviour:ctor()
     AutoObject.ctor(self)
     self.mapAnimate = {}
     self.id = 0
+	self.executeInEditMode = false
 end
 
 function Behaviour:awakeLogic()
@@ -50,9 +51,20 @@ function Behaviour:destroy()
 end
 
 -- 获取gameObject的lua对象
-function Behaviour.getLuaBehaviour(gameOjbect)
-    local scriptBehaviour = gameOjbect:GetComponent(typeof(CSLuaBehaviour))
-    return scriptBehaviour.luaBehaviour
+function Behaviour.getLuaBehaviour(gameOjbect, script)
+    local scriptBehaviour = gameOjbect:GetComponents(typeof(CSLuaBehaviour))
+	if not script then
+		return scriptBehaviour[0].luaBehaviour
+	else
+		for i = 0, scriptBehaviour.Length do
+			local behaivour = scriptBehaviour[i]
+			if string.find(behaivour.luaScript, script) then
+				return behaivour.luaBehaviour
+			end
+		end
+		Info.Error("Behaviour getLuaBehaviour Error! Can not found luaBehaviour with script " .. script)
+		return nil
+	end
 end
 
 -- 绑定Text控件,会在对象destroy的时候解绑

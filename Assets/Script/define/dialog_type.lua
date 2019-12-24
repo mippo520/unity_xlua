@@ -1,20 +1,45 @@
+
+--[[
+	dialog属性:
+		SortOrder:	绘制层级,默认自动处于活动层的最高层
+		OnlyOne:	是否唯一,默认不唯一
+		FullScreen:	是否全屏,默认不全屏
+]]
+
 local dialog_type = {
 
-    -- SpecialUITest = {
-    --     Type = "SpecialUITest",
-    --     AssetBundles = {"ui/test/special_ui"},
-    --     Path = "Assets/Prefabs/ui/test/SpecialUITest.prefab"
-    -- },
-    -- ShaderTest = {
-    --     Type = "ShaderTest",
-    --     AssetBundles = {"ui/test/shader_test"},
-    --     Path = "Assets/Prefabs/ui/test/ShaderTest.prefab"
-    -- },
-
+	PackageTest = {
+		Type = "PackageTest",
+		AssetBundles = {"ui/test/package_test"},
+		Path = "Assets/Prefabs/ui/test/PackageTest.prefab"
+	},
+	ScrollTest = {
+		Type = "ScrollTest",
+		AssetBundles = {"ui/test/scroll"},
+		Path = "Assets/Prefabs/ui/test/ScrollTest.prefab"
+	},
+	RvoTest = {
+		Type = "RvoTest",
+		AssetBundles = {"ui/test/rvo_test"},
+		Path = "Assets/Prefabs/ui/test/RvoTest.prefab"
+	},
+	ShaderTest = {
+		Type = "ShaderTest",
+		AssetBundles = {"ui/test/shader_test"},
+		Path = "Assets/Prefabs/ui/test/ShaderTest.prefab"
+	},
+	TestMenu = {
+		Type = "TestMenu",
+		AssetBundles = {"ui/test/test_menu"},
+		Path = "Assets/Prefabs/ui/test/TestMenu.prefab"
+	},
+	
+	
     FPS = {
         Type = "FPS",
         AssetBundles = {"ui/fps"},
-        Path = "Assets/Prefabs/ui/fps.prefab"
+        Path = "Assets/Prefabs/ui/fps.prefab",
+        SortOrder = 10000
     },
 
     Regist = {
@@ -27,15 +52,23 @@ local dialog_type = {
         AssetBundles = {"ui/login"},
         Path = "Assets/Prefabs/ui/Login.prefab"
     },
-    CreatePlayer = {
-        Type = "CreatePlayer",
-        AssetBundles = {"ui/create_player"},
-        Path = "Assets/Prefabs/ui/CreatePlayer.prefab"
-    },
-    Tips = {
-        Type = "Tips",
+
+	Tips = {
+		Type = "Tips",
+		AssetBundles = {"ui/common"},
+		Path = "Assets/Prefabs/ui/common/Tips.prefab",
+		SortOrder = 9999				-- UI所在层级
+	},
+	UpdateTips = {
+		Type = "UpdateTips",
+		AssetBundles = {"ui/update"},
+		Path = "Assets/Prefabs/ui/update/UpdateTips.prefab",
+		SortOrder = 9999				-- UI所在层级
+	},
+	Toast = {
+        Type = "Toast",
         AssetBundles = {"ui/common"},
-        Path = "Assets/Prefabs/ui/common/Tips.prefab", 
+        Path = "Assets/Prefabs/ui/common/Toast.prefab", 
         SortOrder = 9999
     },
     Preload = {
@@ -44,23 +77,8 @@ local dialog_type = {
         Path = "Assets/Prefabs/ui/common/Preload.prefab",
         SortOrder = 9998
     },
-    GoaheadNotice = {
-        Type = "GoaheadNotice",
-        AssetBundles = {"ui/common"},
-        Path = "Assets/Prefabs/ui/common/notice/Goahead.prefab",
-        SortOrder = 9990    
-    },
-    BlinkNotice = {
-        Type = "BlinkNotice",
-        AssetBundles = {"ui/common"},
-        Path = "Assets/Prefabs/ui/common/notice/Blink.prefab",
-        SortOrder = 9990    
-    },
-    Hero = {
-        Type = "Hero",
-        AssetBundles = {"ui/hero"},
-        Path = "Assets/Prefabs/ui/Hero.prefab"
-    },
+
+
 }
 
 return dialog_type

@@ -21,4 +21,8 @@ const (
 	DuplicateCreateCharacter = 200
 	DuplicatePlayerName = 201
 	CreateCharacterFail = 202
+
+	HeroNotFound = 1000
+	HeroMaxLevel = 1001
+	HeroMaxStar = 1002
 )

@@ -38,6 +38,9 @@ function Timer:updateTime()
 end
 
 function Timer:getCount()
+	if self._count < 0 then
+		return 1
+	end
     return self._count
 end
 

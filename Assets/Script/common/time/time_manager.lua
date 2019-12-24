@@ -1,7 +1,7 @@
 local Timer = require("common.time.timer")
 local TimeManager = class("TimeManager")
 
-function _addTimer(self, timer)
+local function _addTimer(self, timer)
     if not timer then
         Info.Error("_addTimer error! timer is null")
         return
@@ -20,7 +20,7 @@ function _addTimer(self, timer)
     end
 end
 
-function _modifyTimer(self, time, obj, func, interval, count, ...)
+local function _modifyTimer(self, time, obj, func, interval, count, ...)
     local bInsert = false
     for idx, timer in ipairs(self.arrTimer) do
         if timer._time > time then

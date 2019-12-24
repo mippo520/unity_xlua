@@ -1,0 +1,6 @@
+syntax = "proto3";
+package c_gs;
+
+message C2S_GmCommand {
+    string cmd = 1;
+}

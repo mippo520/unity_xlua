@@ -1,0 +1,20 @@
+syntax = "proto3";
+package c_gs;
+
+message Tech {
+    int32 id = 1;
+    int64 lev = 2;
+}
+
+message S2C_TechList {
+    repeated Tech list = 1;
+}
+
+message C2S_UpgradeTechLevReq {
+    int32 id = 1;
+}
+
+message S2C_UpgradeTechLevRsp {
+    int32 code = 1;
+    int32 id = 2;
+}

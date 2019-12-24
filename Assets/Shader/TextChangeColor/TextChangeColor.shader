@@ -48,22 +48,22 @@
 					return f;
 				}
 
-				half4 frag(v2f f) : SV_Target
+				fixed4 frag(v2f f) : SV_Target
 				{
-					half4 color = tex2D(_MainTex, f.tex);
+					fixed4 color = tex2D(_MainTex, f.tex);
 					if (color.a > 0)
 					{
 						float curTime = _Time.y;
 						float startTime = floor(curTime / _Duration) * _Duration;
 						float offsetTime = curTime - startTime;
 
-						half4 col = lerp(_BeginColor, _EndColor, (sin((f.pos.x - _Rect.x) / _Rect.z * 3.14 + offsetTime * 5) + 1) / 2);
+						fixed4 col = lerp(_BeginColor, _EndColor, (sin((f.pos.x - _Rect.x) / _Rect.z * 3.14 + offsetTime * 5) + 1) / 2);
 
-						return half4(col.xyz, color.a);
+						return fixed4(col.xyz, color.a);
 					}
 					else
 					{
-						return half4(0, 0, 0, 0);
+						return fixed4(0, 0, 0, 0);
 					}
 				}
 

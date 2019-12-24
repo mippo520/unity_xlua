@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -75,9 +76,25 @@ public class LuaBehaviourEditor : UnityEditor.Editor
             {
                 po.obj = EditorGUILayout.ObjectField("", po.obj as UnityEngine.Object, typeof(Image), true);
             }
+            else if (typeof(SpriteRenderer).Name == po.type)
+            {
+                po.obj = EditorGUILayout.ObjectField("", po.obj as UnityEngine.Object, typeof(SpriteRenderer), true);
+            }
+            else if (typeof(MeshRenderer).Name == po.type)
+            {
+                po.obj = EditorGUILayout.ObjectField("", po.obj as UnityEngine.Object, typeof(MeshRenderer), true);
+            }
             else if (typeof(CanvasGroup).Name == po.type)
             {
                 po.obj = EditorGUILayout.ObjectField("", po.obj as UnityEngine.Object, typeof(CanvasGroup), true);
+            }
+            else if (typeof(Canvas).Name == po.type)
+            {
+                po.obj = EditorGUILayout.ObjectField("", po.obj as UnityEngine.Object, typeof(Canvas), true);
+            }
+            else if (typeof(Transform).Name == po.type)
+            {
+                po.obj = EditorGUILayout.ObjectField("", po.obj as UnityEngine.Object, typeof(Transform), true);
             }
             else if (typeof(RectTransform).Name == po.type)
             {
@@ -98,6 +115,18 @@ public class LuaBehaviourEditor : UnityEditor.Editor
             else if (typeof(Light).Name == po.type)
             {
                 po.obj = EditorGUILayout.ObjectField("", po.obj as UnityEngine.Object, typeof(Light), true);
+            }
+            else if (typeof(TextMeshPro).Name == po.type)
+            {
+                po.obj = EditorGUILayout.ObjectField("", po.obj as UnityEngine.Object, typeof(TextMeshPro), true);
+            }
+            else if (typeof(SpriteMask).Name == po.type)
+            {
+                po.obj = EditorGUILayout.ObjectField("", po.obj as UnityEngine.Object, typeof(SpriteMask), true);
+            }
+            else if (typeof(Material).Name == po.type)
+            {
+                po.obj = EditorGUILayout.ObjectField("", po.obj as UnityEngine.Object, typeof(Material), true);
             }
             else
             {
@@ -171,12 +200,19 @@ public class LuaBehaviourEditor : UnityEditor.Editor
             AddParam<InputField>();
             AddParam<Animator>();
             AddParam<Image>();
+            AddParam<SpriteRenderer>();
+            AddParam<MeshRenderer>();
             AddParam<CanvasGroup>();
+            AddParam<Canvas>();
+            AddParam<Transform>();
             AddParam<RectTransform>();
             AddParam<ScrollRect>();
             AddParam<SkeletonAnimation>();
             AddParam<SkeletonGraphic>();
             AddParam<Light>();
+            AddParam<TextMeshPro>();
+            AddParam<SpriteMask>();
+            AddParam<Material>();
 
             GUILayout.EndScrollView();
         }

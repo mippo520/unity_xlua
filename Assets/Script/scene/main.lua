@@ -1,16 +1,17 @@
-
-local main = class("main", Behaviour)
+local scene = require("scene.scene")
+local main = class("main", scene)
 
 
 function main:_awake()
-    ConfigManager:init()
-    PlayerControllerInst:init()
-    VipControllerInst:init()
-    HeroControllerInst:init()
+	scene._awake(self)
+	self.name = "main"
+    ConfigManagerInst:init()
 end
 
 function main:_start()
-    DialogManagerInst:open(DialogType.Login)
+	SoundManagerInst:playMusic(SoundDefine.BeginMusicAssetBundle, SoundDefine.BeginMusicAsset)
+
+    DialogManagerInst:open(DialogType.TestMenu)
 end
 
 

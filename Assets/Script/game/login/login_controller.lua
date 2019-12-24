@@ -28,9 +28,36 @@ local function _reconnect(self)
     end)
 end
 
+local function _connectGameServer(self)
+    local time = Now()    
+    HttpManagerInst:Get("https://" .. self.gateHttpAddr:get() .. ":8100/server_info", 
+    {
+        account_id = AccountDataInst.account_id,
+        token = AccountDataInst.token,
+        time = time,
+        sign = Tools.Sign(AccountDataInst.account_id, AccountDataInst.token, time),
+    }, 
+    function (id, state, content)
+        if HttpState.Complete ~= state then
+            _reconnect(self)
+            return
+        end
+        local res = RapidJson.decode(content)
+        if Error.Success == res.code then
+            local resultStrList = {}
+            string.gsub(res.addr,'[^:]+',function ( w , a)
+                table.insert(resultStrList,w)
+            end)
+            NetManagerInst:connect(resultStrList[1], tonumber(resultStrList[2]))
+        else
+            Info.Debug("error code = " .. res.code)
+        end
+    end) 
+end
+
 _login = function (self)
     local time = Now()    
-    HttpManagerInst:Get("http://192.168.3.192:8000/login", 
+    HttpManagerInst:Get("https://" .. self.gateHttpAddr:get() .. ":8000/login", 
     {
         login_type = AccountDataInst.loginType,
         account_name = AccountDataInst.username:get(),
@@ -48,7 +75,7 @@ _login = function (self)
             AccountDataInst.account_id = res.account_id
             AccountDataInst.token = res.token
             AccountDataInst.expireTime = res.expire_ts
-            NetManagerInst:connect("192.168.3.192", 9101)
+            _connectGameServer(self)
         else
             Info.Debug("error code = " .. res.code)
         end
@@ -63,7 +90,7 @@ local function _connectSuccess(self, msg)
     NetManagerInst:send(c_gs.C2S_Login, {
         account_id = AccountDataInst.account_id,
         token = AccountDataInst.token, 
-        server_id = 1
+        -- server_id = 1
     })
 end
 
@@ -110,6 +137,14 @@ function LoginController:ctor()
 
     NetManagerInst:registMessage(c_gs.S2C_Login, self, _s2c_login)
     -- NetManagerInst:registMessage(c_gs.S2C_PlayerData, self, _s2c_playerData)
+	
+	self.gateHttpAddr = BindProperty.new(StorageInst:get("gateHttpAddr"))
+	if nil == self.gateHttpAddr:get() then
+		self.gateHttpAddr:set("192.168.1.31")
+	end
+	self.gateHttpAddr:bind(self, function (_, old, new)
+			StorageInst:set(StorageKey.gateHttpAddr, new.value)
+		end)
 end
 
 function LoginController:login()

@@ -60,11 +60,14 @@ namespace Assets.Common.Lua
             m_LuaEnv = new LuaEnv();
             m_LuaEnv.AddBuildin("rapidjson", XLua.LuaDLL.Lua.LoadRapidJson);
             m_LuaEnv.AddBuildin("pb", XLua.LuaDLL.Lua.LoadLuaProtobuf);
-
             m_LuaEnv.AddLoader(new LuaEnv.CustomLoader((ref string f) =>
             {
                 f = f.Replace(".", "/");
 #if UNITY_EDITOR && !DEBUG_ASSETBUNDLE
+                if ("LuaDebuggee" == f)
+                {
+                    return null;
+                }
                 f = "Assets/Script/" + f + ".lua";
                 return File.ReadAllBytes(f);
 #else

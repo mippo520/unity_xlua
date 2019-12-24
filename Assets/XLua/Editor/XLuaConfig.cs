@@ -72,7 +72,9 @@ public static class XLuaConfig
                 "UnityEngine",
                 "UnityEngine.UI",
                 "UnityEngine.Events",
+                "UnityEngine.U2D", 
                 "Spine.Unity",
+                "TMPro.TextMeshPro",
             };
             var unityTypes = (from assembly in AppDomain.CurrentDomain.GetAssemblies()
                                 where !(assembly.ManifestModule is System.Reflection.Emit.ModuleBuilder)
@@ -198,6 +200,8 @@ public static class XLuaConfig
                 new List<string>(){"UnityEngine.Texture", "imageContentsHash"},
                 new List<string>(){"UnityEngine.UI.Graphic", "OnRebuildRequested"},
                 new List<string>(){"UnityEngine.UI.Text", "OnRebuildRequested"},
+                new List<string>(){"UnityEngine.UI.DefaultControls", "factory"},
+                new List<string>(){"UnityEngine.MeshRenderer", "receiveGI"},
     };
     
 }
