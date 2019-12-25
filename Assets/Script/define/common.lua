@@ -29,6 +29,7 @@ CSRvo = CS.RVO
 CSRvoInst = CSRvo.Simulator.Instance
 CSTools = CSCommon.Tools
 CSEngineExt = CSTools.EngineExt
+CSPackageCreator = CSCommon.Net.PackageCreator
 
 Info = CSCommon.Log.Info
 Info.s_Level = CSCommon.Log.eLogLevel.Debug
@@ -46,7 +47,8 @@ c_gs = require("pb.pb")
 
 EventManagerInst = require("common.event.event_manager")
 StorageInst = require("common.storage.storage")
-NetManagerInst = require("common.net.net_manager")
+TcpManagerInst = require("common.net.tcp_manager")
+UdpManagerInst = require("common.net.udp_manager")
 TimeManagerInst = require("common.time.time_manager")
 DialogManagerInst = require("common.ui.dialog_manager")
 HttpManagerInst = require("common.net.http_manager")

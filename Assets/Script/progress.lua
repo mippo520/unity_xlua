@@ -23,9 +23,9 @@ Progress = class("Progress")
 function Progress:start()
 	Unity.Application.targetFrameRate = FrameRate
 	ApplicationInst:deviceZoom()
-    NetManagerInst:init()
+    TcpManagerInst:init()
     TimeManagerInst:init()
-
+	
     UnitySceneManager.LoadSceneAsync(SceneType.Update)
 end
 
@@ -35,7 +35,8 @@ function Progress:update()
 end
 
 function Progress:appQuit()
-    NetManagerInst:release()
+    TcpManagerInst:release()
+	UdpManagerInst:release()
 end
 
 function Progress:restart()

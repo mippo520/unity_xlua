@@ -8,7 +8,7 @@ namespace Assets.Common.Singleton
 {
     public abstract class Singleton<T> where T : Singleton<T>, new()
     {
-        private static T gInstance = null;
+        protected static T gInstance = null;
 
         public static T GetInstance()
         {

@@ -40,7 +40,7 @@ function network:_start()
 
     -- local btn3 = self.gameObject.transform:GetChild(2).gameObject
     -- btn3:GetComponent(typeof(UnityUI.Button)).onClick:AddListener(function ()
-    --     NetManagerInst:close()
+    --     TcpManagerInst:close()
     -- end)
 
 end

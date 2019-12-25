@@ -1,0 +1,267 @@
+<GlobalConfig CodeFontSize = "22"/>
+<BreakpointList>
+  <Breakpoint State = "BreakpointActive" Filename = "Script/common/net/net_manager.lua" LineIndex = "17"/>
+</BreakpointList>
+<WatchList/>
+<ProjectUI>
+  <TreeState BaseX = "0" BaseY = "-442" AlternativeItem = "LuaFolders#Assets#Script#common#pb">
+    <SelectedList>
+      <Selected Path = "LuaFolders#Assets#Script#common#net#udp_manager.lua"/>
+    </SelectedList>
+    <ExpandedList>
+      <Expanded Path = "LuaFolders"/>
+      <Expanded Path = "LuaFolders#Assets"/>
+      <Expanded Path = "LuaFolders#Assets#Script"/>
+      <Expanded Path = "LuaFolders#Assets#Script#common"/>
+      <Expanded Path = "LuaFolders#Assets#Script#common#net"/>
+      <Expanded Path = "LuaFolders#Assets#Script#pb"/>
+      <Expanded Path = "LuaFolders#Assets#Script#scene"/>
+      <Expanded Path = "LuaFolders#Assets#Script#xlua"/>
+    </ExpandedList>
+  </TreeState>
+</ProjectUI>
+<FindAnReplaceUI
+  Pattern = "Protoc"
+  MatchCase = "true"
+  MatchWholeWord = "true"
+  UseRegEx = "false"
+  Target = ""
+  Replace = "Tcp"/>
+<MainWindow
+  X = "2174"
+  Y = "-22"
+  Width = "1280"
+  Height = "720"
+  Maximized = "true"
+  LastCodeFilename = "E:/u3d/unity_xlua/Assets/Script/common/event/event_manager.lua">
+  <DockingControl>
+    <DockingNode DockingDirection = "Horizontal">
+      <DockingNode DockingDirection = "None">
+        <DockingBlock Width = "428" Height = "923" DocumentStyle = "false">
+          <DockingCard
+            Text = "Project"
+            Tag = ""
+            ActivePage = "true"
+            ActivateTime = "0"/>
+          <DockingCard
+            Text = "Outline"
+            Tag = ""
+            ActivePage = "false"
+            ActivateTime = "0"/>
+        </DockingBlock>
+      </DockingNode>
+      <DockingNode DockingDirection = "Vertical">
+        <DockingNode DockingDirection = "None">
+          <DockingBlock Width = "1473" Height = "652" DocumentStyle = "true">
+            <DockingCard
+              Text = "storage.lua"
+              Tag = "E:/u3d/unity_xlua/Assets/Script/common/storage/storage.lua"
+              ActivePage = "false"
+              ActivateTime = "199855163"
+              CaretLineIndex = "9"
+              CaretCodeCharIndex = "0"
+              BaseX = "0"
+              BaseY = "0"/>
+            <DockingCard
+              Text = "udp_manager.lua"
+              Tag = "E:/u3d/unity_xlua/Assets/Script/common/net/udp_manager.lua"
+              ActivePage = "false"
+              ActivateTime = "199847983"
+              CaretLineIndex = "13"
+              CaretCodeCharIndex = "5"
+              BaseX = "0"
+              BaseY = "0"/>
+            <DockingCard
+              Text = "lua53.lua"
+              Tag = "E:/u3d/unity_xlua/Assets/.lpproj/Apis/Lua/lua53.lua"
+              ActivePage = "false"
+              ActivateTime = "199576274"
+              CaretLineIndex = "167"
+              CaretCodeCharIndex = "16"
+              BaseX = "0"
+              BaseY = "-3340"/>
+            <DockingCard
+              Text = "progress.lua"
+              Tag = "E:/u3d/unity_xlua/Assets/Script/progress.lua"
+              ActivePage = "false"
+              ActivateTime = "199660699"
+              CaretLineIndex = "32"
+              CaretCodeCharIndex = "0"
+              BaseX = "0"
+              BaseY = "-348"/>
+            <DockingCard
+              Text = "net_manager.lua"
+              Tag = "E:/u3d/unity_xlua/Assets/Script/common/net/net_manager.lua"
+              ActivePage = "false"
+              ActivateTime = "199853090"
+              CaretLineIndex = "22"
+              CaretCodeCharIndex = "0"
+              BaseX = "0"
+              BaseY = "-71"/>
+            <DockingCard
+              Text = "behaviour.lua"
+              Tag = "E:/u3d/unity_xlua/Assets/Script/common/behaviour/behaviour.lua"
+              ActivePage = "false"
+              ActivateTime = "199129877"
+              CaretLineIndex = "33"
+              CaretCodeCharIndex = "0"
+              BaseX = "0"
+              BaseY = "-467"/>
+            <DockingCard
+              Text = "event_manager.lua"
+              Tag = "E:/u3d/unity_xlua/Assets/Script/common/event/event_manager.lua"
+              ActivePage = "true"
+              ActivateTime = "199861130"
+              CaretLineIndex = "75"
+              CaretCodeCharIndex = "36"
+              BaseX = "0"
+              BaseY = "-1348"/>
+            <DockingCard
+              Text = "functions.lua"
+              Tag = "E:/u3d/unity_xlua/Assets/Script/common/functions.lua"
+              ActivePage = "false"
+              ActivateTime = "199041798"
+              CaretLineIndex = "531"
+              CaretCodeCharIndex = "9"
+              BaseX = "0"
+              BaseY = "-11380"/>
+            <DockingCard
+              Text = "main.lua"
+              Tag = "E:/u3d/unity_xlua/Assets/Script/scene/main.lua"
+              ActivePage = "false"
+              ActivateTime = "198709786"
+              CaretLineIndex = "19"
+              CaretCodeCharIndex = "4"
+              BaseX = "0"
+              BaseY = "0"/>
+            <DockingCard
+              Text = "load.lua"
+              Tag = "E:/u3d/unity_xlua/Assets/Script/scene/load.lua"
+              ActivePage = "false"
+              ActivateTime = "198668512"
+              CaretLineIndex = "31"
+              CaretCodeCharIndex = "0"
+              BaseX = "0"
+              BaseY = "-270"/>
+            <DockingCard
+              Text = "pb.lua"
+              Tag = "E:/u3d/unity_xlua/Assets/Script/pb/pb.lua"
+              ActivePage = "false"
+              ActivateTime = "198631888"
+              CaretLineIndex = "49"
+              CaretCodeCharIndex = "11"
+              BaseX = "0"
+              BaseY = "-792"/>
+            <DockingCard
+              Text = "common.lua"
+              Tag = "E:/u3d/unity_xlua/Assets/Script/define/common.lua"
+              ActivePage = "false"
+              ActivateTime = "198648347"
+              CaretLineIndex = "44"
+              CaretCodeCharIndex = "6"
+              BaseX = "0"
+              BaseY = "-666"/>
+            <DockingCard
+              Text = "tcp_manager.lua"
+              Tag = "E:/u3d/unity_xlua/Assets/Script/common/net/tcp_manager.lua"
+              ActivePage = "false"
+              ActivateTime = "199026304"
+              CaretLineIndex = "104"
+              CaretCodeCharIndex = "47"
+              BaseX = "0"
+              BaseY = "-1782"/>
+            <DockingCard
+              Text = "network.lua"
+              Tag = "E:/u3d/unity_xlua/Assets/Script/ui/network.lua"
+              ActivePage = "false"
+              ActivateTime = "192403355"
+              CaretLineIndex = "42"
+              CaretCodeCharIndex = "21"
+              BaseX = "0"
+              BaseY = "-656"/>
+            <DockingCard
+              Text = "pb_manager.lua"
+              Tag = "E:/u3d/unity_xlua/Assets/Script/pb/pb_manager.lua"
+              ActivePage = "false"
+              ActivateTime = "197903005"
+              CaretLineIndex = "3"
+              CaretCodeCharIndex = "14"
+              BaseX = "0"
+              BaseY = "0"/>
+            <DockingCard
+              Text = "login_controller.lua"
+              Tag = "E:/u3d/unity_xlua/Assets/Script/game/login/login_controller.lua"
+              ActivePage = "false"
+              ActivateTime = "192414850"
+              CaretLineIndex = "23"
+              CaretCodeCharIndex = "22"
+              BaseX = "0"
+              BaseY = "-238"/>
+            <DockingCard
+              Text = "common_editor.lua"
+              Tag = "E:/u3d/unity_xlua/Assets/Script/define/common_editor.lua"
+              ActivePage = "false"
+              ActivateTime = "192495957"
+              CaretLineIndex = "35"
+              CaretCodeCharIndex = "34"
+              BaseX = "0"
+              BaseY = "-568"/>
+            <DockingCard
+              Text = "auto_object.lua"
+              Tag = "E:/u3d/unity_xlua/Assets/Script/common/auto_object.lua"
+              ActivePage = "false"
+              ActivateTime = "192381179"
+              CaretLineIndex = "56"
+              CaretCodeCharIndex = "14"
+              BaseX = "0"
+              BaseY = "-964"/>
+          </DockingBlock>
+        </DockingNode>
+        <DockingNode DockingDirection = "None">
+          <DockingBlock Width = "1473" Height = "264" DocumentStyle = "false">
+            <DockingCard
+              Text = "Output"
+              Tag = ""
+              ActivePage = "false"
+              ActivateTime = "0"/>
+            <DockingCard
+              Text = "Call Stack"
+              Tag = ""
+              ActivePage = "true"
+              ActivateTime = "0"/>
+            <DockingCard
+              Text = "Locals"
+              Tag = ""
+              ActivePage = "false"
+              ActivateTime = "0"/>
+            <DockingCard
+              Text = "Globals"
+              Tag = ""
+              ActivePage = "false"
+              ActivateTime = "0"/>
+            <DockingCard
+              Text = "Watches"
+              Tag = ""
+              ActivePage = "false"
+              ActivateTime = "0"/>
+            <DockingCard
+              Text = "Autos"
+              Tag = ""
+              ActivePage = "false"
+              ActivateTime = "0"/>
+            <DockingCard
+              Text = "Breakpoints"
+              Tag = ""
+              ActivePage = "false"
+              ActivateTime = "0"/>
+            <DockingCard
+              Text = "Find Result"
+              Tag = ""
+              ActivePage = "false"
+              ActivateTime = "0"/>
+          </DockingBlock>
+        </DockingNode>
+      </DockingNode>
+    </DockingNode>
+  </DockingControl>
+</MainWindow>

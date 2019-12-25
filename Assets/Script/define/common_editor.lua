@@ -36,7 +36,7 @@ Time = CSTools.Time
 HttpState = CSCommon.Net.HttpState
 
 EventManagerInst = require("common.event.event_manager")
-NetManagerInst = require("common.net.net_manager")
+TcpManagerInst = require("common.net.tcp_manager")
 TimeManagerInst = require("common.time.time_manager")
 DialogManagerInst = require("common.ui.dialog_manager")
 HttpManagerInst = require("common.net.http_manager")

@@ -21,7 +21,7 @@ local function _reconnect(self)
     self.reconnectTimerId = TimeManagerInst:onceTimer(NetReconnectWaitTime, self, function (self)
         local now = Now()
         if now < self.expireTime then
-            NetManagerInst:reconnect()
+            TcpManagerInst:reconnect()
         else
             _login(self)
         end
@@ -48,7 +48,7 @@ local function _connectGameServer(self)
             string.gsub(res.addr,'[^:]+',function ( w , a)
                 table.insert(resultStrList,w)
             end)
-            NetManagerInst:connect(resultStrList[1], tonumber(resultStrList[2]))
+            TcpManagerInst:connect(resultStrList[1], tonumber(resultStrList[2]))
         else
             Info.Debug("error code = " .. res.code)
         end
@@ -87,7 +87,7 @@ local function _connectFailed(self, msg)
 end
 
 local function _connectSuccess(self, msg)
-    NetManagerInst:send(c_gs.C2S_Login, {
+    TcpManagerInst:send(c_gs.C2S_Login, {
         account_id = AccountDataInst.account_id,
         token = AccountDataInst.token, 
         -- server_id = 1
@@ -135,8 +135,8 @@ function LoginController:ctor()
     EventManagerInst:registEvent(Event.NetDisconnect, self, _disconnect)
     EventManagerInst:registEvent(Event.NetClosed, self, _closed)
 
-    NetManagerInst:registMessage(c_gs.S2C_Login, self, _s2c_login)
-    -- NetManagerInst:registMessage(c_gs.S2C_PlayerData, self, _s2c_playerData)
+    TcpManagerInst:registMessage(c_gs.S2C_Login, self, _s2c_login)
+    -- TcpManagerInst:registMessage(c_gs.S2C_PlayerData, self, _s2c_playerData)
 	
 	self.gateHttpAddr = BindProperty.new(StorageInst:get("gateHttpAddr"))
 	if nil == self.gateHttpAddr:get() then
@@ -153,7 +153,7 @@ function LoginController:login()
 end
 
 function LoginController:logout()
-    NetManagerInst:close()
+    TcpManagerInst:close()
     _clearNetData(self)
 end
 

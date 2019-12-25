@@ -54,7 +54,7 @@ function AutoObject:destroy()
     EventManagerInst:delObject(self)
 
     -- 移除网络消息
-    NetManagerInst:unregistMessage(self)
+    TcpManagerInst:unregistMessage(self)
 end
 
 -- 调用unityEvent的AddListener,会在对象destroy的时候移除
@@ -76,7 +76,7 @@ end
 
 -- 注册网络消息,会在对象destroy的时候移除
 function AutoObject:registMessage(msg, callback)
-    NetManagerInst:registMessage(msg, self, callback)
+    TcpManagerInst:registMessage(msg, self, callback)
 end
 
 -- 注册一次性定时器,会在对象destroy的时候移除

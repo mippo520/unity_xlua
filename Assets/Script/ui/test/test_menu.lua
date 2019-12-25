@@ -34,7 +34,11 @@ end
 
 
 function TestMenu:onCellClicked(cellBehaviour)
-    DialogManagerInst:open(self.items[cellBehaviour.index + 1].id)
+	UdpManagerInst:send(c_gs.C2S_Login, {
+			account_id = 100,
+			token = "abc"
+		})
+    --DialogManagerInst:open(self.items[cellBehaviour.index + 1].id)
 end
 
 return TestMenu

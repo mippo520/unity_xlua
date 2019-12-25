@@ -19,7 +19,7 @@ namespace Assets.Common.Net
         private EndianType m_EndType = EndianType.Big;
         private int m_PackageLenSize = 0;
         private Socket m_Socket = null;
-        private NetManager m_Manager = null;
+        private INetInterface m_Manager = null;
 
         protected static void SetKey(ref List<byte>[] arrKey)
         {
@@ -78,7 +78,7 @@ namespace Assets.Common.Net
             set { m_Socket = value; }
         }
 
-        public NetManager manager
+        public INetInterface manager
         {
             get { return m_Manager; }
             set { m_Manager = value; }
