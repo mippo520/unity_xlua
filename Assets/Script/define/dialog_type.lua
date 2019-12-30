@@ -78,6 +78,18 @@ local dialog_type = {
         SortOrder = 9998
     },
 
+	Controller = {
+		Type = "Controller", 
+		AssetBundles = {"ui/game/controller"},
+		Path = "Assets/Prefabs/ui/game/Controller.prefab",
+		SortOrder = 0
+	}, 
+	
+	SyncNum = {
+		Type = "SyncNum",
+		AssetBundles = {"ui/game/sync_num"},
+		Path = "Assets/Prefabs/ui/game/SyncNumber.prefab",
+		}, 
 
 }
 

@@ -61,6 +61,7 @@ DialogBehaviour = require("common.ui.dialog_behaviour")
 XLuaUtil = require 'xlua.util'
 
 Now = handler(TimeManagerInst, TimeManagerInst.now)
+ServerTime = handler(TimeManagerInst, TimeManagerInst.serverTime)
 
 Version = BindProperty.new("0.0.0")
 

@@ -13,11 +13,11 @@ function main:_start()
 
     DialogManagerInst:open(DialogType.TestMenu)
 	
-	UdpManagerInst:init("192.168.1.31", 9201)
-	UdpManagerInst:send(c_gs.C2S_Login, {
-			account_id = 100,
-			token = "abc"
-		})
+	--UdpManagerInst:init("192.168.1.31", 9201)
+	--UdpManagerInst:send(c_gs.C2S_Login, {
+			--account_id = 100,
+			--token = "abc"
+		--})
 end
 
 

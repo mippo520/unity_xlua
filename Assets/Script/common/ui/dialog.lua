@@ -5,6 +5,7 @@ function Dialog:ctor()
     self.id = 0
     self.data = {}
     self.inClose = false
+	self.luaObj = nil
 end
 
 function Dialog:close()

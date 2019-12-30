@@ -74,9 +74,14 @@ function AutoObject:registSimpleEvent(event, callback)
     table.insert(self.simpleEvent, event)
 end
 
--- 注册网络消息,会在对象destroy的时候移除
-function AutoObject:registMessage(msg, callback)
-    TcpManagerInst:registMessage(msg, self, callback)
+-- 注册tcp消息,会在对象destroy的时候移除
+function AutoObject:registTcpMessage(msg, callback)
+	TcpManagerInst:registMessage(msg, self, callback)
+end
+
+-- 注册udp消息,会在对象destroy的时候移除
+function AutoObject:registUdpMessage(msg, callback)
+	UdpManagerInst:registMessage(msg, self, callback)
 end
 
 -- 注册一次性定时器,会在对象destroy的时候移除

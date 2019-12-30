@@ -47,7 +47,9 @@ function TimeManager:ctor()
     self.arrTimer = {}
     self.id = 0
     self.arrInsertTimer = {}
+	self.serverTime = nil
     self.offset = 0 -- 时区
+	self.tagServerTime = {}
 end
 
 
@@ -56,9 +58,19 @@ function TimeManager:init()
     self.serverTime = self.currentTime  -- 服务器时间
 end
 
-function TimeManager:setServerTime(time, offset)
-    self.serverTime = time
-    self.offset = offset
+function TimeManager:setServerTime(time, offset, tag)
+	if not tag then
+		self.serverTime = time
+		self.offset = offset
+	else
+		local timeInfo = self.tagServerTime[tag]
+		if not timeInfo then
+			timeInfo = {}
+			self.tagServerTime[tag] = timeInfo
+		end
+		timeInfo.time = time
+		timeInfo.offset = offset
+	end
 end
 
 function TimeManager:update()
@@ -67,6 +79,9 @@ function TimeManager:update()
     EventManagerInst:fireEvent(Event.FrameUpdate, dt)
     self.currentTime = curTime
     self.serverTime = self.serverTime + dt
+	for _, timeInfo in pairs(self.tagServerTime) do
+		timeInfo.time = timeInfo.time + dt
+	end
     while #self.arrTimer > 0 do
         local timer = self.arrTimer[1]
         if timer._time <= self.currentTime then
@@ -89,14 +104,18 @@ function TimeManager:update()
 end
 
 function TimeManager:now()
-    return self.serverTime
+    return self.serverTime, self.offset
+end
+
+function TimeManager:serverTime(tag)
+	return self.tagServerTime[tag]
 end
 
 function TimeManager:onceTimer(interval, obj, func, ...)
     if interval < 0 then
         interval = 0
     end
-    local time = self:now() + interval
+    local time = self.currentTime + interval
     return _modifyTimer(self, time, obj, func, 0, 0, ...)
 end
 
@@ -109,7 +128,7 @@ function TimeManager:loopTimer(firstInterval, interval, obj, func, count, ...)
         firstInterval = 0
     end
 
-    local time = self:now() + firstInterval
+    local time = self.currentTime + firstInterval
     return _modifyTimer(self, time, obj, func, interval, count, ...)
 end
 

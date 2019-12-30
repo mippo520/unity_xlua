@@ -23,6 +23,11 @@ end
 
 function FPS:_start()
     self.fpsText.text = "fps:" .. self.frame
+	self:setDelay(0)
+end
+
+function FPS:setDelay(delay)
+	self.delayText.text = "lag:" .. delay .. "ms"
 end
 
 return FPS

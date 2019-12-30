@@ -28,8 +28,7 @@ namespace Assets.Common.Net.PackageCreator
             {
                 if (null != socket)
                 {
-                    EndPoint point = new IPEndPoint(IPAddress.Any, 0);
-                    socket.BeginReceiveFrom(m_Data, 0, s_PackageLenth, SocketFlags.None, ref point, new System.AsyncCallback(_onReceive), point);
+                    socket.BeginReceiveFrom(m_Data, 0, s_PackageLenth, SocketFlags.None, ref m_EndPoint, new System.AsyncCallback(_onReceive), null);
                 }
             }
             catch
@@ -55,8 +54,6 @@ namespace Assets.Common.Net.PackageCreator
 
             if (rEnd > 0)
             {
-                var ep = ar.AsyncState as EndPoint;
-                Info.Debug("UdpPackageCreator received ep is " + ep.ToString() + " length is " + rEnd + " message is " + System.Text.Encoding.Default.GetString(m_Data, 0, rEnd));
                 manager.ReceiveCallback(m_Data, rEnd);
             }
             Receive();

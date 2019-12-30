@@ -8,7 +8,6 @@ local TcpManager = class("TcpManager", NetManager)
 
 function TcpManager:ctor()
 	NetManager.ctor(self)
-    self.mapPairMsg = {}
     self.arrWaitReceive = {}
     self.connectCount = 0
     self.reconnectTimerId = 0
@@ -119,18 +118,12 @@ function TcpManager:release()
     Net.DelInstance()
 end
 
-function TcpManager:registMessage(msg, obj, callback)
-    self:addMsgInfo(self, msg)
-
-    EventManagerInst:registEvent(msg, obj, callback)
-end
-
 function TcpManager:unregistMessage(obj)
     EventManagerInst:delObject(obj)
 end
 
 function TcpManager:send(msg, data)
-    self:addMsgInfo(self, msg)
+    self:addMsgInfo(msg)
 	local pack = self:pbPack(msg, data)
 	if pack then
 		Net.GetInstance():Send(pack)
@@ -146,12 +139,6 @@ function TcpManager:send(msg, data)
 	end
 end
 
-function TcpManager:registPairMessage(sendMsg, recvMsg)
-    if self.mapPairMsg[sendMsg] then
-        Info.Error("TcpManager:registPairMessage error! pair " .. sendMsg .. " and " .. recvMsg .. " is already registed!")
-    end
-    self.mapPairMsg[sendMsg] = recvMsg
-end
 
 function TcpManager:close()
     Net.GetInstance():Close(false)

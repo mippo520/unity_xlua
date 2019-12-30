@@ -25,13 +25,19 @@ function DialogManager:open(dialogType, openCallback, ...)
 	        local res = ResourcesManagerInst:LoadAsset(dialogType.Path)
 
         	-- 设置自适应
-			local canvasScaler = res:GetComponent(typeof(UnityUI.CanvasScaler))
-			canvasScaler.matchWidthOrHeight = 0
-			canvasScaler.uiScaleMode = UnityUI.CanvasScaler.ScaleMode.ScaleWithScreenSize
-			canvasScaler.referenceResolution = Unity.Vector2(720, 1280)
-	
-	        local s = Unity.Screen.safeArea
+			local s = Unity.Screen.safeArea
 			local orignScale = s.height / s.width
+			
+			local canvasScaler = res:GetComponent(typeof(UnityUI.CanvasScaler))
+			canvasScaler.uiScaleMode = UnityUI.CanvasScaler.ScaleMode.ScaleWithScreenSize
+			if orignScale > 1 then
+				canvasScaler.matchWidthOrHeight = 0
+				canvasScaler.referenceResolution = Unity.Vector2(720, 1280)
+			else
+				canvasScaler.matchWidthOrHeight = 1
+				canvasScaler.referenceResolution = Unity.Vector2(1280, 720)
+			end
+	
 			orignScale = orignScale - 0.05
 			if orignScale < 1.9 then
 				orignScale = 1.9
@@ -67,10 +73,11 @@ function DialogManager:open(dialogType, openCallback, ...)
 	        dialog.id = luaBehaviour.id
 	        dialog.data = clone(dialogType)
 	        self.mapDialog[dialog.id] = dialog
-	        local behaviour = BehaviourManager.getBehaviour(luaBehaviour.id)
-	        if behaviour.setValues then
-	            behaviour:setValues(table.unpack(args))
+	        local luaObj = BehaviourManager.getBehaviour(luaBehaviour.id)
+	        if luaObj.setValues then
+				luaObj:setValues(table.unpack(args))
 	        end
+			dialog.luaObj = luaObj
 			
 			if dialogType.OnlyOne then
 				self.onlyOneDialog[dialogType.Type] = dialog

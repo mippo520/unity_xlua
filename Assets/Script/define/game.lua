@@ -18,3 +18,14 @@ SoundManagerInst = require("game.sound.sound_manager")
 SoundDefine = require("game.sound.define")
 -- scnene
 SceneManagerInst = require("scene.scene_manager")
+
+-- Info
+GameInfoInst = require("game.game_info")
+-- framesync
+FrameInfoInst = require("game.frame_sync.frame_info")
+StatusFrame = require("game.frame_sync.status_frame")
+ActionFrame = require("game.frame_sync.action_frame")
+
+-- role
+RoleManagerInst = require("game.role.role_manager")
+Role = require("game.role.role")

@@ -1,5 +1,9 @@
 local TestMenu = class("TestMenu", ListView)
 
+local function _opGame()
+	UnitySceneManager.LoadSceneAsync(SceneType.Game)
+end
+
 function TestMenu:ctor()
     ListView.ctor(self)
 
@@ -15,11 +19,15 @@ function TestMenu:ctor()
         {
             title = "ScrollTest", 
             id = DialogType.ScrollTest,
-        }, 
-        {
-            title = "ShaderTest", 
-            id = DialogType.ShaderTest,
-        }
+        },
+		{
+			title = "ShaderTest",
+			id = DialogType.ShaderTest,
+		},
+		{
+			title = "UdpTest",
+			cb = _opGame,
+		}
     }
 end 
 
@@ -34,11 +42,13 @@ end
 
 
 function TestMenu:onCellClicked(cellBehaviour)
-	UdpManagerInst:send(c_gs.C2S_Login, {
-			account_id = 100,
-			token = "abc"
-		})
-    --DialogManagerInst:open(self.items[cellBehaviour.index + 1].id)
+
+	local item = self.items[cellBehaviour.index + 1]
+	if item.cb then
+		item.cb()
+	else
+		DialogManagerInst:open(item.id)
+	end
 end
 
 return TestMenu

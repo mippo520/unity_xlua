@@ -14,22 +14,27 @@ namespace Assets.Common.Net
     {
         private EndPoint m_EP = null;
 
-        public void Init(EndianType endian, string ip, Int32 port, IPackageCreator creator)
+        public bool Init(EndianType endian, string ip, Int32 port, IPackageCreator creator)
         {
+            bool bSuccess = false;
             Close();
             m_EndType = endian;
             m_Port = port;
             m_IP = ip;
-            _initSocket();
-            SetPackageCreator(creator);
+            bSuccess = _initSocket();
+            if (bSuccess)
+            {
+                SetPackageCreator(creator);
+            }
+            return bSuccess;
         }
 
-        private void _initSocket()
+        private bool _initSocket()
         {
             if (null != m_Socket || null != m_EP)
             {
                 Info.Warn("UdpManager initSocket Warning! socket or iep is already exist!");
-                return;
+                return false;
             }
             m_EP = new IPEndPoint(IPAddress.Parse(m_IP), m_Port);
             m_Socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
@@ -41,7 +46,9 @@ namespace Assets.Common.Net
             {
                 Info.Warn("UdpManager init socket error!");
                 Close();
+                return false;
             }
+            return true;
         }
 
 
