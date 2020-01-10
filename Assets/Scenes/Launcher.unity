@@ -130,6 +130,7 @@ GameObject:
   m_Component:
   - component: {fileID: 85356173}
   - component: {fileID: 85356172}
+  - component: {fileID: 85356175}
   - component: {fileID: 85356171}
   - component: {fileID: 85356174}
   m_Layer: 0
@@ -216,6 +217,35 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 85356170}
   m_Enabled: 1
+--- !u!114 &85356175
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 85356170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfb01fbd79b673c408cf64111e1a74a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  debugLevel: 0
+  isMultiThreads: 0
+  ip: 127.0.0.1
+  port: 20013
+  clientType: 7
+  networkEncryptType: 0
+  syncPlayerMS: 100
+  threadUpdateHZ: 20
+  serverHeartbeatTick: 60
+  TCP_SEND_BUFFER_MAX: 1460
+  TCP_RECV_BUFFER_MAX: 1460
+  UDP_SEND_BUFFER_MAX: 1472
+  UDP_RECV_BUFFER_MAX: 1472
+  useAliasEntityID: 1
+  isOnInitCallPropertysSetMethods: 1
+  forceDisableUDP: 0
+  automaticallyUpdateSDK: 1
 --- !u!1 &1401310400
 GameObject:
   m_ObjectHideFlags: 0
