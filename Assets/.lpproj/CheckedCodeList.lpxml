@@ -35,18 +35,18 @@
   <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/common/functions.lua" ModifyTime = "1569481446118"/>
   <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/common/time/timer.lua" ModifyTime = "1575887459297"/>
   <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/common/tools.lua" ModifyTime = "1576486900395"/>
-  <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/common/time/time_manager.lua" ModifyTime = "1574305955162"/>
+  <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/common/time/time_manager.lua" ModifyTime = "1577695890353"/>
   <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/common/ui/dialog.lua" ModifyTime = "1577351713471"/>
   <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/common/ui/dialog_behaviour.lua" ModifyTime = "1575546347436"/>
   <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/common/vector.lua" ModifyTime = "1577443097288"/>
-  <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/common/ui/dialog_manager.lua" ModifyTime = "1577351744982"/>
-  <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/define/common.lua" ModifyTime = "1577269761528"/>
+  <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/common/ui/dialog_manager.lua" ModifyTime = "1577689307383"/>
+  <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/define/common.lua" ModifyTime = "1577695696640"/>
   <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/define/common_editor.lua" ModifyTime = "1577264025395"/>
   <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/define/dialog_type.lua" ModifyTime = "1577351567685"/>
   <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/define/engine_extend.lua" ModifyTime = "1569477544481"/>
   <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/define/enum.lua" ModifyTime = "1577173114615"/>
   <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/define/error.lua" ModifyTime = "1569477544482"/>
-  <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/define/err_code.lua" ModifyTime = "1577447327548"/>
+  <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/define/err_code.lua" ModifyTime = "1577677501779"/>
   <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/common/pb/protoc.lua" ModifyTime = "1569477544473"/>
   <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/define/event.lua" ModifyTime = "1577433696348"/>
   <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/define/game_editor.lua" ModifyTime = "1577426684639"/>
@@ -79,12 +79,12 @@
   <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/parts/cfg_char.lua" ModifyTime = "1575518053784"/>
   <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/game/sound/sound_manager.lua" ModifyTime = "1573721652905"/>
   <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/parts/possession.lua" ModifyTime = "1570781473141"/>
-  <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/pb/pb.lua" ModifyTime = "1577447327547"/>
+  <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/pb/pb.lua" ModifyTime = "1577677501778"/>
   <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/progress.lua" ModifyTime = "1577360058749"/>
   <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/pb/pb_manager.lua" ModifyTime = "1577360782158"/>
   <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/parts/currency.lua" ModifyTime = "1576579620493"/>
   <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/scene/load.lua" ModifyTime = "1577356750639"/>
-  <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/scene/game.lua" ModifyTime = "1577427649275"/>
+  <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/scene/game.lua" ModifyTime = "1577689362563"/>
   <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/scene/scene.lua" ModifyTime = "1574066709207"/>
   <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/scene/main.lua" ModifyTime = "1577277021598"/>
   <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/setting.lua" ModifyTime = "1577445490078"/>
@@ -94,7 +94,7 @@
   <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/scene/update.lua" ModifyTime = "1576054798592"/>
   <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/ui/common/tips.lua" ModifyTime = "1571205928926"/>
   <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/ui/common/toast.lua" ModifyTime = "1575282649253"/>
-  <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/ui/fps.lua" ModifyTime = "1571986856096"/>
+  <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/ui/fps.lua" ModifyTime = "1577697432475"/>
   <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/ui/common/touch_long_keep.lua" ModifyTime = "1571038970604"/>
   <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/ui/list_view/list_cover.lua" ModifyTime = "1569477544496"/>
   <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/ui/list_view/list_cell.lua" ModifyTime = "1569481446118"/>
@@ -2295,24 +2295,24 @@
   <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/.lpproj/Apis/Unity/CS/XLua/CSObjectWrap/UnityEngineSubsystemManagerWrap.lua" ModifyTime = "1577268495259"/>
   <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/.lpproj/Apis/Unity/CS/XLua/CSObjectWrap/UnityEngineSubsystemWrap.lua" ModifyTime = "1577268495259"/>
   <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/common/net/tcp_manager.lua" ModifyTime = "1577355100401"/>
-  <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/common/net/udp_manager.lua" ModifyTime = "1577447885845"/>
+  <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/common/net/udp_manager.lua" ModifyTime = "1577697197959"/>
   <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/.lpproj/Apis/Unity/CS/Assets/Common/Net/INetInterface.lua" ModifyTime = "1577269814505"/>
   <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/.lpproj/Apis/Unity/CS/Assets/Common/Net/PackageCreator/FirstPackageCreator.lua" ModifyTime = "1577269814511"/>
   <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/.lpproj/Apis/Unity/CS/Assets/Common/Net/PackageCreator/NormalPackageCreator.lua" ModifyTime = "1577269814512"/>
   <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/game/joystick/joystick.lua" ModifyTime = "1577278194101"/>
   <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/game/controller/controller.lua" ModifyTime = "1577439986942"/>
   <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/game/controller/touch_panel.lua" ModifyTime = "1577428901809"/>
-  <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/game/game_controller.lua" ModifyTime = "1577450750051"/>
-  <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/game/frame_sync/frame.lua" ModifyTime = "1577330696499"/>
-  <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/game/frame_sync/frame_info.lua" ModifyTime = "1577442550561"/>
+  <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/game/game_controller.lua" ModifyTime = "1577697539706"/>
+  <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/game/frame_sync/frame.lua" ModifyTime = "1577677911124"/>
+  <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/game/frame_sync/frame_info.lua" ModifyTime = "1577688285601"/>
   <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/game/frame_sync/action.lua" ModifyTime = "1577441219860"/>
   <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/game/frame_sync/action_frame.lua" ModifyTime = "1577361509053"/>
   <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/game/frame_sync/status_frame.lua" ModifyTime = "1577348620979"/>
   <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/game/frame_sync/action/action.lua" ModifyTime = "1577348971297"/>
   <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/game/frame_sync/action/status.lua" ModifyTime = "1577349055727"/>
   <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/game/sync_number/sync_num.lua" ModifyTime = "1577358395022"/>
-  <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/game/role/role.lua" ModifyTime = "1577448872582"/>
-  <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/game/role/role_manager.lua" ModifyTime = "1577445279297"/>
+  <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/game/role/role.lua" ModifyTime = "1577687481902"/>
+  <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/game/role/role_manager.lua" ModifyTime = "1577687572981"/>
   <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/game/role/role_script.lua" ModifyTime = "1577430067651"/>
   <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/game/game_info.lua" ModifyTime = "1577441749686"/>
   <CheckedCodeItem Filename = "E:/u3d/unity_xlua/Assets/Script/game/role/player.lua" ModifyTime = "1577446939320"/>

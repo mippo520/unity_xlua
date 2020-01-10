@@ -2,7 +2,7 @@
 <BreakpointList/>
 <WatchList/>
 <ProjectUI>
-  <TreeState BaseX = "0" BaseY = "-660" AlternativeItem = "LuaFolders#Assets#Script#game#game_info.lua">
+  <TreeState BaseX = "0" BaseY = "-642" AlternativeItem = "LuaFolders#Assets#Script#game#game_info.lua">
     <SelectedList>
       <Selected Path = "LuaFolders#Assets#Script#game#game_controller.lua"/>
     </SelectedList>
@@ -26,8 +26,8 @@
   </TreeState>
 </ProjectUI>
 <FindAnReplaceUI
-  Pattern = "Udp manager receive msg i"
-  MatchCase = "false"
+  Pattern = "Now()"
+  MatchCase = "true"
   MatchWholeWord = "false"
   UseRegEx = "false"
   Target = "<CurrentProject>"
@@ -42,7 +42,7 @@
   <DockingControl>
     <DockingNode DockingDirection = "Horizontal">
       <DockingNode DockingDirection = "None">
-        <DockingBlock Width = "404" Height = "923" DocumentStyle = "false">
+        <DockingBlock Width = "401" Height = "923" DocumentStyle = "false">
           <DockingCard
             Text = "Project"
             Tag = ""
@@ -57,12 +57,219 @@
       </DockingNode>
       <DockingNode DockingDirection = "Vertical">
         <DockingNode DockingDirection = "None">
-          <DockingBlock Width = "1497" Height = "670" DocumentStyle = "true">
+          <DockingBlock Width = "1500" Height = "666" DocumentStyle = "true">
+            <DockingCard
+              Text = "fps.lua"
+              Tag = "E:/u3d/unity_xlua/Assets/Script/ui/fps.lua"
+              ActivePage = "false"
+              ActivateTime = "24528902"
+              CaretLineIndex = "25"
+              CaretCodeCharIndex = "16"
+              BaseX = "0"
+              BaseY = "0"/>
+            <DockingCard
+              Text = "tcp_manager.lua"
+              Tag = "E:/u3d/unity_xlua/Assets/Script/common/net/tcp_manager.lua"
+              ActivePage = "false"
+              ActivateTime = "23918653"
+              CaretLineIndex = "103"
+              CaretCodeCharIndex = "38"
+              BaseX = "0"
+              BaseY = "-1716"/>
+            <DockingCard
+              Text = "net_manager.lua"
+              Tag = "E:/u3d/unity_xlua/Assets/Script/common/net/net_manager.lua"
+              ActivePage = "false"
+              ActivateTime = "23876261"
+              CaretLineIndex = "0"
+              CaretCodeCharIndex = "0"
+              BaseX = "0"
+              BaseY = "0"/>
+            <DockingCard
+              Text = "udp_manager.lua"
+              Tag = "E:/u3d/unity_xlua/Assets/Script/common/net/udp_manager.lua"
+              ActivePage = "false"
+              ActivateTime = "24227670"
+              CaretLineIndex = "41"
+              CaretCodeCharIndex = "55"
+              BaseX = "0"
+              BaseY = "0"/>
+            <DockingCard
+              Text = "common.lua"
+              Tag = "E:/u3d/unity_xlua/Assets/Script/define/common.lua"
+              ActivePage = "false"
+              ActivateTime = "23282694"
+              CaretLineIndex = "50"
+              CaretCodeCharIndex = "41"
+              BaseX = "0"
+              BaseY = "-1051"/>
+            <DockingCard
+              Text = "auto_object.lua"
+              Tag = "E:/u3d/unity_xlua/Assets/Script/common/auto_object.lua"
+              ActivePage = "false"
+              ActivateTime = "22327184"
+              CaretLineIndex = "89"
+              CaretCodeCharIndex = "30"
+              BaseX = "0"
+              BaseY = "-1843"/>
+            <DockingCard
+              Text = "game_controller.lua"
+              Tag = "E:/u3d/unity_xlua/Assets/Script/game/game_controller.lua"
+              ActivePage = "true"
+              ActivateTime = "117446362"
+              CaretLineIndex = "76"
+              CaretCodeCharIndex = "0"
+              BaseX = "0"
+              BaseY = "0"/>
+            <DockingCard
+              Text = "update.lua"
+              Tag = "E:/u3d/unity_xlua/Assets/Script/scene/update.lua"
+              ActivePage = "false"
+              ActivateTime = "22058849"
+              CaretLineIndex = "12"
+              CaretCodeCharIndex = "0"
+              BaseX = "0"
+              BaseY = "0"/>
+            <DockingCard
+              Text = "time_manager.lua"
+              Tag = "E:/u3d/unity_xlua/Assets/Script/common/time/time_manager.lua"
+              ActivePage = "false"
+              ActivateTime = "22928021"
+              CaretLineIndex = "54"
+              CaretCodeCharIndex = "0"
+              BaseX = "0"
+              BaseY = "-829"/>
+            <DockingCard
+              Text = "timer.lua"
+              Tag = "E:/u3d/unity_xlua/Assets/Script/common/time/timer.lua"
+              ActivePage = "false"
+              ActivateTime = "21941680"
+              CaretLineIndex = "0"
+              CaretCodeCharIndex = "0"
+              BaseX = "0"
+              BaseY = "-132"/>
+            <DockingCard
+              Text = "preload.lua"
+              Tag = "E:/u3d/unity_xlua/Assets/Script/ui/common/preload.lua"
+              ActivePage = "false"
+              ActivateTime = "22320534"
+              CaretLineIndex = "23"
+              CaretCodeCharIndex = "22"
+              BaseX = "0"
+              BaseY = "-177"/>
+            <DockingCard
+              Text = "load.lua"
+              Tag = "E:/u3d/unity_xlua/Assets/Script/scene/load.lua"
+              ActivePage = "false"
+              ActivateTime = "21790184"
+              CaretLineIndex = "0"
+              CaretCodeCharIndex = "0"
+              BaseX = "0"
+              BaseY = "-396"/>
+            <DockingCard
+              Text = "dialog_manager.lua"
+              Tag = "E:/u3d/unity_xlua/Assets/Script/common/ui/dialog_manager.lua"
+              ActivePage = "false"
+              ActivateTime = "16229336"
+              CaretLineIndex = "0"
+              CaretCodeCharIndex = "0"
+              BaseX = "0"
+              BaseY = "0"/>
+            <DockingCard
+              Text = "dialog_behaviour.lua"
+              Tag = "E:/u3d/unity_xlua/Assets/Script/common/ui/dialog_behaviour.lua"
+              ActivePage = "false"
+              ActivateTime = "16232986"
+              CaretLineIndex = "47"
+              CaretCodeCharIndex = "0"
+              BaseX = "0"
+              BaseY = "-721"/>
+            <DockingCard
+              Text = "game.lua"
+              Tag = "E:/u3d/unity_xlua/Assets/Script/scene/game.lua"
+              ActivePage = "false"
+              ActivateTime = "21815901"
+              CaretLineIndex = "82"
+              CaretCodeCharIndex = "3"
+              BaseX = "0"
+              BaseY = "-1188"/>
+            <DockingCard
+              Text = "frame_info.lua"
+              Tag = "E:/u3d/unity_xlua/Assets/Script/game/frame_sync/frame_info.lua"
+              ActivePage = "false"
+              ActivateTime = "21391613"
+              CaretLineIndex = "30"
+              CaretCodeCharIndex = "19"
+              BaseX = "0"
+              BaseY = "-545"/>
+            <DockingCard
+              Text = "role.lua"
+              Tag = "E:/u3d/unity_xlua/Assets/Script/game/role/role.lua"
+              ActivePage = "false"
+              ActivateTime = "14510274"
+              CaretLineIndex = "62"
+              CaretCodeCharIndex = "19"
+              BaseX = "0"
+              BaseY = "-66"/>
+            <DockingCard
+              Text = "role_manager.lua"
+              Tag = "E:/u3d/unity_xlua/Assets/Script/game/role/role_manager.lua"
+              ActivePage = "false"
+              ActivateTime = "14609695"
+              CaretLineIndex = "28"
+              CaretCodeCharIndex = "12"
+              BaseX = "0"
+              BaseY = "-330"/>
+            <DockingCard
+              Text = "status_frame.lua"
+              Tag = "E:/u3d/unity_xlua/Assets/Script/game/frame_sync/status_frame.lua"
+              ActivePage = "false"
+              ActivateTime = "10551042"
+              CaretLineIndex = "0"
+              CaretCodeCharIndex = "0"
+              BaseX = "0"
+              BaseY = "0"/>
+            <DockingCard
+              Text = "action_frame.lua"
+              Tag = "E:/u3d/unity_xlua/Assets/Script/game/frame_sync/action_frame.lua"
+              ActivePage = "false"
+              ActivateTime = "10551360"
+              CaretLineIndex = "0"
+              CaretCodeCharIndex = "0"
+              BaseX = "0"
+              BaseY = "0"/>
+            <DockingCard
+              Text = "frame.lua"
+              Tag = "E:/u3d/unity_xlua/Assets/Script/game/frame_sync/frame.lua"
+              ActivePage = "false"
+              ActivateTime = "10551699"
+              CaretLineIndex = "5"
+              CaretCodeCharIndex = "8"
+              BaseX = "0"
+              BaseY = "0"/>
+            <DockingCard
+              Text = "login_controller.lua"
+              Tag = "E:/u3d/unity_xlua/Assets/Script/game/login/login_controller.lua"
+              ActivePage = "false"
+              ActivateTime = "7702075"
+              CaretLineIndex = "109"
+              CaretCodeCharIndex = "48"
+              BaseX = "0"
+              BaseY = "-2085"/>
+            <DockingCard
+              Text = "player.lua"
+              Tag = "E:/u3d/unity_xlua/Assets/Script/game/role/player.lua"
+              ActivePage = "false"
+              ActivateTime = "5859624"
+              CaretLineIndex = "0"
+              CaretCodeCharIndex = "0"
+              BaseX = "0"
+              BaseY = "0"/>
             <DockingCard
               Text = "Vector2.lua"
               Tag = "E:/u3d/unity_xlua/Assets/.lpproj/Apis/Unity/CS/UnityEngine/Vector2.lua"
               ActivePage = "false"
-              ActivateTime = "81751089"
+              ActivateTime = "5530957"
               CaretLineIndex = "139"
               CaretCodeCharIndex = "32"
               BaseX = "0"
@@ -71,7 +278,7 @@
               Text = "TemplateCommon.lua.txt"
               Tag = "E:/u3d/unity_xlua/Assets/XLua/Src/Editor/Template/TemplateCommon.lua.txt"
               ActivePage = "false"
-              ActivateTime = "89099924"
+              ActivateTime = "4695790"
               CaretLineIndex = "17"
               CaretCodeCharIndex = "28"
               BaseX = "0"
@@ -80,24 +287,24 @@
               Text = "lua53.lua"
               Tag = "E:/u3d/unity_xlua/Assets/.lpproj/Apis/Lua/lua53.lua"
               ActivePage = "false"
-              ActivateTime = "6927097"
+              ActivateTime = "5860568"
               CaretLineIndex = "169"
               CaretCodeCharIndex = "0"
               BaseX = "0"
               BaseY = "-3340"/>
             <DockingCard
-              Text = "game_controller.lua"
-              Tag = "E:/u3d/unity_xlua/Assets/Script/game/game_controller.lua"
-              ActivePage = "true"
-              ActivateTime = "91337128"
-              CaretLineIndex = "25"
-              CaretCodeCharIndex = "27"
+              Text = "setting.lua"
+              Tag = "E:/u3d/unity_xlua/Assets/Script/setting.lua"
+              ActivePage = "false"
+              ActivateTime = "2087894"
+              CaretLineIndex = "10"
+              CaretCodeCharIndex = "23"
               BaseX = "0"
-              BaseY = "-330"/>
+              BaseY = "0"/>
           </DockingBlock>
         </DockingNode>
         <DockingNode DockingDirection = "None">
-          <DockingBlock Width = "1497" Height = "246" DocumentStyle = "false">
+          <DockingBlock Width = "1500" Height = "250" DocumentStyle = "false">
             <DockingCard
               Text = "Output"
               Tag = ""
