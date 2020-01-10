@@ -2,6 +2,7 @@
 using Assets.Common.Lua;
 using Assets.Common.Resource;
 using Assets.Common.Singleton;
+using KBEngine;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,8 @@ namespace Assets.Common
 
         public void begin()
         {
+            KBEngineApp.getSingleton().login("abc", "123", System.Text.Encoding.UTF8.GetBytes("kbengine_unity3d_demo"));
+            return;
             ResourcesManager.GetInstance().checkVersion();
             ResourcesManager.GetInstance().Init(() =>
             {
